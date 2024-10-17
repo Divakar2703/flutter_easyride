@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easy_ride/Home/Components/pickup_screen.dart';
+import 'package:flutter_easy_ride/Pre_Booking/screens/select_pickup_time.dart';
 import 'package:intl/intl.dart';
 
 
@@ -73,7 +73,6 @@ class _SelectPickopState extends State<SelectPickop> {
                   color: Colors.black87,
                   fontWeight: FontWeight.w600,
                   fontFamily: 'Poppins', // Set Poppins as the default font
-
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -107,15 +106,14 @@ class _SelectPickopState extends State<SelectPickop> {
                   color: Colors.black87,
                   fontWeight: FontWeight.w400,
                   fontFamily: 'Poppins', // Set Poppins as the default font
-
                 ),
               ),
             ),
 
 
             SizedBox(height: 25),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8),
               child: Column(
                 children: [
                   Row(
@@ -123,7 +121,7 @@ class _SelectPickopState extends State<SelectPickop> {
                       Icon(Icons.calendar_month,color: Colors.black87,size: 26,),
                       SizedBox(width: 15,),
                       Text(
-                        'Choose your exact pickup time up to\n90 days in advance',
+                        'Choose your exact pickup\n time up to  90 days in advance',
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.black54,
@@ -195,19 +193,18 @@ class _SelectPickopState extends State<SelectPickop> {
             Spacer(),
             GestureDetector(
               onTap: (){
-               Navigator.push(context,
-                   MaterialPageRoute(builder: (context) => PickupScreen()));
-
+             //  Navigator.push(context, MaterialPageRoute(builder: (context) => SelectPickupTime()));
+                Navigator.of(context).push(_createRoute());
               },
               child: Container(
               //  margin: EdgeInsets.symmetric(horizontal: 24,vertical: 16),
                 height: 44,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
+                    borderRadius: BorderRadius.circular(10),
                     color: kDarkBlueColor
                 ),
-                child:Row(
+                child:const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
@@ -229,4 +226,23 @@ class _SelectPickopState extends State<SelectPickop> {
       ),
     );
   }
+
+  Route _createRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => SelectPickupTime(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0); // Start off the screen to the right
+        const end = Offset.zero; // Slide to the center
+        const curve = Curves.easeInOut;
+
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
+  }
+
 }

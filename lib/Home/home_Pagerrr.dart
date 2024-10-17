@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../nav_Bar.dart';
-import 'Components/select_Pickup.dart';
-import 'Components/select_vehicle.dart';
+import '../Pre_Booking/screens/select_Pickup.dart';
+import '../Book_Now/screens/select_vehicle.dart';
 
 final Color kDarkBlueColor = const Color(0xFFffb917);
 class HomePagerrr extends StatefulWidget {

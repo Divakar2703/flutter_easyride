@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../payment_Screen.dart';
 
 
 final Color kDarkBlueColor = const Color(0xff1937d7);

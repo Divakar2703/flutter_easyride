@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/provider/api_provider.dart';
+import 'package:flutter_easy_ride/service/api_helper.dart';
+import 'package:provider/provider.dart';
 import '../../nav_Bar.dart';
 import '../../new/home/components/end_screen.dart';
 import '../../utils/colors.dart';
@@ -6,9 +9,6 @@ import 'components/car_show_container.dart';
 import 'components/add_banner_widget.dart';
 import 'components/banner_slider.dart';
 import 'components/location_show_widget.dart';
-
-
-
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -19,11 +19,26 @@ class HomeView extends StatefulWidget {
 
 class _NewHomeViewState extends State<HomeView> {
 
-
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<ApiProvider>(context, listen: false)
+        .getCurrentLocation()
+        .then((_) {
+      // After fetching auth, call the next method
+      Provider.of<ApiProvider>(context, listen: false).fetchAuth();
+    })
+        .catchError((error) {
+      // Handle errors if needed
+      print("Error: $error");
+    });
+}
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       key: _scaffoldKey,
       drawer: const NavBar(),
