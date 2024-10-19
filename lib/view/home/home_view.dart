@@ -4,6 +4,8 @@ import 'package:flutter_easy_ride/service/api_helper.dart';
 import 'package:provider/provider.dart';
 import '../../nav_Bar.dart';
 import '../../new/home/components/end_screen.dart';
+import '../../new/rental/select_recurring_rental_view.dart';
+import '../../payment/payment_Screen.dart';
 import '../../utils/colors.dart';
 import 'components/car_show_container.dart';
 import 'components/add_banner_widget.dart';
@@ -206,7 +208,13 @@ class _NewHomeViewState extends State<HomeView> {
                 delegate: SliverChildListDelegate(
                   [
 
-                  const LocationShowWidget(),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => PaymentScreen()));
+
+                    },
+                      child: const LocationShowWidget()),
 
                     const BannerSlider(),
                     const  Padding(

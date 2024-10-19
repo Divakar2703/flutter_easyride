@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../Book_Now/screens/pickup_screen.dart';
 import '../../../Pre_Booking/screens/select_Pickup.dart';
-import '../../../new/rental/rental_location_select_view.dart';
+import '../../../rental/rental_location_select_view.dart';
 
 class CarShowContainer extends StatefulWidget {
   const CarShowContainer({Key? key}) : super(key: key);
