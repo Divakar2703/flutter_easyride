@@ -53,7 +53,7 @@ class MapProvider with ChangeNotifier {
 
   // Toggle map size between expanded and normal
   void toggleMapSize() {
-    mapHeightPercentage = mapHeightPercentage == 0.45 ? 0.85 : 0.45;
+    mapHeightPercentage = mapHeightPercentage == 0.6 ? 0.9 : 0.6;
     notifyListeners();
   }
 
@@ -80,13 +80,13 @@ class MapProvider with ChangeNotifier {
   void loadMapData(double originLat, double originLng, double destLat, double destLng) async {
     // Simulate a delay to fetch map data
     await Future.delayed(Duration(seconds: 2));
-    _markers.add(
-      Marker(
-        markerId: MarkerId("pickup"),
-        position: LatLng(originLat, originLng), // Pickup Location
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-      ),
-    );
+    // _markers.add(
+    //   Marker(
+    //     markerId: MarkerId("pickup"),
+    //     position: LatLng(originLat, originLng), // Pickup Location
+    //     icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+    //   ),
+    // );
     _markers.add(
       Marker(
         markerId: MarkerId("dropoff"),

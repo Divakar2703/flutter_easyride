@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/Book_Now/screens/pickup_screen.dart';
 import 'package:flutter_easy_ride/provider/api_provider.dart';
 import 'package:flutter_easy_ride/service/api_helper.dart';
 import 'package:provider/provider.dart';
+import '../../common_widget/cab_card_widget.dart';
 import '../../nav_Bar.dart';
 import '../../new/home/components/end_screen.dart';
 import '../../utils/colors.dart';
@@ -20,6 +22,7 @@ class HomeView extends StatefulWidget {
 class _NewHomeViewState extends State<HomeView> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
 @override
   void initState() {
     // TODO: implement initState
@@ -42,13 +45,13 @@ class _NewHomeViewState extends State<HomeView> {
     return Scaffold(
       key: _scaffoldKey,
       drawer: const NavBar(),
-      backgroundColor: backgroundColor,
+      backgroundColor: AppColors.backgroundColor,
       body: Stack(
         children: [
           CustomScrollView(
             slivers: [
               SliverAppBar(
-                backgroundColor: primaryBlue,
+                backgroundColor: AppColors.primaryBlue,
                 expandedHeight: 280.0,
                 floating: false,
                 pinned: true,
@@ -60,8 +63,8 @@ class _NewHomeViewState extends State<HomeView> {
                         decoration: const BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              primaryBlue,
-                              gradientEnd,
+                              AppColors.primaryBlue,
+                              AppColors.gradientEnd,
                             ],
                             stops: [0.79, 0.31], // First 70% green, last 30% white
                             begin: Alignment.topCenter,
@@ -158,8 +161,8 @@ class _NewHomeViewState extends State<HomeView> {
                               ShaderMask(
                                 shaderCallback: (bounds) =>const LinearGradient(
                                   colors: [
-                                    yellowText,
-                                    lightYellowText
+                                    AppColors.yellowText,
+                                    AppColors.lightYellowText
                                   ],
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
@@ -206,8 +209,24 @@ class _NewHomeViewState extends State<HomeView> {
                 delegate: SliverChildListDelegate(
                   [
 
-                  const LocationShowWidget(),
-
+                    SizedBox(height: 10,),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text("Explore more",style: TextStyle(fontSize: 16,fontFamily: "Poppins",fontWeight: FontWeight.bold),),
+                    ),
+                  //const LocationShowWidget(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                            onTap:(){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>PickupScreen()));
+                            },
+                            child: CabCard(cabImageUrl: "assets/icon/motorbike.png",cabName: "Bike",)),
+                        CabCard(cabImageUrl: "assets/icon/auto.png",cabName: "Auto",),
+                        CabCard(cabImageUrl: "assets/icon/motorbike.png",cabName: "Auto",),
+                      ],
+                    ),
                     const BannerSlider(),
                     const  Padding(
                       padding:  EdgeInsets.symmetric(horizontal: 12,vertical: 8),
