@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/provider/api_provider.dart';
-import 'package:flutter_easy_ride/service/api_helper.dart';
 import 'package:provider/provider.dart';
 import '../../nav_Bar.dart';
-import '../../new/home/components/end_screen.dart';
 import '../../utils/colors.dart';
 import 'components/car_show_container.dart';
 import 'components/add_banner_widget.dart';
