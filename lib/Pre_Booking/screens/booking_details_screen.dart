@@ -156,13 +156,14 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text("Price", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600,fontFamily: "Poppins")),
                           SizedBox(width: 10,),
-                          Text("₹120", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold,fontFamily: "Poppins",color:  Color(0xff1937d7))),
+                          Text("₹120", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,fontFamily: "Poppins",color:  Color(0xff1937d7))),
                           SizedBox(width: 10,),
-                          Text("₹150", style: TextStyle(fontSize: 25, decoration: TextDecoration.lineThrough,fontFamily: "Poppins",fontWeight: FontWeight.bold)),
+                          Text("₹150", style: TextStyle(fontSize: 20, decoration: TextDecoration.lineThrough,fontFamily: "Poppins",fontWeight: FontWeight.bold)),
                         ],
                       ),
                       SizedBox(width: 10,),
@@ -172,17 +173,17 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                 // SizedBox(height: 5),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.social_distance,color: Colors.black,),
+                      Text("Distance", style: TextStyle(fontSize: 14, color: Colors.grey)),
                       SizedBox(width: 10,),
                       Text("10 km", style: TextStyle(fontSize: 14, color: Colors.grey)),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

@@ -13,15 +13,16 @@ void main() {
         ChangeNotifierProvider(create: (_) => CabBookProvider()),
         ChangeNotifierProvider(create: (_)=>ApiProvider()),
         ChangeNotifierProvider(create: (_)=>MapProvider())
-
       ],
-      child:  MyApp()
-      // DevicePreview(
-      //     builder: (BuildContext context) {
-      //       return MyApp();
-      //     },
-      //     )
+      child:
+      //MyApp()
+      DevicePreview(
+          builder: (BuildContext context) {
+            return MyApp();
+          },
+          )
   ));
+
 }
 
 class MyApp extends StatelessWidget {
