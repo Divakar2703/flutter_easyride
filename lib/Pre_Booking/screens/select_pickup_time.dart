@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/Pre_Booking/screens/select_prebooking_vehicle.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -189,7 +190,7 @@ class _SelectPickupTimeState extends State<SelectPickupTime> {
   }
   Route _createRoute() {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => BookingDetailsScreen(),
+      pageBuilder: (context, animation, secondaryAnimation) => SelectPrebookingVehicle(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(1.0, 0.0); // Start off the screen to the right
         const end = Offset.zero; // Slide to the center

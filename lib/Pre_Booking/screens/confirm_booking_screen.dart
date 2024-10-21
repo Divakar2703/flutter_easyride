@@ -77,7 +77,8 @@ class _BookingSuccessScreenState extends State<BookingSuccessScreen> with Single
                       child: Text(
                         'Booking Confirmed!',
                         style: TextStyle(
-                          fontSize: 32,
+                          fontSize: 18,
+                          fontFamily: "Poppins",
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -114,8 +115,9 @@ class _BookingSuccessScreenState extends State<BookingSuccessScreen> with Single
                   child: Text(
                     'Done',
                     style: TextStyle(
+                      fontFamily: "Poppins",
                       color: Colors.blueAccent,
-                      fontSize: 18,
+                      fontSize: 14,
                     ),
                   ),
                 ),
