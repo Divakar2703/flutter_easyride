@@ -4,7 +4,8 @@ import 'package:flutter_easy_ride/service/api_helper.dart';
 import 'package:provider/provider.dart';
 import '../../nav_Bar.dart';
 import '../../new/home/components/end_screen.dart';
-import '../../new/rental/select_recurring_rental_view.dart';
+import '../../rental/recurring/components/select_hour.dart';
+import '../../rental/recurring/components/select_recurring_rental_view.dart';
 import '../../payment/payment_Screen.dart';
 import '../../utils/colors.dart';
 import 'components/car_show_container.dart';
@@ -44,13 +45,13 @@ class _NewHomeViewState extends State<HomeView> {
     return Scaffold(
       key: _scaffoldKey,
       drawer: const NavBar(),
-      backgroundColor: backgroundColor,
+      backgroundColor: AppColors.backgroundColor,
       body: Stack(
         children: [
           CustomScrollView(
             slivers: [
               SliverAppBar(
-                backgroundColor: primaryBlue,
+                backgroundColor: AppColors.primaryBlue,
                 expandedHeight: 280.0,
                 floating: false,
                 pinned: true,
@@ -62,8 +63,8 @@ class _NewHomeViewState extends State<HomeView> {
                         decoration: const BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              primaryBlue,
-                              gradientEnd,
+                              AppColors.primaryBlue,
+                              AppColors.gradientEnd,
                             ],
                             stops: [0.79, 0.31], // First 70% green, last 30% white
                             begin: Alignment.topCenter,
@@ -160,8 +161,8 @@ class _NewHomeViewState extends State<HomeView> {
                               ShaderMask(
                                 shaderCallback: (bounds) =>const LinearGradient(
                                   colors: [
-                                    yellowText,
-                                    lightYellowText
+                                    AppColors.yellowText,
+                                    AppColors.lightYellowText
                                   ],
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
@@ -211,7 +212,7 @@ class _NewHomeViewState extends State<HomeView> {
                   GestureDetector(
                     onTap: (){
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => PaymentScreen()));
+                          MaterialPageRoute(builder: (context) => SelectRecurringRentalView()));
 
                     },
                       child: const LocationShowWidget()),

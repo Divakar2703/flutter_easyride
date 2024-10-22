@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easy_ride/new/rental/select_recurring_rental_view.dart';
+import 'package:flutter_advanced_segment/flutter_advanced_segment.dart';
+import 'package:flutter_easy_ride/rental/recurring/components/select_recurring_rental_view.dart';
+import 'package:flutter_easy_ride/rental/recurring/recurring_location_select_view.dart';
+import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:provider/provider.dart';
 
 import '../Book_Now/provider/cab_book_provider.dart';
@@ -16,18 +19,35 @@ class RentalLocationSelectView extends StatefulWidget {
 
 class _RentalLocationSelectViewState extends State<RentalLocationSelectView> {
 
-  TextEditingController _pickupController=TextEditingController();
+  final _selectedSegment = ValueNotifier('inventory'); // 'inventory' is selected initially
+
+  TextEditingController _pickupController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
 
     Provider.of<CabBookProvider>(context, listen: false).getCurrentLocation();
+
+    // Add listener to handle segment change
+    _selectedSegment.addListener(() {
+      if (_selectedSegment.value == 'products') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RecurringLocationSelectView(), // Replace with your RecurringLocationSelectView widget
+          ),
+        );
+      }
+    });
   }
+
   @override
   void dispose() {
     _pickupController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     final cabProvider = Provider.of<CabBookProvider>(context);
@@ -54,10 +74,35 @@ class _RentalLocationSelectViewState extends State<RentalLocationSelectView> {
         ),
       ),
       body: Container(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.symmetric(horizontal: 12,vertical: 0),
         child: Column(
           children: [
 
+        Container(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Container(
+              height: 35,
+              width: double.maxFinite,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: AdvancedSegment(
+                segments: {
+                  'inventory': 'Hourly Rentals',
+                  'products': 'Recurring Rentals',
+                },
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                controller: _selectedSegment,
+                backgroundColor: AppColors.primaryBlue,
+                sliderColor: Colors.white,
+              ),
+            ),
+            // Rest of the UI remains the same...
+          ],
+        ),
+      ),
+
+            SizedBox(height: 00,),
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
@@ -116,8 +161,6 @@ class _RentalLocationSelectViewState extends State<RentalLocationSelectView> {
                 ],
               ),
             ),
-
-
 
             SizedBox(height: 20,),
             GestureDetector(

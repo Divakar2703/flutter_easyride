@@ -83,6 +83,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ),
             ),
 
+
             Divider(
               thickness: 1.0,
             ),
@@ -91,8 +92,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               child: Row(
                 children: [
                   Image.asset(
-                    'assets/images/cash.webp', // Replace with your image asset path
-                    //color: Colors.grey.shade600,
+                    'assets/images/cash.webp',
                     width: 30,
                     height: 30,
                   ),
@@ -103,7 +103,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       fontSize: 15,
                       color: Colors.black87,
                       fontWeight: FontWeight.w500,
-                      fontFamily: 'Poppins', // Set Poppins as the default font
+                      fontFamily: 'Poppins',
                     ),
                   ),
                   Spacer(),
