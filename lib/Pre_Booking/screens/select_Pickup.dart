@@ -172,8 +172,8 @@ class _SelectPickopState extends State<SelectPickop> {
 
 
             SizedBox(height: 25),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8),
               child: Row(
                 children: [
                   Text(

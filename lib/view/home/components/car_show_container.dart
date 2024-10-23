@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../../Book_Now/screens/book_now_screen.dart';
 import '../../../Book_Now/screens/pickup_screen.dart';
+import '../../../Pre_Booking/screens/pre_booking_screen.dart';
 import '../../../Pre_Booking/screens/select_Pickup.dart';
 import '../../../new/rental/rental_location_select_view.dart';
 
@@ -58,11 +60,11 @@ class _CarShowContainerState extends State<CarShowContainer> with TickerProvider
     Widget destination;
 
     if (label == "PreBooking") {
-      destination = SelectPickop();
+      destination = PreBookingScreen();
     } else if (label == "Rental") {
       destination = RentalLocationSelectView();
     } else {
-      destination = PickupScreen();
+      destination = BookNowScreen();
     }
 
     Navigator.of(context).push(_createRoute(destination));

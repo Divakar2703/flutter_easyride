@@ -16,7 +16,7 @@ import '../../utils/local_storage.dart';
 
 class CabBookProvider with ChangeNotifier {
   String? _pickupLocation;
-  String? _dropLocation;
+  String _dropLocation="";
 
 
   List<AutocompletePrediction> placePredictions = [];
