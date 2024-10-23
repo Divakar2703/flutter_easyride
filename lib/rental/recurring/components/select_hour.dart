@@ -12,6 +12,7 @@ class _SelectHourState extends State<SelectHour> {
   int selectedIndex = 0; // Default selected index
   bool isExpanded = true; // Boolean flag to control visibility
 
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -23,7 +24,7 @@ class _SelectHourState extends State<SelectHour> {
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: Colors.grey.shade300, // Change this to your desired border color
-                  width: 1.0, // Change the width as needed
+                  width: 1.0,
                 ),
               ),
               child: CircleAvatar(
@@ -170,6 +171,7 @@ class _SelectHourState extends State<SelectHour> {
       ],
     );
   }
+
 
   Widget _buildCategoryCard(int index, String image, String title, String type, String seats, String price, String oldPrice) {
     bool isSelected = selectedIndex == index;

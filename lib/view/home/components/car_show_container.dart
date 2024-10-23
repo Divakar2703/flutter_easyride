@@ -3,7 +3,7 @@ import '../../../Book_Now/screens/book_now_screen.dart';
 import '../../../Book_Now/screens/pickup_screen.dart';
 import '../../../Pre_Booking/screens/pre_booking_screen.dart';
 import '../../../Pre_Booking/screens/select_Pickup.dart';
-import '../../../new/rental/rental_location_select_view.dart';
+import '../../../rental/rental_location_select_view.dart';
 
 class CarShowContainer extends StatefulWidget {
   const CarShowContainer({Key? key}) : super(key: key);
@@ -18,7 +18,6 @@ class _CarShowContainerState extends State<CarShowContainer> with TickerProvider
     {"icon": 'assets/images/car_logo_one.png', "item": "PreBooking"},
     {"icon": 'assets/images/car_logo_two.png', "item": "Rental"},
   ];
-
 
   late List<AnimationController> _controllers;
   late List<Animation<Offset>> _animations;
