@@ -74,7 +74,7 @@ class _BookingSuccessScreenState extends State<BookingSuccessScreen> with Single
                   builder: (context, double scale, child) {
                     return Transform.scale(
                       scale: scale, // Apply scaling
-                      child: Text(
+                      child: Text( 
                         'Booking Confirmed!',
                         style: TextStyle(
                           fontSize: 18,
