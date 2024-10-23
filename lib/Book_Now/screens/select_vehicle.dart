@@ -19,35 +19,39 @@ class SelectVehicle extends StatefulWidget {
 }
 
 class _SelectVehicleState extends State<SelectVehicle> {
-
   late GoogleMapController mapController;
-  final LatLng _pickupLocation = LatLng(ALatitude, ALongitude); // Pickup location coordinates
-  int selectedRow=-1;
+  final LatLng _pickupLocation =
+      LatLng(ALatitude, ALongitude); // Pickup location coordinates
+  int selectedRow = -1;
 
-  Set<int> selectedRows = Set<int>(); // Use a Set to keep track of selected indices
+  Set<int> selectedRows =
+      Set<int>(); // Use a Set to keep track of selected indices
 
   @override
   void initState() {
     super.initState();
     Provider.of<CabBookProvider>(context, listen: false).getVehicleData();
     final mapProvider = Provider.of<MapProvider>(context, listen: false);
-    mapProvider.loadMapData(ALatitude, ALongitude, 30.32455712895656, 78.00607616176579);
-    mapProvider.getPolyPoints(ALatitude, ALongitude, 30.32455712895656, 78.00607616176579);
-
+    mapProvider.loadMapData(
+        ALatitude, ALongitude, 30.32455712895656, 78.00607616176579);
+    mapProvider.getPolyPoints(
+        ALatitude, ALongitude, 30.32455712895656, 78.00607616176579);
   }
-
 
   @override
   Widget build(BuildContext context) {
     final mapProvider = Provider.of<MapProvider>(context);
 
     return Scaffold(
-      body:
-      Stack(
+      body: Stack(
         children: [
-          MapWidget(initialPosition: _pickupLocation, markers: mapProvider.markers, polylineCoordinates: mapProvider.polylineCoordinates,),
+          MapWidget(
+            initialPosition: _pickupLocation,
+            markers: mapProvider.markers,
+            polylineCoordinates: mapProvider.polylineCoordinates,
+          ),
           // Draggable bottom sheet or fixed container for booking card
-          
+
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -62,8 +66,9 @@ class _SelectVehicleState extends State<SelectVehicle> {
                 child: Column(
                   children: [
                     Container(
-                      height: MediaQuery.of(context).size.height*0.4,
-                      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                      height: MediaQuery.of(context).size.height * 0.4,
+                      padding:
+                          EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.only(
                           topRight: Radius.circular(16),
@@ -71,37 +76,44 @@ class _SelectVehicleState extends State<SelectVehicle> {
                         ),
                         color: Colors.white,
                       ),
-                      child: Consumer<CabBookProvider>(builder: (context, cabProvider, child) {
+                      child: Consumer<CabBookProvider>(
+                          builder: (context, cabProvider, child) {
                         if (cabProvider.vehicleResponse == null) {
                           return Center(child: CircularProgressIndicator());
-                        } else if (cabProvider.vehicleResponse!.vehicle == null || cabProvider.vehicleResponse!.vehicle!.isEmpty) {
+                        } else if (cabProvider.vehicleResponse!.vehicle ==
+                                null ||
+                            cabProvider.vehicleResponse!.vehicle!.isEmpty) {
                           return Center(child: Text("No vehicles available"));
                         } else {
                           return ListView.builder(
                             shrinkWrap: true,
-                            itemCount: cabProvider.vehicleResponse?.vehicle.length,
+                            itemCount:
+                                cabProvider.vehicleResponse?.vehicle.length,
                             itemBuilder: (BuildContext context, int index) {
-                              var vehicle = cabProvider.vehicleResponse?.vehicle[index];
-                
+                              var vehicle =
+                                  cabProvider.vehicleResponse?.vehicle[index];
+
                               return VehicleListItem(
                                 title: vehicle!.name,
                                 subtitle: vehicle.description,
                                 price: vehicle.fare.toString(),
                                 time: "2 min",
                                 assetPath: vehicle.image,
-                                isSelected: selectedRows.contains(index), // Check if the current index is in the selected rows
+                                isSelected: selectedRows.contains(
+                                    index), // Check if the current index is in the selected rows
                                 onTap: () {
                                   setState(() {
                                     // Toggle the selection state
                                     if (selectedRows.contains(index)) {
-                                      selectedRows.remove(index); // Deselect if already selected
+                                      selectedRows.remove(
+                                          index); // Deselect if already selected
                                     } else {
-                                      selectedRows.add(index); // Select if not selected
+                                      selectedRows
+                                          .add(index); // Select if not selected
                                     }
                                   });
                                 },
                               );
-                
                             },
                           );
                         }
@@ -141,9 +153,5 @@ class _SelectVehicleState extends State<SelectVehicle> {
         ],
       ),
     );
-
-
   }
-
 }
-

@@ -83,7 +83,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     ),
                   ],
                 ),
-
                 SizedBox(height: 30,),
                 Material(
                   elevation: 4,
@@ -98,7 +97,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
                     ),
 
-                    child: Column(
+               child: Column(
                       children: [
                         Row(
                           children: [

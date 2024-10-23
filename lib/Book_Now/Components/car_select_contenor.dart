@@ -10,7 +10,7 @@ class CarSelectContainer extends StatefulWidget {
 }
 
 class _CarSelectContainerState extends State<CarSelectContainer> {
-  int selectedRow = -1; // Initially no row is selected
+  int selectedRow = -1;
 
   @override
   Widget build(BuildContext context) {

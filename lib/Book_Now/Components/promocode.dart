@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 
 import 'confirm_vehicle.dart';
@@ -10,8 +10,7 @@ void openPromocodeBottomSheet(BuildContext context) {
 
   showModalBottomSheet(
     context: context,
-    isScrollControlled: true, // Set this to true
-
+    isScrollControlled: true,
     builder: (BuildContext context) {
       return Container(
         height: 230,
