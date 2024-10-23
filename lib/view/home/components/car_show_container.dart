@@ -19,7 +19,6 @@ class _CarShowContainerState extends State<CarShowContainer> with TickerProvider
     {"icon": 'assets/images/car_logo_two.png', "item": "Rental"},
   ];
 
-
   late List<AnimationController> _controllers;
   late List<Animation<Offset>> _animations;
 
