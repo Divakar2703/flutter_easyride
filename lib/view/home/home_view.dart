@@ -212,7 +212,7 @@ class _NewHomeViewState extends State<HomeView> {
                       padding: const EdgeInsets.all(8.0),
                       child: Text("Explore more",style: TextStyle(fontSize: 16,fontFamily: "Poppins",fontWeight: FontWeight.bold),),
                     ),
-                  //const LocationShowWidget(),
+                  const LocationShowWidget(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [

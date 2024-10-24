@@ -16,9 +16,10 @@ class DriveFindingScreen extends StatefulWidget {
 }
 
 class _DriveFindingScreenState extends State<DriveFindingScreen> {
+
+  
   late GoogleMapController mapController;
   final LatLng _pickupLocation = LatLng(ALatitude, ALongitude); 
-
   @override
   void initState() {
     super.initState();
@@ -84,14 +85,21 @@ class _DriveFindingScreenState extends State<DriveFindingScreen> {
                   ],
                 ),
               ),
-              // Padding(
-              //   padding: EdgeInsets.only(left: 10, right: 10),
-              //   child: ProgressBar(), 
-              // ),
-              SizedBox(height: 10),
+              Padding(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: ProgressBar(), 
+              ),
+              SizedBox(height: 20),
               Divider(height: 2, thickness: 8),
             ],
           ),
+
+
+
+
+
+
+          
         ],
       ),
     );

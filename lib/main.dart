@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/provider/api_provider.dart';
 import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
 import 'package:flutter_easy_ride/provider/map_provider.dart';
+
 import 'package:provider/provider.dart';
 import 'Book_Now/provider/drive_looking_provider.dart';
+import 'provider/theme_provider.dart';
 import 'provider/triphistoryprovider.dart';
 import 'provider/histrydetails_Provider.dart';
+
 import 'view/home/home_view.dart';
 
 void main() {
@@ -18,6 +21,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => ProgressBarState()),
         ChangeNotifierProvider(create: (_) => TripHistoryProvider()),
         ChangeNotifierProvider(create: (_) => TriphistrydetailsProvider()),
+        ChangeNotifierProvider(create: (_)=> ThemeProvider())
       ],
       child: DevicePreview(
         builder: (BuildContext context) {
@@ -39,6 +43,8 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const HomeView(),
+     
+    
     );
   }
 }

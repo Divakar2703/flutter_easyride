@@ -5,7 +5,7 @@ import 'confirm_vehicle.dart';
 
 final Color kDarkBlueColor = const Color(0xff1937d7);
 
-void openPromocodeBottomSheet(BuildContext context) {
+void openPromocodeBottomSheet(BuildContext context,) {
   // Sample list of notifications
 
   showModalBottomSheet(

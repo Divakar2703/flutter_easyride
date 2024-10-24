@@ -28,7 +28,7 @@ void openConfirmVehicleBottomSheet(BuildContext context) {
                         CircleAvatar(
                           radius: 25,
                           backgroundImage:
-                              AssetImage('assets/images/user.jpeg'),
+                              AssetImage('assets/images/user.png'),
                         ),
                         SizedBox(
                           width: 10,

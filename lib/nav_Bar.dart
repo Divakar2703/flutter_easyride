@@ -26,14 +26,21 @@ class NavBar extends StatelessWidget {
             ),
             accountEmail: Text('+91-5484389989'),
             currentAccountPicture: CircleAvatar(
+            
+              
               child: ClipOval(
-                child: Image.asset('assets/images/user.jpeg'),
+                
+                child: Image.asset('assets/images/user.png', width: 55, height: 55,),
+                
+                
               ),
             ),
             decoration: BoxDecoration(
                 color: kDarkBlueColor,
-                image: DecorationImage(
-                    image: AssetImage('gggg'), fit: BoxFit.cover)),
+                // image: DecorationImage(
+                //     image: AssetImage('gggg'), fit: BoxFit.cover),
+                    
+                    ),
           ),
           ListTile(
             leading: Icon(
@@ -132,7 +139,7 @@ class NavBar extends StatelessWidget {
               ),
             ),
             onTap: () {
-              // Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryScreen()));
+       
 
               Navigator.push(
                   context,

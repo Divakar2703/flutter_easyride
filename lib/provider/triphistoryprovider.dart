@@ -13,16 +13,17 @@ class TripHistoryProvider with ChangeNotifier {
 
   Future<void> fetchTripHistory(String userId) async {
     _isLoading = true;
-    notifyListeners();
+    // notifyListeners();
     try {
       _allTrips = await _apiService.getTripHistory(userId);
       _filteredTrips = _allTrips;
+      print(_allTrips);
     } catch (error) {
   
       print("Error fetching trip history: $error");
     } finally {
       _isLoading = false;
-      notifyListeners();
+      // notifyListeners();
     }
   }
   void filterTrips(String filter) {
@@ -34,8 +35,10 @@ class TripHistoryProvider with ChangeNotifier {
                trip['date'].toLowerCase().contains(filter.toLowerCase());
       }).toList();
     }
-    notifyListeners();
+    // notifyListeners();
   }
 }
+
+  
 
   
