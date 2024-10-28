@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/profile_Screen.dart';
-import 'package:flutter_easy_ride/triphistory_screen.dart';
+import 'Book_Now/screens/trip_details_screen.dart';
+import 'book_easyride/new_screen/trip_histry_details_screen.dart';
 import 'notification_Screen.dart';
-import 'triphistrydetails_screen.dart';
 
 final Color kDarkBlueColor = const Color(0xff1937d7);
 
@@ -21,26 +21,24 @@ class NavBar extends StatelessWidget {
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w400,
-                fontFamily: 'Poppins', 
+                fontFamily: 'Poppins',
               ),
             ),
             accountEmail: Text('+91-5484389989'),
             currentAccountPicture: CircleAvatar(
-            
-              
               child: ClipOval(
-                
-                child: Image.asset('assets/images/user.png', width: 55, height: 55,),
-                
-                
+                child: Image.asset(
+                  'assets/images/user.png',
+                  width: 55,
+                  height: 55,
+                ),
               ),
             ),
             decoration: BoxDecoration(
-                color: kDarkBlueColor,
-                // image: DecorationImage(
-                //     image: AssetImage('gggg'), fit: BoxFit.cover),
-                    
-                    ),
+              color: kDarkBlueColor,
+              // image: DecorationImage(
+              //     image: AssetImage('gggg'), fit: BoxFit.cover),
+            ),
           ),
           ListTile(
             leading: Icon(
@@ -51,7 +49,7 @@ class NavBar extends StatelessWidget {
               'Profile',
               style: TextStyle(
                 fontWeight: FontWeight.w500,
-                fontFamily: 'Poppins', 
+                fontFamily: 'Poppins',
               ),
             ),
             onTap: () {
@@ -139,12 +137,8 @@ class NavBar extends StatelessWidget {
               ),
             ),
             onTap: () {
-       
-
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => TripHistoryScreen()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => TripHistoryScreen()));
             },
           ),
           ListTile(

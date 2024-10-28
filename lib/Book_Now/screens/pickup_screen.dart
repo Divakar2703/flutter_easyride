@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/Book_Now/screens/select_vehicle.dart';
 import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
+import 'package:flutter_easy_ride/book_easyride/ride_option.dart';
 import 'package:provider/provider.dart';
 
 import '../../common_widget/pickup_drop_widget.dart';
@@ -22,6 +23,7 @@ class _PickupScreenState extends State<PickupScreen> {
 
     Provider.of<CabBookProvider>(context, listen: false).getCurrentLocation();
   }
+
   @override
   void dispose() {
     pickupController.dispose();
@@ -31,31 +33,73 @@ class _PickupScreenState extends State<PickupScreen> {
   @override
   Widget build(BuildContext context) {
     final cabProvider = Provider.of<CabBookProvider>(context);
-    if (cabProvider.pickupLocation != null||cabProvider.dropLocation!=null) {
+    if (cabProvider.pickupLocation != null ||
+        cabProvider.dropLocation != null) {
       pickupController.text = cabProvider.pickupLocation!;
-      dropController.text=cabProvider.dropLocation??"";
+      dropController.text = cabProvider.dropLocation ?? "";
     }
     return Scaffold(
       backgroundColor: const Color(0xfff3fdf6),
       appBar: AppBar(
         backgroundColor: Color(0xff1937d7),
-        title: Text(
-          'Pickup',
-          style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontFamily: 'Poppins', // Set Poppins as the default font
-              fontSize: 17,
-              color: Colors.white
-          ),
+        title: Row(
+          children: [
+            Text(
+              'Pickup',
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'Poppins', // Set Poppins as the default font
+                  fontSize: 17,
+                  color: Colors.white),
+            ),
+            SizedBox(
+              width: 120,
+            ),
+            InkWell(
+              onTap: () {
+                showModalBottomSheet
+              
+                (
+                    context: context,
+                    builder: (context) {
+                      return RideOptions();
+                    });
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white),
+                    borderRadius: BorderRadius.circular(20)),
+                child: Row(children: [
+                  Row(
+                    children: [
+                      Text(
+                        'My Self',
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500),
+                      ),
+                     Icon( Icons.arrow_drop_down_outlined, color: Colors.white,)
+                    ],
+                  )
+                ]),
+              ),
+            )
+          ],
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back,color: Colors.white,size: 21,),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+            size: 21,
+          ),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
       ),
-      body:Column(
+      body: Column(
         children: [
           // Container(
           //  // margin: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -225,15 +269,15 @@ class _PickupScreenState extends State<PickupScreen> {
           // ),
           PickupDropWidget(
             pickupController: pickupController,
-            dropController: dropController, onChange: (value) {
-            cabProvider.placeAutoComplete(value,"Drop");
-          },
+            dropController: dropController,
+            onChange: (value) {
+              cabProvider.placeAutoComplete(value, "Drop");
+            },
           ),
           GestureDetector(
             onTap: () {
-
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MapPage()));
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => MapPage()));
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -242,27 +286,28 @@ class _PickupScreenState extends State<PickupScreen> {
                   width: 160,
                   height: 35,
                   padding: EdgeInsets.symmetric(horizontal: 12),
-                  margin: EdgeInsets.symmetric(horizontal: 16,vertical: 8),
+                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
-                    color: Color(0xff1937d7).withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: Colors.grey.shade300
-                    )
-                  ),
+                      color: Color(0xff1937d7).withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.grey.shade300)),
                   child: const Row(
                     children: [
                       Icon(
                         Icons.location_on_outlined,
-                        size: 20,color: Color(0xff1937d7),),
-
-                      SizedBox(width: 6,),
+                        size: 20,
+                        color: Color(0xff1937d7),
+                      ),
+                      SizedBox(
+                        width: 6,
+                      ),
                       Text(
                         "Select on map",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Color(0xff1937d7),
-                          fontFamily: 'Poppins', // Set Poppins as the default font
+                          fontFamily:
+                              'Poppins', // Set Poppins as the default font
 
                           fontSize: 14.0,
                           fontWeight: FontWeight.w400,
@@ -280,81 +325,101 @@ class _PickupScreenState extends State<PickupScreen> {
             color: Colors.grey.shade300,
           ),
 
-          if(cabProvider.placePredictions.isNotEmpty)
-            Container(
-              height: 100,
-                child: ListView.builder(
-                  itemCount: cabProvider.placePredictions.length,
-                  itemBuilder: (context, index) =>
-                      InkWell(
-                        onTap: (){
-                          cabProvider.getDropLocation(cabProvider.placePredictions[index].description??"");
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(Icons.watch_later_outlined,
-                                    color: Colors.grey.shade800,size: 20,),
-                                  SizedBox(width: 10,),
-                                  Text(
-                                    cabProvider.placePredictions[index].description??"dehradun",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey.shade800,
-                                      fontFamily: 'Poppins', // Set Poppins as the default font
-
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  )
-                                ],
-                              ),
-                              Divider(color: Colors.grey.shade200,)
-                            ],
-                          ),
-                        ),
-                      ),
-                )),
-          if(cabProvider.pickPlacePredictions.isNotEmpty)
+          if (cabProvider.placePredictions.isNotEmpty)
             Container(
                 height: 100,
                 child: ListView.builder(
-                  itemCount: cabProvider.pickPlacePredictions.length,
-                  itemBuilder: (context, index) =>
-                      InkWell(
-                        onTap: (){
-                          cabProvider.getDropLocation(cabProvider.pickPlacePredictions[index].description??"");
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
+                  itemCount: cabProvider.placePredictions.length,
+                  itemBuilder: (context, index) => InkWell(
+                    onTap: () {
+                      cabProvider.getDropLocation(
+                          cabProvider.placePredictions[index].description ??
+                              "");
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        children: [
+                          Row(
                             children: [
-                              Icon(Icons.location_on_outlined,
-                                color: Colors.grey.shade800,size: 20,),
-                              SizedBox(width: 5,),
+                              Icon(
+                                Icons.watch_later_outlined,
+                                color: Colors.grey.shade800,
+                                size: 20,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
                               Text(
-                                cabProvider.pickPlacePredictions[index].description??"dehradun",
+                                cabProvider
+                                        .placePredictions[index].description ??
+                                    "dehradun",
                                 style: TextStyle(
-                                  fontSize: 13,
+                                  fontSize: 14,
                                   color: Colors.grey.shade800,
-                                  fontFamily: 'Poppins', // Set Poppins as the default font
+                                  fontFamily:
+                                      'Poppins', // Set Poppins as the default font
 
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w400,
                                 ),
                               )
                             ],
                           ),
-                        ),
+                          Divider(
+                            color: Colors.grey.shade200,
+                          )
+                        ],
                       ),
+                    ),
+                  ),
                 )),
+          if (cabProvider.pickPlacePredictions.isNotEmpty)
+            Container(
+                height: 100,
+                child: ListView.builder(
+                  itemCount: cabProvider.pickPlacePredictions.length,
+                  itemBuilder: (context, index) => InkWell(
+                    onTap: () {
+                      cabProvider.getDropLocation(
+                          cabProvider.pickPlacePredictions[index].description ??
+                              "");
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.location_on_outlined,
+                            color: Colors.grey.shade800,
+                            size: 20,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            cabProvider
+                                    .pickPlacePredictions[index].description ??
+                                "dehradun",
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey.shade800,
+                              fontFamily:
+                                  'Poppins', // Set Poppins as the default font
 
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                )),
 
           Spacer(),
           GestureDetector(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SelectVehicle()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SelectVehicle()));
             },
             child: Container(
               //  margin: EdgeInsets.symmetric(horizontal: 24,vertical: 16),
@@ -364,7 +429,7 @@ class _PickupScreenState extends State<PickupScreen> {
                 borderRadius: BorderRadius.circular(5),
                 color: Color(0xff1937d7),
               ),
-              child:const Row(
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
@@ -386,7 +451,3 @@ class _PickupScreenState extends State<PickupScreen> {
     );
   }
 }
-
-
-
-
