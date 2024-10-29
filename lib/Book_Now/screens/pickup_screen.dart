@@ -26,6 +26,7 @@ class _PickupScreenState extends State<PickupScreen> {
     pickupController.dispose();
     super.dispose();
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +65,6 @@ class _PickupScreenState extends State<PickupScreen> {
           ),
           GestureDetector(
             onTap: () {
-
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => MapPage()));
             },

@@ -207,24 +207,8 @@ class _NewHomeViewState extends State<HomeView> {
                 delegate: SliverChildListDelegate(
                   [
 
-                    SizedBox(height: 10,),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text("Explore more",style: TextStyle(fontSize: 16,fontFamily: "Poppins",fontWeight: FontWeight.bold),),
-                    ),
-                  //const LocationShowWidget(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        InkWell(
-                            onTap:(){
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>PickupScreen()));
-                            },
-                            child: CabCard(cabImageUrl: "assets/icon/motorbike.png",cabName: "Bike",)),
-                        CabCard(cabImageUrl: "assets/icon/auto.png",cabName: "Auto",),
-                        CabCard(cabImageUrl: "assets/icon/motorbike.png",cabName: "Auto",),
-                      ],
-                    ),
+                  const LocationShowWidget(),
+
                     const BannerSlider(),
                     const  Padding(
                       padding:  EdgeInsets.symmetric(horizontal: 12,vertical: 8),

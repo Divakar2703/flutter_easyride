@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 
+import '../screens/drive_finding_screen.dart';
 import 'confirm_vehicle.dart';
 
 final Color kDarkBlueColor = const Color(0xff1937d7);
@@ -94,7 +95,8 @@ void openPromocodeBottomSheet(BuildContext context) {
                   SizedBox(height: 20,),
                   GestureDetector(
                     onTap: () {
-                      openConfirmVehicleBottomSheet(context);
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>DriveFindingScreen()));
+                     // openConfirmVehicleBottomSheet(context);
                     },
                     child: Container(
                       height: 44,

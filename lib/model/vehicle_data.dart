@@ -39,6 +39,7 @@ class Vehicle {
   final String name;
   final String image;
   final String description;
+  final String type;
   final double fare;
 
   Vehicle({
@@ -46,6 +47,7 @@ class Vehicle {
     required this.name,
     required this.image,
     required this.description,
+    required this.type,
     required this.fare,
   });
 
@@ -56,6 +58,7 @@ class Vehicle {
       name: json['name'] as String,
       image: json['image'] as String,
       description: json['description'] as String,
+      type: json["type"]??"",
       fare: (json['fare'] as num).toDouble(),
     );
   }
@@ -67,6 +70,7 @@ class Vehicle {
       'name': name,
       'image': image,
       'description': description,
+      'type':type,
       'fare': fare,
     };
   }

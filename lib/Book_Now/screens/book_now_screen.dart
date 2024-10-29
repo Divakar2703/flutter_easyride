@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
 import 'package:flutter_easy_ride/Book_Now/screens/pickup_screen.dart';
+import 'package:flutter_easy_ride/Book_Now/screens/select_vehicle.dart';
 import 'package:flutter_easy_ride/provider/api_provider.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -28,7 +30,14 @@ class _BookNowScreenState extends State<BookNowScreen> {
     super.initState();
     print("Alatitiue==${ALatitude}");
     _getCurrentLocation();
-    Provider.of<ApiProvider>(context,listen: false).getCurrentLocation();
+    Provider.of<ApiProvider>(context,listen: false).getCurrentLocation() .then((_) {
+      // After fetching auth, call the next method
+      Provider.of<CabBookProvider>(context, listen: false).getDropHistoryList();
+    })
+        .catchError((error) {
+      // Handle errors if needed
+      print("Error: $error");
+    });
   }
 
   void _getCurrentLocation() async {
@@ -58,11 +67,8 @@ class _BookNowScreenState extends State<BookNowScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-
-    var provider=Provider.of<ApiProvider>(context);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -144,9 +150,17 @@ class _BookNowScreenState extends State<BookNowScreen> {
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: [
-                      rideOption('Bike', 'assets/icon/motorbike.png'),
-                      rideOption('Auto', 'assets/icon/auto.png'),
-                      rideOption('Car', 'assets/icon/auto.png'),
+                      InkWell(
+                          onTap: () {
+
+                          },
+                          child: rideOption('Bike', 'assets/icon/motorbike.png')),
+                          InkWell(
+                              onTap: (){
+
+                              },
+                              child: rideOption('Auto', 'assets/icon/auto.png')),
+                          rideOption('Car', 'assets/icon/auto.png'),
                     ],
                   ),
                 ),
@@ -195,16 +209,37 @@ class _BookNowScreenState extends State<BookNowScreen> {
                   ),
                 ),
 
-                SizedBox(height: 20),
+               // SizedBox(height: 20),
 
                 // History of search locations
-                Column(
-                  children: [
-                    locationHistoryItem('Home, 5678 Broadway St.'),
-                    locationHistoryItem('Work, 123 Elm St.'),
-                    locationHistoryItem('Park, 987 Willow St.'),
-                  ],
-                ),
+
+                Container(
+                  height: MediaQuery.of(context).size.height*0.2,
+                  child: Consumer<CabBookProvider>(
+                    builder: (BuildContext context, CabBookProvider provider, Widget? child) {
+                    return  ListView.builder(
+                      shrinkWrap: true,
+                        padding: EdgeInsets.zero,
+                        itemCount: provider.dropHistoryData?.list.length,
+                          itemBuilder: (context,index){
+
+                            return  InkWell(
+                                onTap: (){
+
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>SelectVehicle()));
+                                },
+                                child: locationHistoryItem(provider.dropHistoryData!.list[index].dropAddress));
+                          });
+                    },
+                  ),
+                )
+                // Column(
+                //   children: [
+                //     locationHistoryItem('Home, 5678 Broadway St.'),
+                //     locationHistoryItem('Work, 123 Elm St.'),
+                //     locationHistoryItem('Park, 987 Willow St.'),
+                //   ],
+                // ),
               ],
             ),
           ),
@@ -220,11 +255,13 @@ class _BookNowScreenState extends State<BookNowScreen> {
     try {
       List<Placemark> placemarks = await placemarkFromCoordinates(
           tappedPoint.latitude, tappedPoint.longitude);
+      ALatitude=tappedPoint.latitude;
+      ALongitude=tappedPoint.longitude;
 
-        pickupAddress =
+        address =
         '${placemarks[0].thoroughfare}, ${placemarks[0].subLocality}, ${placemarks[0].locality}, ${placemarks[0].administrativeArea}, ${placemarks[0].postalCode}';
-        print("add===${pickupAddress}");
-        pickupController.text=pickupAddress;
+        print("add===${address}");
+        pickupController.text=address;
         setState(() {
 
         });
@@ -269,7 +306,9 @@ class _BookNowScreenState extends State<BookNowScreen> {
             children: [
               Icon(Icons.watch_later_outlined),
               SizedBox(width: 10),
-              Text(address),
+              SizedBox(
+                  width: MediaQuery.of(context).size.width*0.7,
+                  child: Text(address)),
             ],
           ),
           Icon(Icons.arrow_forward_ios, size: 18),
@@ -277,6 +316,7 @@ class _BookNowScreenState extends State<BookNowScreen> {
       ),
     );
   }
+
 }
 
 // Custom page route with door opening animation

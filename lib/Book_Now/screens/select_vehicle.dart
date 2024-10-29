@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/Book_Now/common_widget/shimmer_loader.dart';
 import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -33,16 +34,16 @@ class _SelectVehicleState extends State<SelectVehicle> {
     Provider.of<CabBookProvider>(context, listen: false).getVehicleData();
     final mapProvider = Provider.of<MapProvider>(context, listen: false);
     mapProvider.loadMapData(
-        ALatitude, ALongitude, 30.32455712895656, 78.00607616176579);
+        ALatitude, ALongitude, dropLat, dropLong);
     mapProvider.getPolyPoints(
-        ALatitude, ALongitude, 30.32455712895656, 78.00607616176579);
+        ALatitude, ALongitude, dropLat, dropLong);
   }
 
   @override
   Widget build(BuildContext context) {
     final mapProvider = Provider.of<MapProvider>(context);
 
-    return Scaffold(
+    return mapProvider.isLoading?ShimmerLoader(): Scaffold(
       body: Stack(
         children: [
           MapWidget(
