@@ -5,28 +5,30 @@ import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
 import 'package:flutter_easy_ride/provider/map_provider.dart';
 import 'package:provider/provider.dart';
 import 'Book_Now/provider/drive_looking_provider.dart';
+import 'book_easyride/provider/trip_histry_provider.dart';
 import 'book_easyride/provider/trip_histrydetailsprovider.dart';
 import 'provider/theme_provider.dart';
-
-
-
 import 'view/home/home_view.dart';
 
 void main() {
-  runApp(MultiProvider(
+  runApp(
+    MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => CabBookProvider()),
         ChangeNotifierProvider(create: (_) => ApiProvider()),
         ChangeNotifierProvider(create: (_) => MapProvider()),
-        ChangeNotifierProvider(create: (_) => ProgressBarState()),         
+        ChangeNotifierProvider(create: (_) => ProgressBarState()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => TripHistoryProvider()),
+        ChangeNotifierProvider(create: (_) => TripHistrydetailsprovider()),
+        ChangeNotifierProvider(create: (_) => TripHistoryProviders()),
       ],
       child: DevicePreview(
         builder: (BuildContext context) {
           return MyApp();
         },
-      )));
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -42,7 +44,8 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const HomeView(),
-      // home: BookForRide(),
+     
+     
     );
   }
 }

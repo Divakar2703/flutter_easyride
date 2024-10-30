@@ -1,48 +1,35 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:flutter/material.dart';
-import '../model/trip_histry_details_model.dart';
-import '../service/apiservice.dart';
+import 'package:flutter_easy_ride/book_easyride/model/histrydetails.dart';
 
-class TripHistoryProvider with ChangeNotifier {
-  final ApiServices _apiService = ApiServices();
-  TripHistryDetailsModel? _tripData;
-  bool _isLoading = false;
+class TripHistrydetailsprovider with ChangeNotifier {
+  List<HistoryDetails> _historyList = [];
+  List<HistoryDetails> get historyList => _historyList;
 
-  TripHistryDetailsModel? get tripData => _tripData;
-  bool get isLoading => _isLoading;
-
-  Future<void> fetchTripHistory(String bookingId) async {
-    _isLoading = true;
-    notifyListeners();
-
-    _tripData = await _apiService.fetchTripHistoryDetails(bookingId);
-
-    _isLoading = false;
-    notifyListeners();
-
-    sortTrips();
-  }
-
-void sortTrips() {
-  if (_tripData != null && _tripData!.trip != null) {
-    _tripData!.trip!.sort((a, b) {
-      if (a.rideStatus == 'Pending' && b.rideStatus == 'Completed') {
-        return -1;
-      } else if (a.rideStatus == 'Completed' && b.rideStatus == 'Pending') {
-        return 1;
+  Future<void> fetchHistoryDetails() async {
+    final url =
+        Uri.parse("https://asatvindia.in/cab/Api/User/trip_history_details");
+    final headers = {
+      'username': 'cabadmin',
+      'password': '060789c53dd8c490b0e4695ba678f1a0',
+      'Content-Type': 'application/json',
+    };
+    try {
+      final response = await http.post(url, headers: headers);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print(response.body);
+        if (data['status'] == 'success') {
+          _historyList = (data['data'] as List)
+              .map((item) => HistoryDetails.fromJson(item))
+              .toList();
+          notifyListeners();
+        }
       }
-      return 0;
-    });
+    } catch (error) {
+      throw error;
+    }
   }
-}
-
-
-
-
-
-
-
-
-
-
-
 }

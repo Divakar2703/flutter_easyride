@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/profile_Screen.dart';
 import 'Book_Now/screens/trip_details_screen.dart';
-import 'book_easyride/new_screen/trip_histry_details_screen.dart';
+import 'book_easyride/new_screen/triphistry_details.dart';
+import 'book_easyride/new_screen/triphistry.dart';
 import 'notification_Screen.dart';
 
 final Color kDarkBlueColor = const Color(0xff1937d7);
@@ -138,7 +139,7 @@ class NavBar extends StatelessWidget {
             ),
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => TripHistoryScreen()));
+                  MaterialPageRoute(builder: (context) => TripHistoryScreens()));
             },
           ),
           ListTile(
