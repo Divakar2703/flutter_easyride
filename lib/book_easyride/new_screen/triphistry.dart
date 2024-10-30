@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../provider/trip_histry_provider.dart';
+import 'triphistry_details.dart';
 
 class TripHistoryScreens extends StatefulWidget {
   @override
@@ -29,9 +30,10 @@ class _TripHistoryScreensState extends State<TripHistoryScreens> {
           )),
       body: Consumer<TripHistoryProviders>(
         builder: (context, provider, _) {
+          
           if (provider.tripHistoryList == null ||
               provider.tripHistoryList!.isEmpty) {
-            return Center(child: Container());
+            return Center(child: Text('No trip history available.'));
           }
           return ListView.builder(
             itemCount: provider.tripHistoryList!.length,
@@ -57,6 +59,7 @@ class _TripHistoryScreensState extends State<TripHistoryScreens> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                       
                         Row(
                           children: [
                             Expanded(
@@ -67,6 +70,7 @@ class _TripHistoryScreensState extends State<TripHistoryScreens> {
                                     children: [
                                       Icon(Icons.location_on,
                                           color: Colors.green),
+
                                       SizedBox(width: 5),
                                       Expanded(
                                         child: Text(
@@ -80,11 +84,14 @@ class _TripHistoryScreensState extends State<TripHistoryScreens> {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 15),
+                                  SizedBox(height: 15), 
+                                
                                   Row(
                                     children: [
                                       Icon(Icons.location_on,
                                           color: Colors.red),
+
+
                                       SizedBox(width: 3),
                                       Expanded(
                                         child: Text(
@@ -98,6 +105,7 @@ class _TripHistoryScreensState extends State<TripHistoryScreens> {
                                       ),
                                     ],
                                   ),
+                                 
                                 ],
                               ),
                             ),
@@ -117,22 +125,18 @@ class _TripHistoryScreensState extends State<TripHistoryScreens> {
                                 Text(
                                   trip.rideStatus ?? '',
                                   style: TextStyle(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12),
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.w400, fontSize: 12
+                                  ),
                                 )
                               ]),
                         ),
-                        Text(
-                          trip.vehicle ?? '',
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 12),
-                        ),
+                         Text(trip.vehicle ?? '', style: TextStyle(fontFamily: 'Poppins',fontWeight: FontWeight.w400 , fontSize: 12),),
                       ],
                     ),
                   ),
+                  
+                           
                 ],
               );
             },

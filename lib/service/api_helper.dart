@@ -14,4 +14,5 @@ class ApiHelper{
   static String afterOnlinePaymentVerify=baseurl+'User/after_onlinepayment_verify';
   static String dropLocationHistory=baseurl+'User/drop_location_history';
   static String triphistry = baseurl+'User/trip_history';
+  static String triphistrydetails = baseurl+'User/trip_history_details';
 }

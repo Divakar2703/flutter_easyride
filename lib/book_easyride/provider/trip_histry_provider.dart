@@ -44,4 +44,7 @@ class TripHistoryProviders with ChangeNotifier {
 
     notifyListeners();
   }
+
+
 }
+  

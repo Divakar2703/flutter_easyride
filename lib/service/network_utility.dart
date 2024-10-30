@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:http/http.dart' as http;
 
 class NetworkUtility {
@@ -21,4 +22,5 @@ class NetworkUtility {
     // Return null for any error or failure
     return null;
   }
+
 }
