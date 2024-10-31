@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../provider/trip_histry_provider.dart';
-import 'triphistry_details.dart';
+
 
 class TripHistoryScreens extends StatefulWidget {
   @override

@@ -61,6 +61,8 @@ dependencies:
   # cool_alert: ^1.1.0
   flutter_image_slider: ^0.0.2
   flutter_image_slideshow: ^0.1.6
+  countdown_progress_indicator: ^0.1.3
+  dropdown_button2: ^2.3.9
 
 
 dev_dependencies:
