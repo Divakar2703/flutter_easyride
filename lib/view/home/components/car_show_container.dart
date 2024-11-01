@@ -155,7 +155,26 @@ class _CarShowContainerState extends State<CarShowContainer> with TickerProvider
             },
           );
         },
-      ),
+      )
+
     );
+
   }
 }
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
 class ApiService {
   final String apiUrl = "https://asatvindia.in/cab/Api/User/trip_history";
-
   Future<List<dynamic>> getTripHistory(String userId) async {
     final response = await http.post(
       Uri.parse(apiUrl),
@@ -18,3 +16,6 @@ class ApiService {
     }
   }
 }
+
+
+
