@@ -288,6 +288,8 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
     );
   }
 
+
+
   TextStyle textStyle() {
     return TextStyle(
         fontFamily: 'Poppins', fontWeight: FontWeight.w500, fontSize: 13);

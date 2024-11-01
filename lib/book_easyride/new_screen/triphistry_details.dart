@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../provider/trip_histrydetailsprovider.dart';
 
 class HistryDetails extends StatefulWidget {
   const HistryDetails({super.key});
@@ -8,6 +11,14 @@ class HistryDetails extends StatefulWidget {
 }
 
 class _HistryDetailsState extends State<HistryDetails> {
+  @override
+  void initState() {
+    Provider.of<TripHistrydetailsproviders>(context, listen: false)
+        .featchData('booking_id');
+
+    super.initState();
+  }
+
   double distance = 34.0;
 
   @override
@@ -297,7 +308,9 @@ class _HistryDetailsState extends State<HistryDetails> {
                 ),
               ],
             ),
-            SizedBox(height: 15),
+            Row(children: [
+              Column(children: [Container(child: Icon(Icons.more_vert))])
+            ]),
             Row(
               children: [
                 Icon(Icons.location_on, color: Colors.red),
