@@ -91,7 +91,7 @@ class MapProvider with ChangeNotifier {
       Marker(
         markerId: MarkerId("dropoff"),
         position: LatLng(dropLat, dropLong), // Drop Location
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
       ),
     );
     isLoading = false;

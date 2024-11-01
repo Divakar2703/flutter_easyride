@@ -13,5 +13,10 @@ class ApiHelper{
   static String afterPayNowWallet=baseurl+'User/afterpaynow_wallet';
   static String afterOnlinePaymentVerify=baseurl+'User/after_onlinepayment_verify';
   static String dropLocationHistory=baseurl+'User/drop_location_history';
+  static String deleteDropLocation=baseurl+'User/delete_droploc_history';
+  static String getOffers=baseurl+'User/get_offers';
+  static String applyCoupon=baseurl+'User/apply_coupon';
+  static String imageUrl="https://asatvindia.in/cab/";
+
 }
 

@@ -6,6 +6,7 @@ import 'package:flutter_easy_ride/model/drop_location_history.dart';
 import 'package:flutter_easy_ride/model/vehicle_data.dart';
 import 'package:http/http.dart'as http;
 import '../../model/autocomplate_prediction.dart';
+import '../../model/coupon_data.dart';
 import '../../model/place_auto_complate_response.dart';
 import '../../service/api_helper.dart';
 import '../../service/network_utility.dart';
@@ -17,11 +18,11 @@ class CabBookProvider with ChangeNotifier {
   String? _pickupLocation;
   String _dropLocation="";
   bool isLoading = true;
-
-
-
   List<AutocompletePrediction> placePredictions = [];
   List<AutocompletePrediction> pickPlacePredictions = [];
+  final List<Vehicle> vehicle=[];
+  CouponData? couponData;
+
   VehicleResponse? vehicleResponse;
   DriverDetails? driverInfo;
   HistoryResponse? historyResponse;
@@ -39,8 +40,10 @@ final String apiKey='AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y';
     notifyListeners();
   }
 
-  void setDropLocation(String location) {
+  void setDropLocation(String location,double lat,double long) {
     _dropLocation = location;
+    dropLat=lat;
+    dropLong=long;
     notifyListeners();
   }
 
@@ -49,6 +52,12 @@ final String apiKey='AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y';
     notifyListeners();
   }
 
+  void setCabType(String type){
+
+    cabType=type;
+    notifyListeners();
+
+  }
 
   void placeAutoComplete(String query,String location) async {
     Uri uri =
@@ -76,7 +85,6 @@ final String apiKey='AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y';
       }
     }
   }
-
   void getDropLocation(String location){
     _dropLocation=location;
     notifyListeners();
@@ -85,36 +93,79 @@ final String apiKey='AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y';
     _pickupLocation=location;
     notifyListeners();
   }
+  // Future<void> getVehicleData() async {
+  //
+  //   Map<String, dynamic> requestBody = {
+  //     "pickup_lat": ALatitude,
+  //     "pickup_long": ALongitude,
+  //     "drop_lat": dropLat,
+  //     "drop_long": dropLong
+  //   };
+  //
+  //   try {
+  //     final response = await NetworkUtility.sendPostRequest(
+  //       ApiHelper.getVehicle,
+  //        requestBody,
+  //     );
+  //     print('Response body: ${response.body}');
+  //     Map<String,dynamic> jsondataa=jsonDecode(response.body);
+  //
+  //     if (response.statusCode == 200) {
+  //       VehicleResponse response=VehicleResponse.fromJson(jsondataa);
+  //       vehicleResponse=response;
+  //       notifyListeners();
+  //     } else {
+  //       print('Error: ${response.statusCode}, ${response.body}');
+  //     }
+  //   } catch (e) {
+  //     print('Error sending POST request: $e');
+  //     // Handle any exception
+  //   }
 
   Future<void> getVehicleData() async {
-
     Map<String, dynamic> requestBody = {
-      "pickup_lat": 24.856874349764823,
-      "pickup_long": 74.61273737259009,
-      "drop_lat": 24.858874743013917,
-      "drop_long": 74.61150946823327
+      "pickup_lat": ALatitude,
+      "pickup_long": ALongitude,
+      "drop_lat": dropLat,
+      "drop_long": dropLong
     };
 
     try {
       final response = await NetworkUtility.sendPostRequest(
         ApiHelper.getVehicle,
-         requestBody,
+        requestBody,
       );
       print('Response body: ${response.body}');
-      Map<String,dynamic> jsondataa=jsonDecode(response.body);
+      Map<String, dynamic> jsondataa = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
-        VehicleResponse response=VehicleResponse.fromJson(jsondataa);
-        vehicleResponse=response;
+        VehicleResponse vehicleResponse = VehicleResponse.fromJson(jsondataa);
+
+        // Check if type is empty and filter accordingly
+        List<Vehicle> filteredVehicles = vehicleResponse.vehicle.where((vehicle) {
+          // If cabType is empty, include all vehicles; otherwise, filter by type
+          return cabType.isEmpty || vehicle.type == cabType;
+        }).toList();
+
+        // Update the response with filtered data
+        vehicleResponse = VehicleResponse(
+          vehicle: filteredVehicles,
+          status: vehicleResponse.status,
+          message: vehicleResponse.message,
+          statusCode: vehicleResponse.statusCode,
+        );
+
+        // Notify listeners with filtered data
+        this.vehicleResponse = vehicleResponse;
         notifyListeners();
       } else {
         print('Error: ${response.statusCode}, ${response.body}');
       }
     } catch (e) {
       print('Error sending POST request: $e');
-      // Handle any exception
     }
   }
+
   Future<void> sendRequestToDriver(double pickLat,double pickLong,double dropLat,double dropLong,int vehicleID,String pickupAddress,String dropAddress) async {
     // Request body
     Map<String, dynamic> requestBody = {
@@ -289,6 +340,7 @@ final String apiKey='AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y';
       if (response.statusCode == 200) {
          historyResponse=HistoryResponse.fromJson(jsondataa);
         print("response===${historyResponse}");
+         isLoading=false;
         notifyListeners();
         // Handle success response
       } else {
@@ -311,10 +363,62 @@ final String apiKey='AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y';
 
       final response = await NetworkUtility.sendPostRequest(ApiHelper.dropLocationHistory,requestBody);
       print('Response body: ${response.body}');
-      Map<String,dynamic> jsondataa=jsonDecode(response.body);
 
       if (response.statusCode == 200) {
-        HistoryResponse response=HistoryResponse.fromJson(jsondataa);
+        isLoading=false;
+        notifyListeners();
+        // Handle success response
+      } else {
+        print('Error: ${response.statusCode}, ${response.body}');
+        // Handle error response
+      }
+    } catch (e) {
+      print('Error sending POST request: $e');
+      // Handle any exception
+    }
+  }
+  Future<void> deleteDropLocation(String dropID) async {
+
+    Map<String, dynamic> requestBody = {
+      "autoid": int.parse(dropID),
+    };
+    try {
+
+      final response = await NetworkUtility.sendPostRequest(ApiHelper.deleteDropLocation,requestBody);
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        isLoading=false;
+        getDropHistoryList();
+        notifyListeners();
+        // Handle success response
+      } else {
+        print('Error: ${response.statusCode}, ${response.body}');
+        // Handle error response
+      }
+    } catch (e) {
+      print('Error sending POST request: $e');
+      // Handle any exception
+    }
+  }
+  Future<void> getOffers(int vehicleID) async {
+
+    Map<String, dynamic> requestBody = {
+      "pickup_lat": ALatitude,
+      "pickup_long": ALongitude,
+      "drop_lat": dropLat,
+      "drop_long": dropLong,
+      "vehicletype_id":vehicleID    };
+    try {
+
+      final response = await NetworkUtility.sendPostRequest(ApiHelper.getOffers,requestBody);
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        isLoading=false;
+        var jsondata=jsonDecode(response.body);
+         couponData=CouponData.fromJson(jsondata);
+        getDropHistoryList();
         notifyListeners();
         // Handle success response
       } else {

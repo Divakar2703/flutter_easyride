@@ -19,6 +19,7 @@ class ApiProvider with ChangeNotifier{
 
 
   Future<void> getCurrentLocation() async {
+    print("hi");
     PermissionStatus permission = await Permission.location.request();
 
     if (permission == PermissionStatus.granted) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/Book_Now/common_widget/shimmer_loader.dart';
 import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
 import 'package:flutter_easy_ride/Book_Now/screens/pickup_screen.dart';
 import 'package:flutter_easy_ride/Book_Now/screens/select_vehicle.dart';
@@ -69,11 +70,12 @@ class _BookNowScreenState extends State<BookNowScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var cabBookProvider=Provider.of<CabBookProvider>(context);
 
     return Scaffold(
       backgroundColor: Colors.white,
        //   appBar: AppBar(title: Text('Choose Your Ride')),
-      body: Column(
+      body: cabBookProvider.isLoading?ShimmerLoader():Column(
         children: [
           // Map with search box on top
           Stack(
@@ -152,15 +154,32 @@ class _BookNowScreenState extends State<BookNowScreen> {
                     children: [
                       InkWell(
                           onTap: () {
+                            cabBookProvider.setCabType("Bike");
+                            Navigator.push(
+                              context,
+                              createDoorOpenPageRoute(PickupScreen()),
+                            );
 
                           },
                           child: rideOption('Bike', 'assets/icon/motorbike.png')),
                           InkWell(
                               onTap: (){
-
+                                cabBookProvider.setCabType("AUTO");
+                                Navigator.push(
+                                  context,
+                                  createDoorOpenPageRoute(PickupScreen()),
+                                );
                               },
                               child: rideOption('Auto', 'assets/icon/auto.png')),
-                          rideOption('Car', 'assets/icon/auto.png'),
+                          InkWell(
+                              onTap: (){
+                                cabBookProvider.setCabType("CAR");
+                                Navigator.push(
+                                  context,
+                                  createDoorOpenPageRoute(PickupScreen()),
+                                );
+                              },
+                              child: rideOption('Car', 'assets/icon/auto.png')),
                     ],
                   ),
                 ),
@@ -180,6 +199,7 @@ class _BookNowScreenState extends State<BookNowScreen> {
                 GestureDetector(
                   onTap: () {
                     // Navigate to another screen with door open animation
+                    cabBookProvider.setCabType("");
                     Navigator.push(
                       context,
                       createDoorOpenPageRoute(PickupScreen()),
@@ -222,24 +242,51 @@ class _BookNowScreenState extends State<BookNowScreen> {
                         padding: EdgeInsets.zero,
                         itemCount: provider.dropHistoryData?.list.length,
                           itemBuilder: (context,index){
+                        var data=provider.dropHistoryData?.list[index];
 
                             return  InkWell(
                                 onTap: (){
+                                  cabBookProvider.setDropLocation(data!.dropAddress,double.parse(data.dropLat),double.parse(data.dropLong),);
 
                                   Navigator.push(context, MaterialPageRoute(builder: (context)=>SelectVehicle()));
+                                },
+                                onLongPress: () async {
+                                  // Show a confirmation dialog
+                                  final deleteConfirmed = await showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text("Delete Item"),
+                                        content: Text("Are you sure you want to delete this item?"),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop(false); // Cancel deletion
+                                            },
+                                            child: Text("Cancel"),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop(true); // Confirm deletion
+                                            },
+                                            child: Text("Delete"),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+
+                                  // If confirmed, delete the item from the list
+                                  if (deleteConfirmed ?? false) {
+                                    provider.deleteDropLocation(provider.dropHistoryData!.list[index].id); // Define this method in your provider to handle deletion
+                                  }
                                 },
                                 child: locationHistoryItem(provider.dropHistoryData!.list[index].dropAddress));
                           });
                     },
                   ),
                 )
-                // Column(
-                //   children: [
-                //     locationHistoryItem('Home, 5678 Broadway St.'),
-                //     locationHistoryItem('Work, 123 Elm St.'),
-                //     locationHistoryItem('Park, 987 Willow St.'),
-                //   ],
-                // ),
+
               ],
             ),
           ),
