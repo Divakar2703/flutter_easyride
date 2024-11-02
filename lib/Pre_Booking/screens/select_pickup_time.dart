@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
 
+import '../../book_easyride/custom/message.dart';
 import '../../common_widget/map_widget.dart';
 import '../../provider/map_provider.dart';
 import '../../utils/eve.dart';
@@ -208,24 +209,29 @@ class _SelectPickupTimeState extends State<SelectPickupTime> {
                                       listen: false)
                                   .confirmpreebook();
 
+                              CustomSnackbar(
+                                message: 'Request has been send successfully',
+                                backgroundColor: Colors.blue,
+                                height: 35,
+                                
+                                widthFactor: 0.9,
+                                textStyle: TextStyle(
+                                    color: Colors.white, fontSize: 15),
+                                durationInSeconds: 600,
+                              ).showSnackbar(context);
+                              child:
+                             
+
                               // final snackBar = SnackBar(
                               //   backgroundColor: Colors.lightBlue,
                               //   shape: BeveledRectangleBorder(),
                               //   content:Center(child: Column(children: [Row(children: [Text('Request has been send successfully', style: TextStyle(fontFamily: 'Poppins', fontSize: 10, fontWeight: FontWeight.bold),)])])),
-                                
+
                               //   duration: Duration(seconds: 5),
                               // );
 
                               // ScaffoldMessenger.of(context)
                               //     .showSnackBar(snackBar);
-                             
-
-                              
-
-
-
-
-
 
                               Future.delayed(Duration(seconds: 5), () {
                                 Navigator.of(context).push(_createRoute());

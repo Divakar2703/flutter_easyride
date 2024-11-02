@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../provider/trip_histry_provider.dart';
+import '../provider/triphistry_provider.dart';
 import 'triphistry_details.dart';
-
 class TripHistoryScreens extends StatefulWidget {
   @override
   _TripHistoryScreensState createState() => _TripHistoryScreensState();
@@ -16,6 +16,9 @@ class _TripHistoryScreensState extends State<TripHistoryScreens> {
       Provider.of<TripHistoryProviders>(context, listen: false)
           .fetchTripHistory(6 ,1 ,'');
     });
+
+
+    // Provider.of<TriphistryProvider>(context ,listen: false).gethistry();
   }
 
   @override
@@ -28,7 +31,8 @@ class _TripHistoryScreensState extends State<TripHistoryScreens> {
             'Trip History',
             style: TextStyle(color: Colors.white),
           )),
-      body: Consumer<TripHistoryProviders>(
+      body: 
+      Consumer<TripHistoryProviders>(
         builder: (context, provider, _) {
           if (provider.tripHistoryList == null ||
               provider.tripHistoryList!.isEmpty) {
@@ -106,12 +110,12 @@ class _TripHistoryScreensState extends State<TripHistoryScreens> {
                         ),
                         Divider(),
                         InkWell(
-                          // onTap: () {
-                          //   Navigator.push(
-                          //       context,
-                          //       MaterialPageRoute(
-                          //           builder: (context) => TripHistoryScreen()));
-                          // },
+                          onTap: () {
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => HistryDetails()));
+                          },
                           child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -134,18 +138,19 @@ class _TripHistoryScreensState extends State<TripHistoryScreens> {
                       ],
                     ),
                   ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>HistryDetails()));
+                  // InkWell(
+                  //   onTap: () {
+                  //     Provider.of<TriphistryProvider>(context, listen: false).gethistryDetails();
+                  //     Navigator.push(context, MaterialPageRoute(builder: (context)=>HistryDetails()));
                       
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                      decoration: BoxDecoration(
-                        color: Colors.blue,
-                      ),
-                    ),
-                  )
+                  //   },
+                  //   child: Container(
+                  //     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  //     decoration: BoxDecoration(
+                  //       color: Colors.blue,
+                  //     ),
+                  //   ),
+                  // )
                 ],
               );
             },

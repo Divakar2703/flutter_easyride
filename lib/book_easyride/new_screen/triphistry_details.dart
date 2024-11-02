@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../provider/trip_histrydetailsprovider.dart';
+import '../provider/triphistry_provider.dart';
 
 class HistryDetails extends StatefulWidget {
   const HistryDetails({super.key});
@@ -13,8 +13,8 @@ class HistryDetails extends StatefulWidget {
 class _HistryDetailsState extends State<HistryDetails> {
   @override
   void initState() {
-    Provider.of<TripHistrydetailsproviders>(context, listen: false)
-        .featchData('booking_id');
+    Provider.of<TriphistryProvider>(context, listen: false)
+        .gethistryDetails;
 
     super.initState();
   }

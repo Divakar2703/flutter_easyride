@@ -6,12 +6,8 @@ import 'package:flutter_easy_ride/provider/map_provider.dart';
 import 'package:provider/provider.dart';
 import 'Book_Now/provider/drive_looking_provider.dart';
 import 'Pre_Booking/provider/preebooking_provider.dart';
-import 'book_easyride/new_screen/bankselection.dart';
-import 'book_easyride/new_screen/confirm_booking.dart';
-import 'book_easyride/new_screen/time.dart';
-import 'book_easyride/new_screen/triphistry_details.dart';
 import 'book_easyride/provider/trip_histry_provider.dart';
-import 'book_easyride/provider/trip_histrydetailsprovider.dart';
+import 'book_easyride/provider/triphistry_provider.dart';
 import 'provider/theme_provider.dart';
 import 'view/home/home_view.dart';
 
@@ -23,10 +19,10 @@ void main() {
         ChangeNotifierProvider(create: (_) => ApiProvider()),
         ChangeNotifierProvider(create: (_) => MapProvider()),
         ChangeNotifierProvider(create: (_) => ProgressBarState()),
-        ChangeNotifierProvider(create: (_) => ThemeProvider()),       
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => TripHistoryProviders()),
-        ChangeNotifierProvider(create: (_)=>TripHistrydetailsproviders()),
-        ChangeNotifierProvider(create: (_)=>PreebookingProvider()),
+        ChangeNotifierProvider(create: (_) => TriphistryProvider()),
+        ChangeNotifierProvider(create: (_) => PreebookingProvider()),
       ],
       child: DevicePreview(
         builder: (BuildContext context) {
@@ -50,10 +46,6 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const HomeView(),
-        
-       
-     
-     
     );
   }
 }
