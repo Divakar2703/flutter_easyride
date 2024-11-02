@@ -14,13 +14,16 @@ class ApiHelper{
   static String afterOnlinePaymentVerify=baseurl+'User/after_onlinepayment_verify';
   static String dropLocationHistory=baseurl+'User/drop_location_history';
   static String triphistry = baseurl+'User/trip_history';
-  static String triphistrydetails = baseurl+'User/trip_history_details/booking_id';
+  static String triphistrydetails = baseurl+'User/trip_history_details';
+  static String deleteDropLocation=baseurl+'User/delete_droploc_history';
+  static String getOffers=baseurl+'User/get_offers';
+  static String applyCoupon=baseurl+'User/apply_coupon';
+  static String imageUrl="https://asatvindia.in/cab/";
   static String submitfeedback = baseurl+'User/submit_feedback';
 
 
-//// pree booking 
- static String confirmbooking =baseurl+'User/pre_booking_available';
+//// pree booking
+  static String confirmbooking =baseurl+'User/pre_booking_available';
 
- 
 
 }

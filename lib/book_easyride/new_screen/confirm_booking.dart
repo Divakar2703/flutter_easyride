@@ -14,7 +14,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
   final List<Map<String, dynamic>> banks = [
     {'name': 'GPay', 'image': 'assets/images/gpay.jpg'},
     {'name': 'Paytm', 'image': 'assets/images/paytem.png'},
-    {'name': 'PhonePay', 'image': 'assets/images/phonepay.png'},
+    {'name': 'Online', 'image': 'assets/images/phonepay.png'},
     {'name': 'RozaPay', 'image': 'assets/images/rojapay.png'},
   ];
 

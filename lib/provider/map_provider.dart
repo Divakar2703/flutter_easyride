@@ -63,7 +63,7 @@ class MapProvider with ChangeNotifier {
           googleApiKey: "AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y",
           request: PolylineRequest(
               origin: PointLatLng(ALatitude, ALongitude),
-              destination: PointLatLng(30.32455712895656, 78.00607616176579),
+              destination: PointLatLng(dropLat, dropLong),
               mode: TravelMode.driving));
 
       if (result.points.isNotEmpty) {
@@ -90,8 +90,8 @@ class MapProvider with ChangeNotifier {
     _markers.add(
       Marker(
         markerId: MarkerId("dropoff"),
-        position: LatLng(destLat, destLng), // Drop Location
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        position: LatLng(dropLat, dropLong), // Drop Location
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
       ),
     );
     isLoading = false;

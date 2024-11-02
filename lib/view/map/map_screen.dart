@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 
 import '../../Book_Now/screens/select_vehicle.dart';
 import '../../utils/eve.dart';
@@ -39,9 +41,9 @@ class _MapPageState extends State<MapPage> {
         position.longitude,
       );
       setState(() {
-        ALatitude = position.latitude;
-        ALongitude = position.longitude;
-        address =
+        dropLat = position.latitude;
+        dropLong = position.longitude;
+        dropAddress =
         '${placemarks[0].thoroughfare}, ${placemarks[0].subLocality}, ${placemarks[0].locality}, ${placemarks[0].administrativeArea}, ${placemarks[0].postalCode}';
       });
     } catch (e) {
@@ -51,6 +53,7 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
+    final cabProvider=Provider.of<CabBookProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white,
         body: Column(
@@ -96,9 +99,9 @@ class _MapPageState extends State<MapPage> {
                                     width: 10,
                                   ),
                                   Text(
-                                    address!.length > 30
-                                        ? '${address!.substring(0, 30)}...'
-                                        : address!,
+                                    dropAddress!.length > 30
+                                        ? '${dropAddress!.substring(0, 30)}...'
+                                        : dropAddress!,
                                   ),
                                 ],
                               )),
@@ -128,6 +131,7 @@ class _MapPageState extends State<MapPage> {
                             ),
                           ),
                           onPressed: () async {
+                            cabProvider.addDropLocation(dropLat.toString(), dropLong.toString(), dropAddress, "book_now");
                             Navigator.push(context, MaterialPageRoute(builder: (context) => SelectVehicle()));
                           },
                           child: const Row(
@@ -192,8 +196,11 @@ class _MapPageState extends State<MapPage> {
     try {
       List<Placemark> placemarks = await placemarkFromCoordinates(
           tappedPoint.latitude, tappedPoint.longitude);
+      dropLat=tappedPoint.latitude;
+      dropLong=tappedPoint.longitude;
+
       setState(() {
-        address =
+        dropAddress =
         '${placemarks[0].thoroughfare}, ${placemarks[0].subLocality}, ${placemarks[0].locality}, ${placemarks[0].administrativeArea}, ${placemarks[0].postalCode}';
       });
     } catch (e) {

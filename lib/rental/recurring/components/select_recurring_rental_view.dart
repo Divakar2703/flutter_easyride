@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easy_ride/new/rental/select_hour.dart';
+import 'package:flutter_easy_ride/rental/recurring/components/select_hour.dart';
 import 'package:flutter_easy_ride/new/rental/week_schedule_view.dart';
+import 'package:flutter_easy_ride/rental/recurring/components/week_wallet_view.dart';
 
 class SelectRecurringRentalView extends StatefulWidget {
   const SelectRecurringRentalView({super.key});
@@ -139,11 +140,11 @@ class _SelectRecurringRentalViewState extends State<SelectRecurringRentalView> {
             WeekScheduleView(),
 
             GestureDetector(
-              // onTap: (){
-              //   Navigator.push(context,
-              //       MaterialPageRoute(builder: (context) => SelectRecurringRentalView()));
-              //
-              // },
+              onTap: (){
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => WeekWalletView()));
+
+              },
               child: Container(
                 //  margin: EdgeInsets.symmetric(horizontal: 24,vertical: 16),
                 height: 44,

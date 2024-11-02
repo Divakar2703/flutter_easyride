@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/Book_Now/common_widget/shimmer_loader.dart';
 import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -8,6 +9,7 @@ import '../../common_widget/vehicle_widget.dart';
 import '../../provider/map_provider.dart';
 import '../Components/promocode.dart';
 import '../provider/cab_book_provider.dart';
+import 'drive_finding_screen.dart';
 
 final Color kDarkBlueColor = const Color(0xff1937d7);
 
@@ -33,17 +35,17 @@ class _SelectVehicleState extends State<SelectVehicle> {
     Provider.of<CabBookProvider>(context, listen: false).getVehicleData();
     final mapProvider = Provider.of<MapProvider>(context, listen: false);
     mapProvider.loadMapData(
-        ALatitude, ALongitude, 30.32455712895656, 78.00607616176579);
+        ALatitude, ALongitude, dropLat, dropLong);
     mapProvider.getPolyPoints(
-        ALatitude, ALongitude, 30.32455712895656, 78.00607616176579);
+        ALatitude, ALongitude, dropLat, dropLong);
   }
 
   @override
   Widget build(BuildContext context) {
     final mapProvider = Provider.of<MapProvider>(context);
 
-    return Scaffold(
-      body: Stack(
+    return  Scaffold(
+      body: mapProvider.isLoading?ShimmerLoader():Stack(
         children: [
           MapWidget(
             initialPosition: _pickupLocation,
@@ -66,7 +68,7 @@ class _SelectVehicleState extends State<SelectVehicle> {
                 child: Column(
                   children: [
                     Container(
-                      height: MediaQuery.of(context).size.height * 0.4,
+                      height: MediaQuery.of(context).size.height * 0.35,
                       padding:
                           EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                       decoration: const BoxDecoration(
@@ -79,7 +81,7 @@ class _SelectVehicleState extends State<SelectVehicle> {
                       child: Consumer<CabBookProvider>(
                           builder: (context, cabProvider, child) {
                         if (cabProvider.vehicleResponse == null) {
-                          return Center(child: CircularProgressIndicator());
+                          return Center(child: Text("No vehicles available"));
                         } else if (cabProvider.vehicleResponse!.vehicle ==
                                 null ||
                             cabProvider.vehicleResponse!.vehicle!.isEmpty) {
@@ -107,7 +109,10 @@ class _SelectVehicleState extends State<SelectVehicle> {
                                     if (selectedRows.contains(index)) {
                                       selectedRows.remove(
                                           index); // Deselect if already selected
+
                                     } else {
+                                      cabProvider.getOffers(int.parse(vehicle.id));
+
                                       selectedRows
                                           .add(index); // Select if not selected
                                     }
@@ -120,29 +125,112 @@ class _SelectVehicleState extends State<SelectVehicle> {
                       }),
                     ),
                     // Confirm Button
-                    GestureDetector(
-                      onTap: () {
-                        // Add your confirm action here
-                        openPromocodeBottomSheet(context);
-                      },
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 44,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Color(0xff1937d7), // Your confirm button color
-                        ),
-                        child: const Center(
-                          child: Text(
-                            "Confirm",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Poppins',
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w500,
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 100,
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2), // Shadow color
+                            offset: Offset(0, -4), // Offset with negative y value for top shadow
+                            blurRadius: 6, // Blur radius
+                            spreadRadius: 1, // Spread radius
+                          ),
+                        ],
+                      ),
+
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                width: MediaQuery.of(context).size.width*0.4,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(Icons.payment,color: Colors.green,),
+                                        SizedBox(width: 5,),
+                                        Text("Cash"),
+                                      ],
+                                    ),
+                                    Icon(Icons.arrow_forward_ios_rounded,color: Colors.black,size: 18,)
+
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                height: 25,
+                                width: 2,
+                                color: Colors.grey.shade200,
+                              ),
+                              Container(
+                                width: MediaQuery.of(context).size.width*0.4,
+
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(Icons.local_offer_sharp,color: Colors.blueAccent,),
+                                        SizedBox(width: 5,),
+
+                                        Text("Offers"),
+                                      ],
+                                    ),
+                                    InkWell(
+                                        onTap: (){
+                                          openPromocodeBottomSheet(context);
+                                        },
+                                        child: Icon(Icons.arrow_forward_ios_rounded,color: Colors.black,size: 18,))
+
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+
+                          SizedBox(height: 10,),
+                          GestureDetector(
+                            onTap: () {
+                              // Add your confirm action here
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          DriveFindingScreen()));
+
+
+
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                             height: 44,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Color(0xff1937d7), // Your confirm button color
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  "Confirm",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Poppins',
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
                   ],

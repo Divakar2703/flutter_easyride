@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/Book_Now/screens/select_vehicle.dart';
 import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
-import 'package:flutter_easy_ride/Pre_Booking/screens/select_pickup_time.dart';
 import 'package:provider/provider.dart';
 
 import '../../common_widget/pickup_drop_widget.dart';
+import '../../common_widget/rentale_recurring_location_add_widget.dart';
 import '../../view/map/map_screen.dart';
+import 'components/recurring_booking_detail_view.dart';
+import 'components/select_recurring_rental_view.dart';
 
-class PreBookingScreen extends StatefulWidget {
-  const PreBookingScreen({super.key});
+class RecurringLocationSelectView extends StatefulWidget {
+  const RecurringLocationSelectView({super.key});
 
   @override
-  State<PreBookingScreen> createState() => _PreBookingScreenState();
+  State<RecurringLocationSelectView> createState() => _PickupScreenState();
 }
 
-class _PreBookingScreenState extends State<PreBookingScreen> {
+class _PickupScreenState extends State<RecurringLocationSelectView> {
   final pickupController = TextEditingController();
   final dropController = TextEditingController();
   @override
   void initState() {
     super.initState();
+
     Provider.of<CabBookProvider>(context, listen: false).getCurrentLocation();
   }
   @override
@@ -39,11 +42,10 @@ class _PreBookingScreenState extends State<PreBookingScreen> {
       backgroundColor: const Color(0xfff3fdf6),
       appBar: AppBar(
         backgroundColor: Color(0xff1937d7),
-        title: Text(
-          'Pickup',
+        title: Text('Create Recurring Package',
           style: TextStyle(
               fontWeight: FontWeight.w500,
-              fontFamily: 'Poppins', // Set Poppins as the default font
+              fontFamily: 'Poppins',
               fontSize: 17,
               color: Colors.white
           ),
@@ -57,58 +59,12 @@ class _PreBookingScreenState extends State<PreBookingScreen> {
       ),
       body:Column(
         children: [
-          PickupDropWidget(
+          RentaleRecurringLocationAddWidget(
             pickupController: pickupController,
             dropController: dropController, onChange: (value) {
             cabProvider.placeAutoComplete(value,"Drop");
           },
           ),
-          GestureDetector(
-            onTap: () {
-
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MapPage()));
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 160,
-                  height: 35,
-                  padding: EdgeInsets.symmetric(horizontal: 12),
-                  margin: EdgeInsets.symmetric(horizontal: 16,vertical: 8),
-                  decoration: BoxDecoration(
-                      color: Color(0xff1937d7).withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                          color: Colors.grey.shade300
-                      )
-                  ),
-                  child: const Row(
-                    children: [
-                      Icon(
-                        Icons.location_on_outlined,
-                        size: 20,color: Color(0xff1937d7),),
-
-                      SizedBox(width: 6,),
-                      Text(
-                        "Select on map",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Color(0xff1937d7),
-                          fontFamily: 'Poppins', // Set Poppins as the default font
-
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-
           Divider(
             thickness: 1.5,
             color: Colors.grey.shade300,
@@ -188,7 +144,7 @@ class _PreBookingScreenState extends State<PreBookingScreen> {
           Spacer(),
           GestureDetector(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SelectPickupTime()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SelectRecurringRentalView()));
             },
             child: Container(
               //  margin: EdgeInsets.symmetric(horizontal: 24,vertical: 16),
@@ -202,7 +158,7 @@ class _PreBookingScreenState extends State<PreBookingScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Set Pickup time",
+                    "Continue",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,
