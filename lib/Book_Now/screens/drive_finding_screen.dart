@@ -5,7 +5,8 @@ import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../common_widget/map_widget.dart'; 
+import '../../book_easyride/new_screen/confirm_booking.dart';
+import '../../common_widget/map_widget.dart';
 import '../../provider/map_provider.dart';
 import 'drive_looking_screen.dart'; 
 import 'trip_details_screen.dart'; 
@@ -317,8 +318,8 @@ class _DriveFindingScreenState extends State<DriveFindingScreen> {
                           Spacer(),
                           GestureDetector(
                             onTap: () {
-                              // Navigator.push(context,
-                              //     MaterialPageRoute(builder: (context) => PaymentScreen()));
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => ConfirmBooking()));
                             },
                             child: Container(
                               margin: EdgeInsets.all(16),
@@ -332,14 +333,10 @@ class _DriveFindingScreenState extends State<DriveFindingScreen> {
                                 children: [
                                   InkWell(
                                     onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  PaymentScreen()));
+
                                     },
                                     child: Text(
-                                      "Pay",
+                                      "Next",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: Colors.white,

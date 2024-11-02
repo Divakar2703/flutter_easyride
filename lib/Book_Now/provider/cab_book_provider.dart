@@ -140,24 +140,32 @@ final String apiKey='AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y';
 
       if (response.statusCode == 200) {
         VehicleResponse vehicleResponse = VehicleResponse.fromJson(jsondataa);
+        if(vehicleResponse.status=="success"){
+          // Check if type is empty and filter accordingly
+          List<Vehicle> filteredVehicles = vehicleResponse.vehicle.where((vehicle) {
+            // If cabType is empty, include all vehicles; otherwise, filter by type
+            return cabType.isEmpty || vehicle.type == cabType;
+          }).toList();
 
-        // Check if type is empty and filter accordingly
-        List<Vehicle> filteredVehicles = vehicleResponse.vehicle.where((vehicle) {
-          // If cabType is empty, include all vehicles; otherwise, filter by type
-          return cabType.isEmpty || vehicle.type == cabType;
-        }).toList();
+          // Update the response with filtered data
+          vehicleResponse = VehicleResponse(
+            vehicle: filteredVehicles,
+            status: vehicleResponse.status,
+            message: vehicleResponse.message,
+            statusCode: vehicleResponse.statusCode,
+          );
 
-        // Update the response with filtered data
-        vehicleResponse = VehicleResponse(
-          vehicle: filteredVehicles,
-          status: vehicleResponse.status,
-          message: vehicleResponse.message,
-          statusCode: vehicleResponse.statusCode,
-        );
+          // Notify listeners with filtered data
+          this.vehicleResponse = vehicleResponse;
+          notifyListeners();
+        }
+        else{
+          print("no data found");
+          notifyListeners();
 
-        // Notify listeners with filtered data
-        this.vehicleResponse = vehicleResponse;
-        notifyListeners();
+        }
+
+
       } else {
         print('Error: ${response.statusCode}, ${response.body}');
       }

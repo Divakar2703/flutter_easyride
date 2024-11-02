@@ -81,7 +81,7 @@ class _SelectVehicleState extends State<SelectVehicle> {
                       child: Consumer<CabBookProvider>(
                           builder: (context, cabProvider, child) {
                         if (cabProvider.vehicleResponse == null) {
-                          return Center(child: CircularProgressIndicator());
+                          return Center(child: Text("No vehicles available"));
                         } else if (cabProvider.vehicleResponse!.vehicle ==
                                 null ||
                             cabProvider.vehicleResponse!.vehicle!.isEmpty) {
