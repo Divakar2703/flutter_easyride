@@ -6,11 +6,12 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
 
+import '../../Book_Now/provider/cab_book_provider.dart';
 import '../../book_easyride/custom/message.dart';
 import '../../common_widget/map_widget.dart';
 import '../../provider/map_provider.dart';
 import '../../utils/eve.dart';
-import 'booking_details_screen.dart';
+
 
 class SelectPickupTime extends StatefulWidget {
   @override
@@ -28,9 +29,14 @@ class _SelectPickupTimeState extends State<SelectPickupTime> {
   @override
   void initState() {
     super.initState();
-    // Provider.of<PreebookingProvider>(context, listen: false ).confirmpreebook();
 
-    ///
+    final cabBookProvider =
+        Provider.of<CabBookProvider>(context, listen: false);
+    cabBookProvider.findDriver(9);
+    
+    Provider.of<PreebookingProvider>(context, listen: false ).confirmpreebook();
+
+ 
     final mapProvider = Provider.of<MapProvider>(context, listen: false);
     mapProvider.loadMapData(
         ALatitude, ALongitude, 30.32455712895656, 78.00607616176579);
@@ -195,7 +201,8 @@ class _SelectPickupTimeState extends State<SelectPickupTime> {
                           ),
                         )
                       : Center(
-                          child: Text('Select a date to view available times')),
+                          child: Text('Select a date to view available times'),
+                        ),
 
                   Spacer(),
 
@@ -209,18 +216,18 @@ class _SelectPickupTimeState extends State<SelectPickupTime> {
                                       listen: false)
                                   .confirmpreebook();
 
+
+
                               CustomSnackbar(
                                 message: 'Request has been send successfully',
                                 backgroundColor: Colors.blue,
                                 height: 35,
-                                
                                 widthFactor: 0.9,
                                 textStyle: TextStyle(
                                     color: Colors.white, fontSize: 15),
-                                durationInSeconds: 600,
+                                durationInSeconds: 2,
                               ).showSnackbar(context);
                               child:
-                             
 
                               // final snackBar = SnackBar(
                               //   backgroundColor: Colors.lightBlue,
@@ -233,7 +240,7 @@ class _SelectPickupTimeState extends State<SelectPickupTime> {
                               // ScaffoldMessenger.of(context)
                               //     .showSnackBar(snackBar);
 
-                              Future.delayed(Duration(seconds: 5), () {
+                              Future.delayed(Duration(seconds: 3), () {
                                 Navigator.of(context).push(_createRoute());
                               });
 

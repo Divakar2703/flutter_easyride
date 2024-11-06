@@ -4,6 +4,7 @@ import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../../Pre_Booking/provider/preebooking_provider.dart';
 import '../../common_widget/custombutton.dart';
 import '../../common_widget/map_widget.dart';
 import '../provider/cab_book_provider.dart';
@@ -22,6 +23,11 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
   @override
   void initState() {
     super.initState();
+
+    // final cancelPreeboovehicle = Provider.of<PreebookingProvider>(context);
+    // cancelPreeboovehicle.Cancialpreebook();
+
+    Provider.of<PreebookingProvider>(context, listen: false);
 
     final cabBookProvider =
         Provider.of<CabBookProvider>(context, listen: false);
@@ -42,14 +48,10 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
       body: SingleChildScrollView(
         child: Stack(
           children: [
-           
             Container(
               decoration: BoxDecoration(
                 border: Border.symmetric(),
-                
                 borderRadius: BorderRadius.circular(100),
-                
-               
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,8 +176,8 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                           children: [
                             Text(
                               'Total Fare',
-                              style:
-                                  TextStyle(fontSize: 15, fontFamily: "Poppins"),
+                              style: TextStyle(
+                                  fontSize: 15, fontFamily: "Poppins"),
                             ),
                             SizedBox(
                               width: 230,
@@ -193,24 +195,32 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                   Padding(
                     padding: EdgeInsets.only(left: 20, right: 20),
                     child: Customtbutton(
-                      text: 'Back',
-                      fontFamily: "Poppins",
-                      textColor: Colors.black,
-                      color: Colors.yellow,
-                    ),
+                        text: 'Back',
+                        fontFamily: "Poppins",
+                        textColor: Colors.white,
+                        color: Colors.blue),
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 20, right: 20),
-                    child: Customtbutton(
-                      fontFamily: "Poppins",
-                      color: Colors.red,
-                      text: 'Cancel Ride',
+                    child: InkWell(
+                      onTap: () {
+                        Provider.of<PreebookingProvider>(context, listen: false)
+                            .Cancialpreebook(
+                               "Book-00075307", "plan changed", 8238375356);
+                      },
+                      child: Customtbutton(
+                        fontFamily: "Poppins",
+                        color: Colors.blue,
+                        text: 'Cancel Ride',
+                      ),
                     ),
                   ),
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                 ],
               ),
             ),

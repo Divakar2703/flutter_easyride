@@ -1,6 +1,6 @@
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../provider/triphistry_provider.dart';
 
 class HistryDetails extends StatefulWidget {
@@ -11,10 +11,15 @@ class HistryDetails extends StatefulWidget {
 }
 
 class _HistryDetailsState extends State<HistryDetails> {
+  late TriphistryProvider tripdetails;
+
   @override
   void initState() {
-    Provider.of<TriphistryProvider>(context, listen: false)
-        .gethistryDetails;
+    // Provider.of<TriphistryProvider>(context, listen: false)
+    //     .gethistryDetails;
+
+    tripdetails = Provider.of<TriphistryProvider>(context, listen: false);
+    tripdetails.getallhistry();
 
     super.initState();
   }
@@ -398,3 +403,4 @@ class _HistryDetailsState extends State<HistryDetails> {
     );
   }
 }
+

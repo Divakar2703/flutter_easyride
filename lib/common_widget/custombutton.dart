@@ -32,7 +32,7 @@ class Customtbutton extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 12, horizontal: 100),
           decoration: BoxDecoration(
             // color: backgroundColor ?? Colors.yellow,
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(5),
             color: color,
           ),
           child: Center(

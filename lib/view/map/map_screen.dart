@@ -134,6 +134,10 @@ class _MapPageState extends State<MapPage> {
                             cabProvider.addDropLocation(dropLat.toString(), dropLong.toString(), dropAddress, "book_now");
                             Navigator.push(context, MaterialPageRoute(builder: (context) => SelectVehicle()));
                           },
+        
+        
+        
+                          
                           child: const Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [

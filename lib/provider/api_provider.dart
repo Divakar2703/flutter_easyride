@@ -64,10 +64,11 @@ class ApiProvider with ChangeNotifier{
       print('Error sending POST request: $e');
     }
   }
+
+
   Future<void> fetchTheme() async {
     final String url = ApiHelper.getTheme;
     print("url===$url");
-
 
     try {
       final response = await NetworkUtility.sendGetRequest(url,);
