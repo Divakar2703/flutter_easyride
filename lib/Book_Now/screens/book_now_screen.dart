@@ -20,7 +20,7 @@ class BookNowScreen extends StatefulWidget {
 
 class _BookNowScreenState extends State<BookNowScreen> {
   GoogleMapController? _mapController;
-  LatLng? _currentLocation; // Example coordinates
+  LatLng _currentLocation=LatLng(30.365518638199323, 78.04342051246367); // Example coordinates
   LatLng? sourceLocation;
   String pickupAddress="";
   TextEditingController pickupController=TextEditingController();
@@ -31,14 +31,15 @@ class _BookNowScreenState extends State<BookNowScreen> {
     super.initState();
     print("Alatitiue==${ALatitude}");
     _getCurrentLocation();
-    Provider.of<ApiProvider>(context,listen: false).getCurrentLocation() .then((_) {
-      // After fetching auth, call the next method
-      Provider.of<CabBookProvider>(context, listen: false).getDropHistoryList();
-    })
-        .catchError((error) {
-      // Handle errors if needed
-      print("Error: $error");
-    });
+    Provider.of<CabBookProvider>(context, listen: false).getDropHistoryList();
+    // Provider.of<ApiProvider>(context,listen: false).getCurrentLocation() .then((_) {
+    //   // After fetching auth, call the next method
+    //   Provider.of<CabBookProvider>(context, listen: false).getDropHistoryList();
+    // })
+    //     .catchError((error) {
+    //   // Handle errors if needed
+    //   print("Error: $error");
+    // });
   }
 
   void _getCurrentLocation() async {
@@ -85,7 +86,7 @@ class _BookNowScreenState extends State<BookNowScreen> {
                 child: GoogleMap(
                   onTap: _handleMapTap,
                   initialCameraPosition: CameraPosition(
-                    target: _currentLocation!,
+                    target: _currentLocation,
                     zoom: 14.0,
                   ),
                   onMapCreated: (GoogleMapController controller) {},
@@ -93,7 +94,7 @@ class _BookNowScreenState extends State<BookNowScreen> {
                   markers: {
                     Marker(
                       markerId: MarkerId('currentLocation'),
-                      position: _currentLocation!,
+                      position: _currentLocation,
                     ),
                   },
                 ),

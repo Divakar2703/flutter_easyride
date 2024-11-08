@@ -1,5 +1,9 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/payment/cab_payment_page.dart';
+import 'package:flutter_easy_ride/payment/razorpay/PhonePeGatewayWebview.dart';
+import 'package:flutter_easy_ride/payment/razorpay/phonepay.dart';
+import 'package:flutter_easy_ride/payment/razorpay/razzz.dart';
 import 'package:flutter_easy_ride/provider/api_provider.dart';
 import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
 import 'package:flutter_easy_ride/provider/map_provider.dart';
@@ -23,8 +27,6 @@ void main() {
         ChangeNotifierProvider(create: (_)=>TripHistrydetailsproviders()),
         ChangeNotifierProvider(create: (_)=>TripHistoryProviders()),
         ChangeNotifierProvider(create: (_)=>PreebookingProvider())
-
-
 
       ],
       child:
@@ -74,11 +76,15 @@ class _MyAppState extends State<MyApp> {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          home:  HomeView(),
+          home:
+          //PhonePeGatewayWebView(orderId: '1', txnAmount: 1,),
+         // RazorpayGateway()
+              HomeView(),
         );
       },
     );
   }
+  
 }
 
 

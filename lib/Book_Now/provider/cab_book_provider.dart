@@ -51,14 +51,12 @@ final String apiKey='AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y';
     _pickupLocation = location;
     notifyListeners();
   }
-
   void setCabType(String type){
 
     cabType=type;
     notifyListeners();
 
   }
-
   void placeAutoComplete(String query,String location) async {
     Uri uri =
     Uri.https("maps.googleapis.com", 'maps/api/place/autocomplete/json', {
@@ -93,35 +91,6 @@ final String apiKey='AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y';
     _pickupLocation=location;
     notifyListeners();
   }
-  // Future<void> getVehicleData() async {
-  //
-  //   Map<String, dynamic> requestBody = {
-  //     "pickup_lat": ALatitude,
-  //     "pickup_long": ALongitude,
-  //     "drop_lat": dropLat,
-  //     "drop_long": dropLong
-  //   };
-  //
-  //   try {
-  //     final response = await NetworkUtility.sendPostRequest(
-  //       ApiHelper.getVehicle,
-  //        requestBody,
-  //     );
-  //     print('Response body: ${response.body}');
-  //     Map<String,dynamic> jsondataa=jsonDecode(response.body);
-  //
-  //     if (response.statusCode == 200) {
-  //       VehicleResponse response=VehicleResponse.fromJson(jsondataa);
-  //       vehicleResponse=response;
-  //       notifyListeners();
-  //     } else {
-  //       print('Error: ${response.statusCode}, ${response.body}');
-  //     }
-  //   } catch (e) {
-  //     print('Error sending POST request: $e');
-  //     // Handle any exception
-  //   }
-
   Future<void> getVehicleData() async {
     Map<String, dynamic> requestBody = {
       "pickup_lat": ALatitude,
@@ -173,7 +142,6 @@ final String apiKey='AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y';
       print('Error sending POST request: $e');
     }
   }
-
   Future<void> sendRequestToDriver(double pickLat,double pickLong,double dropLat,double dropLong,int vehicleID,String pickupAddress,String dropAddress) async {
     // Request body
     Map<String, dynamic> requestBody = {

@@ -20,10 +20,17 @@ class ApiHelper{
   static String applyCoupon=baseurl+'User/apply_coupon';
   static String imageUrl="https://asatvindia.in/cab/";
   static String submitfeedback = baseurl+'User/submit_feedback';
-
+  static String convCharge = baseurl+'User/conv_charge';
+  static String rejectUserRequest = baseurl+'User/RejectUserRequest';
 
 //// pree booking
   static String confirmbooking =baseurl+'User/pre_booking_available';
+
+
+  // Payment
+  static String getWallet ='https://www.bits.teamtest.co.in/Api/Wallet/getWallet';
+
+
 
 
 }
