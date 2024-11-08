@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easy_ride/Book_Now/screens/pickup_screen.dart';
 import 'package:flutter_easy_ride/provider/api_provider.dart';
 import 'package:provider/provider.dart';
-import '../../common_widget/cab_card_widget.dart';
 import '../../nav_Bar.dart';
 import '../../utils/colors.dart';
 import 'components/car_show_container.dart';

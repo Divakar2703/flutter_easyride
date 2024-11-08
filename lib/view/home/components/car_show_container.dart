@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../Book_Now/screens/book_now_screen.dart';
-import '../../../Book_Now/screens/pickup_screen.dart';
 import '../../../Pre_Booking/screens/pre_booking_screen.dart';
-import '../../../Pre_Booking/screens/select_Pickup.dart';
 import '../../../rental/rental_location_select_view.dart';
 
 class CarShowContainer extends StatefulWidget {

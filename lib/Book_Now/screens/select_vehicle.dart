@@ -32,7 +32,7 @@ class _SelectVehicleState extends State<SelectVehicle> {
   @override
   void initState() {
     super.initState();
-    Provider.of<CabBookProvider>(context,listen: false).paymenttype();
+    Provider.of<CabBookProvider>(context,listen: false).convcharge();
     Provider.of<CabBookProvider>(context, listen: false).getVehicleData();
     final mapProvider = Provider.of<MapProvider>(context, listen: false);
     mapProvider.loadMapData(ALatitude, ALongitude, dropLat, dropLong);
@@ -170,7 +170,7 @@ class _SelectVehicleState extends State<SelectVehicle> {
                                               Provider.of<CabBookProvider>(
                                                       context,
                                                       listen: false)
-                                                  .paymenttype();
+                                                  .convcharge();
                                             },
                                             child: Row(
                                               children: [

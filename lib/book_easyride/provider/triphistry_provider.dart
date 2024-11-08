@@ -6,15 +6,10 @@ import '../../service/api_helper.dart';
 import '../model/triphistry.dart';
 
 class TriphistryProvider with ChangeNotifier {
-  List<TripHistryModel> triphistrys = []; // trip histry details
-  List<TripHistryModel> get triphis => triphistrys;
-  var TripHistryModel1;
-
-  TripHistryModel? triphistory;
-  TripHistryModel? get triphistrylist => triphistory;
-
   List<ListElement> _historyList = [];
   List<ListElement> get historyList => _historyList; //trip histry
+  TripHistryModel? triphistory;
+  TripHistryModel? get triphistrylist => triphistory; // trip histry details
 
   Future<void> GetHistory() async {
     Map<String, dynamic> requestbody = {
@@ -39,58 +34,23 @@ class TriphistryProvider with ChangeNotifier {
     }
   }
 
-  Future<void> gethistryDetails() async {
-    Map<String, dynamic> requestBody = {"booking_id": "Book-00852362"};
+  //  triphistry details
 
-    try {
-      final response = await NetworkUtility.sendPostRequest(
-        ApiHelper.triphistrydetails,
-        requestBody,
-      );
-
-      if (response.statusCode == 200) {
-        Map<String, dynamic> json = jsonDecode(response.body);
-        if (json["data"] != null && json["data"] is List) {
-          List<dynamic> tripList = json["data"];
-          print(tripList);
-
-          triphistrys = tripList
-              .map((tripData) => TripHistryModel.fromJson(tripData))
-              .toList();
-        } else {
-          triphistrys = [];
-        }
-        notifyListeners();
-      } else {
-        print('Unexpected status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error: $e');
-      throw Exception('Error loading trip history details: $e');
-    }
-  }
-
-  Future<void> getallhistry() async {
+  Future<void> triphistryDetails() async {
     Map<String, dynamic> requestbody = {"booking_id": "Book-00852362"};
-
     try {
       final response = await NetworkUtility.sendPostRequest(
           ApiHelper.triphistrydetails, requestbody);
 
       if (response.statusCode == 200) {
-        var triphistrylist = jsonDecode(response.body);
-        var triphistrylist1 = triphistrylist;
-
-        print(triphistrylist1);
+        var jsonData = jsonDecode(response.body);
+        triphistory = TripHistryModel.fromJson(jsonData);
+        notifyListeners();
       } else {
-        print('Data is not featch please check your code');
+        print('Error please you code');
       }
-    } catch (Error) {}
+    } catch (Error) {
+      throw 'Histry not found';
+    }
   }
 }
-
-
-
-
-
-

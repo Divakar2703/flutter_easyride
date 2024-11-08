@@ -12,7 +12,6 @@ import '../../common_widget/map_widget.dart';
 import '../../provider/map_provider.dart';
 import '../../utils/eve.dart';
 
-
 class SelectPickupTime extends StatefulWidget {
   @override
   _SelectPickupTimeState createState() => _SelectPickupTimeState();
@@ -33,10 +32,9 @@ class _SelectPickupTimeState extends State<SelectPickupTime> {
     final cabBookProvider =
         Provider.of<CabBookProvider>(context, listen: false);
     cabBookProvider.findDriver(9);
-    
-    Provider.of<PreebookingProvider>(context, listen: false ).confirmpreebook();
 
- 
+    Provider.of<PreebookingProvider>(context, listen: false).confirmpreebook();
+
     final mapProvider = Provider.of<MapProvider>(context, listen: false);
     mapProvider.loadMapData(
         ALatitude, ALongitude, 30.32455712895656, 78.00607616176579);
@@ -216,8 +214,6 @@ class _SelectPickupTimeState extends State<SelectPickupTime> {
                                       listen: false)
                                   .confirmpreebook();
 
-
-
                               CustomSnackbar(
                                 message: 'Request has been send successfully',
                                 backgroundColor: Colors.blue,
@@ -228,29 +224,16 @@ class _SelectPickupTimeState extends State<SelectPickupTime> {
                                 durationInSeconds: 2,
                               ).showSnackbar(context);
                               child:
-
-                              // final snackBar = SnackBar(
-                              //   backgroundColor: Colors.lightBlue,
-                              //   shape: BeveledRectangleBorder(),
-                              //   content:Center(child: Column(children: [Row(children: [Text('Request has been send successfully', style: TextStyle(fontFamily: 'Poppins', fontSize: 10, fontWeight: FontWeight.bold),)])])),
-
-                              //   duration: Duration(seconds: 5),
-                              // );
-
-                              // ScaffoldMessenger.of(context)
-                              //     .showSnackBar(snackBar);
-
                               Future.delayed(Duration(seconds: 3), () {
                                 Navigator.of(context).push(_createRoute());
                               });
 
                               print(
                                   'Booking for ${DateFormat('EEE, d MMM').format(_selectedDate!)} at $_selectedTime');
-                              // Navigate or send data to backend for booking
                             }
-                          : null, // Disable button if date and time not selected
+                          : null,
                       child: Text(
-                        'Confirm Booking',
+                        'Confirm Bookingm',
                         style: TextStyle(
                             fontFamily: "Poppins",
                             fontSize: 14,

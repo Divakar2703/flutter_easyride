@@ -25,6 +25,8 @@ class Notes {
         statusCode: json["statusCode"],
     );
 
+  get length => null;
+
     Map<String, dynamic> toJson() => {
         "delivery_notes": deliveryNotes.toJson(),
         "status": status,

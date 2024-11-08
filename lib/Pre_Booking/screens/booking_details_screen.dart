@@ -143,6 +143,8 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
 
   Widget _buildContent() {
     final mapProvider = Provider.of<MapProvider>(context);
+    final convcharges = Provider.of<CabBookProvider>(context);
+   
 
     return Stack(
       children: [
@@ -208,7 +210,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                       ),
                     ],
                   ),
-                  // SizedBox(height: 5),
+               
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -253,12 +255,14 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                                   builder: (context) =>
                                       BookingSuccessScreen()));
                           // Provider.of<CabBookProvider>(context, listen: false).bookCab(requestID, 259, "paymentType"," orderID", "transID", "amount" as double, "conCharge" as double);
+                          Provider.of<CabBookProvider>(context, listen: false).convcharge();
                         },
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.all(10),
                           backgroundColor: Color(0xff1937d7), // Button color
                         ),
                         child: Text('Confirm Booking',
+
                             style: TextStyle(
                                 fontSize: 14,
                                 fontFamily: "Poppins",
@@ -327,6 +331,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
 
   void _onWalletTap() {
     _showPaymentBottomSheet(context);
+    
   }
 
   void _onAddNotesTap() {
@@ -1132,10 +1137,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                         icon: Icons.account_balance_wallet,
                         value: 'Pay via Wallet',
                       ),
-                      // ElevatedButton(onPressed: () {
-                      //   Provider.of<CabBookProvider>(context, listen: false).paymenttype();
-
-                      // }, child:  Text('payment')),
+                      
 
                       SizedBox(height: 20),
                       SizedBox(

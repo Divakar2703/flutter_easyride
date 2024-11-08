@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easy_ride/Pre_Booking/provider/preebooking_provider.dart';
 import 'package:flutter_easy_ride/Pre_Booking/screens/booking_details_screen.dart';
 import 'package:flutter_easy_ride/utils/eve.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import '../../Book_Now/Components/promocode.dart';
 import '../../Book_Now/provider/cab_book_provider.dart';
 import '../../common_widget/map_widget.dart';
 import '../../common_widget/vehicle_widget.dart';
@@ -45,6 +42,7 @@ class _SelectPrebookingVehicleState extends State<SelectPrebookingVehicle> {
   @override
   Widget build(BuildContext context) {
     final mapProvider = Provider.of<MapProvider>(context);
+    final paymenttypes = Provider.of<CabBookProvider>(context, listen: false);
 
     return Scaffold(
       body: Stack(
@@ -162,6 +160,7 @@ class _SelectPrebookingVehicleState extends State<SelectPrebookingVehicle> {
                         child: ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).push(_createRoute());
+               
                           },
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.all(10),

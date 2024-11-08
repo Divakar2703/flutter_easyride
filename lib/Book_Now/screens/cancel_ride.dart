@@ -14,7 +14,7 @@ class CancelRideScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: [ 
             const Text(
               'Are you sure you want to cancel your ride?',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),

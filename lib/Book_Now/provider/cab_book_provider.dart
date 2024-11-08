@@ -468,7 +468,7 @@ class CabBookProvider with ChangeNotifier {
     } catch (Error) {}
   }
 
-  Future<void> paymenttype() async {
+  Future<void> convcharge() async {
     Map<String, dynamic> requestbody = {};
     try {
       final response =
@@ -484,9 +484,4 @@ class CabBookProvider with ChangeNotifier {
       throw 'Error Data is not found';
     }
   }
-
 }
-
-
-
-
