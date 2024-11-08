@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 class CustomSnackbar extends StatelessWidget {
   final String message;
   final Color backgroundColor;
@@ -6,18 +7,15 @@ class CustomSnackbar extends StatelessWidget {
   final double widthFactor;
   final TextStyle textStyle;
   final int durationInSeconds;
-
   const CustomSnackbar({
     Key? key,
     required this.message,
-    this.backgroundColor = Colors.blue,
+    this.backgroundColor = Colors.white,
     this.height = 70,
     this.widthFactor = 0.9,
     this.textStyle = const TextStyle(color: Colors.white, fontSize: 16),
     this.durationInSeconds = 3,
   }) : super(key: key);
-
-
   void showSnackbar(BuildContext context) {
     final snackBar = SnackBar(
       backgroundColor: Colors.transparent,
@@ -29,7 +27,7 @@ class CustomSnackbar extends StatelessWidget {
           horizontal: MediaQuery.of(context).size.width * (1 - widthFactor) / 2,
         ),
         decoration: BoxDecoration(
-          color: backgroundColor,
+          color: Color(0xff1937d7),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Center(
@@ -46,6 +44,6 @@ class CustomSnackbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.shrink(); 
+    return SizedBox.shrink();
   }
 }

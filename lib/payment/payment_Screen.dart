@@ -17,7 +17,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         title: Text('Payments',
           style: TextStyle(
               fontWeight: FontWeight.w500,
-              fontFamily: 'Poppins', // Set Poppins as the default font
+              fontFamily: 'Poppins', 
               fontSize: 17,
               color: Colors.white
           ),

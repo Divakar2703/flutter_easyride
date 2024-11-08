@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
+import 'package:provider/provider.dart';
 import 'time.dart';
 
 class ConfirmBooking extends StatefulWidget {
@@ -9,6 +13,14 @@ class ConfirmBooking extends StatefulWidget {
 }
 
 class _ConfirmBookingState extends State<ConfirmBooking> {
+  @override
+  void initState() {
+    final convcharges =
+        Provider.of<CabBookProvider>(context, listen: false).convcharge();
+
+    super.initState();
+  }
+
   String? selectedBank;
 
   final List<Map<String, dynamic>> banks = [
@@ -20,6 +32,8 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
 
   @override
   Widget build(BuildContext context) {
+    final convcharges = Provider.of<CabBookProvider>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -42,6 +56,8 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
               SizedBox(height: 10),
               buildLocationInfo(),
               SizedBox(height: 20),
+              // convcharge(),
+              SizedBox(height: 10),
               buildPriceDetails(),
               SizedBox(height: 20),
               buildConfirmButton(),
@@ -196,13 +212,71 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
     );
   }
 
+  // Widget convcharge() {
+  //   final convcharges = Provider.of<CabBookProvider>(context);
+
+  //   return Container(
+  //     child: Column(
+  //       children: [
+  //         Row(
+  //           crossAxisAlignment: CrossAxisAlignment.end,
+  //           mainAxisAlignment: MainAxisAlignment.end,
+  //           children: [
+  //             Text(
+  //               convcharges.paytype!.convCharge == null
+  //                   ? 'convcharge'
+  //                   : "conv charge",
+  //               style: TextStyle(
+  //                   fontSize: 13,
+  //                   fontFamily: 'Poppins',
+  //                   fontWeight: FontWeight.w500),
+  //             ),
+  //             SizedBox(
+  //               width: 20,
+  //             ),
+  //             Text(
+  //               convcharges.paytype!.convCharge,
+  //               style: TextStyle(
+  //                   fontSize: 13,
+  //                   fontFamily: 'Poppins',
+  //                   fontWeight: FontWeight.w500),
+  //             )
+  //           ],
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
   Widget buildPriceDetails() {
+    final convcharges = Provider.of<CabBookProvider>(context);
+
     return Container(
       padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
       decoration: containerDecoration(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Row(
+            crossAxisAlignment:  CrossAxisAlignment.end,
+            mainAxisAlignment:  MainAxisAlignment.end,
+            children: [
+              Text(
+                convcharges.paytype!.convCharge == null
+                    ? 'convcharge'
+                    : 'Convcharge',
+                style: TextStyle(
+                    fontSize: 13,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w500),
+              ),
+              SizedBox(width: 10,),
+               Text(convcharges.paytype!.convCharge),
+               SizedBox(width: 3),
+               Text('₹')
+            ],
+          ),
+         
           Row(
             children: [
               Image.asset("assets/images/rupaya.jpg", width: 40, height: 40),
@@ -287,8 +361,6 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
       ],
     );
   }
-
-
 
   TextStyle textStyle() {
     return TextStyle(

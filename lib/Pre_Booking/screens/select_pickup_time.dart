@@ -6,10 +6,11 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
 
+import '../../Book_Now/provider/cab_book_provider.dart';
+import '../../book_easyride/custom/message.dart';
 import '../../common_widget/map_widget.dart';
 import '../../provider/map_provider.dart';
 import '../../utils/eve.dart';
-import 'booking_details_screen.dart';
 
 class SelectPickupTime extends StatefulWidget {
   @override
@@ -27,9 +28,13 @@ class _SelectPickupTimeState extends State<SelectPickupTime> {
   @override
   void initState() {
     super.initState();
-    // Provider.of<PreebookingProvider>(context, listen: false ).confirmpreebook();
 
-    ///
+    final cabBookProvider =
+        Provider.of<CabBookProvider>(context, listen: false);
+    cabBookProvider.findDriver(9);
+
+    Provider.of<PreebookingProvider>(context, listen: false).confirmpreebook();
+
     final mapProvider = Provider.of<MapProvider>(context, listen: false);
     mapProvider.loadMapData(
         ALatitude, ALongitude, 30.32455712895656, 78.00607616176579);
@@ -194,7 +199,8 @@ class _SelectPickupTimeState extends State<SelectPickupTime> {
                           ),
                         )
                       : Center(
-                          child: Text('Select a date to view available times')),
+                          child: Text('Select a date to view available times'),
+                        ),
 
                   Spacer(),
 
@@ -208,36 +214,26 @@ class _SelectPickupTimeState extends State<SelectPickupTime> {
                                       listen: false)
                                   .confirmpreebook();
 
-                              // final snackBar = SnackBar(
-                              //   backgroundColor: Colors.lightBlue,
-                              //   shape: BeveledRectangleBorder(),
-                              //   content:Center(child: Column(children: [Row(children: [Text('Request has been send successfully', style: TextStyle(fontFamily: 'Poppins', fontSize: 10, fontWeight: FontWeight.bold),)])])),
-                                
-                              //   duration: Duration(seconds: 5),
-                              // );
-
-                              // ScaffoldMessenger.of(context)
-                              //     .showSnackBar(snackBar);
-                             
-
-                              
-
-
-
-
-
-
-                              Future.delayed(Duration(seconds: 5), () {
+                              CustomSnackbar(
+                                message: 'Request has been send successfully',
+                                backgroundColor: Colors.blue,
+                                height: 35,
+                                widthFactor: 0.9,
+                                textStyle: TextStyle(
+                                    color: Colors.white, fontSize: 15),
+                                durationInSeconds: 2,
+                              ).showSnackbar(context);
+                              child:
+                              Future.delayed(Duration(seconds: 3), () {
                                 Navigator.of(context).push(_createRoute());
                               });
 
                               print(
                                   'Booking for ${DateFormat('EEE, d MMM').format(_selectedDate!)} at $_selectedTime');
-                              // Navigate or send data to backend for booking
                             }
-                          : null, // Disable button if date and time not selected
+                          : null,
                       child: Text(
-                        'Confirm Booking',
+                        'Confirm Bookingm',
                         style: TextStyle(
                             fontFamily: "Poppins",
                             fontSize: 14,
