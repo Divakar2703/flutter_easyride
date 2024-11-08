@@ -68,6 +68,38 @@ class _HistryDetailsState extends State<HistryDetails> {
                   )
                 ],
               ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            'Entry Date',
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Text(details.triphistory!.entryDate,
+                          style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500))
+                    ],
+                  )
+                ],
+              ),
               SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

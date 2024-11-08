@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../Pre_Booking/screens/select_pickup_time.dart';
 import '../view/home/home_view.dart';
 
-
 class Routes {
   static const String homeview = '/homeview';
   static const String selectpickuptimegin = '/helectPickupTime';
