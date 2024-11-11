@@ -2,7 +2,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/model/theme_config.dart';
 import 'package:flutter_easy_ride/service/api_helper.dart';
+import 'package:flutter_easy_ride/service/network_utility.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart'as http;
@@ -12,7 +14,12 @@ import '../utils/eve.dart';
 import '../utils/local_storage.dart';
 
 class ApiProvider with ChangeNotifier{
+  ThemeConfig? themeConfig;
+  ThemeConfig? get themeConfigg => themeConfig;
+
+
   Future<void> getCurrentLocation() async {
+    print("hi");
     PermissionStatus permission = await Permission.location.request();
 
     if (permission == PermissionStatus.granted) {
@@ -57,5 +64,33 @@ class ApiProvider with ChangeNotifier{
       print('Error sending POST request: $e');
     }
   }
+
+
+  Future<void> fetchTheme() async {
+    final String url = ApiHelper.getTheme;
+    print("url===$url");
+
+    try {
+      final response = await NetworkUtility.sendGetRequest(url,);
+      print('Response theme body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        print('Response theme code: ${response.statusCode}');
+
+      //  var data=jsonDecode(response.body);
+        final Map<String, dynamic> data = json.decode(response.body);
+
+         themeConfig=ThemeConfig.fromJson(data);
+        print("themeconfig===${themeConfig}");
+        notifyListeners();
+
+      } else {
+        print('Error: ${response.statusCode}, ${response.body}');
+      }
+    } catch (e) {
+      print('Error sending POST request: $e');
+    }
+  }
+
 
 }

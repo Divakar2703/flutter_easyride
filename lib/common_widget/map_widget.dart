@@ -7,11 +7,15 @@ class MapWidget extends StatelessWidget {
   final LatLng initialPosition;
   final Set<Marker> markers;
   final List<LatLng> polylineCoordinates;
+  final width;
+  final mapheight;
 
   const MapWidget({
     required this.initialPosition,
     required this.markers,
     required this.polylineCoordinates,
+    this.width,
+    this.mapheight,
   });
 
   @override
@@ -22,8 +26,10 @@ class MapWidget extends StatelessWidget {
       children: [
         // Map with Animated Container for dynamic resizing
         AnimatedContainer(
+          width: width,
           duration: Duration(milliseconds: 300),
-          height: MediaQuery.of(context).size.height * mapProvider.mapHeightPercentage,
+          height: MediaQuery.of(context).size.height *
+              mapProvider.mapHeightPercentage,
           child: GoogleMap(
             onMapCreated: (GoogleMapController controller) {},
             initialCameraPosition: CameraPosition(

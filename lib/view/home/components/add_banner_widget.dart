@@ -66,7 +66,7 @@ class _FirstState extends State<AddBannerWidget> {
                             fontFamily: 'Poppins',
                           ),
                         ),
-                        const  Icon(
+                        const Icon(
                           Icons.arrow_forward,
                           color: Colors.black87,
                           size: 16,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart'; // For Lottie animations
+import 'package:flutter_easy_ride/Pre_Booking/screens/image_slider.dart';
+import 'package:lottie/lottie.dart';
 
 class BookingSuccessScreen extends StatefulWidget {
   const BookingSuccessScreen({super.key});
@@ -8,17 +9,33 @@ class BookingSuccessScreen extends StatefulWidget {
   _BookingSuccessScreenState createState() => _BookingSuccessScreenState();
 }
 
-class _BookingSuccessScreenState extends State<BookingSuccessScreen> with SingleTickerProviderStateMixin {
+class _BookingSuccessScreenState extends State<BookingSuccessScreen>
+    with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+  late AnimationController controller;
+  late Animation<double> animation;
 
   @override
   void initState() {
     super.initState();
+    late AnimationController animation1;
 
-    // Animation controller for text scaling
+    controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+
+    animation = CurvedAnimation(
+      parent: controller,
+      curve: Curves.easeInOut,
+    );
+    controller.repeat(reverse: true);
+
+    controller.forward();
+
     _controller = AnimationController(
-      duration: const Duration(seconds: 1),
+      duration: const Duration(seconds: 2),
       vsync: this,
     )..repeat(reverse: true);
 
@@ -27,53 +44,69 @@ class _BookingSuccessScreenState extends State<BookingSuccessScreen> with Single
       curve: Curves.easeInOut,
     );
   }
-
   @override
   void dispose() {
+    controller.dispose();
     _controller.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          // Animated background color
           AnimatedContainer(
             duration: const Duration(seconds: 3),
             curve: Curves.linear,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color(0xff1937d7), Colors.lightBlueAccent, Colors.indigo],
+                colors: [
+                  Color(0x801937d7),
+                  Colors.lightBlueAccent,
+                ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
             ),
           ),
-
-          // Main content of the success screen
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Lottie success animation
-                Lottie.asset(
-                  'assets/lottie/success.json', // Add your Lottie animation file here
-                  // width: 150,
-                  // height: 150,
-                  fit: BoxFit.cover,
+                PreeVehicle(),
+                Lottie.asset('assets/lottie/success.json',
+                    fit: BoxFit.cover, width: 250, height: 100, repeat: true),
+                ScaleTransition(
+                  scale: animation,
+                  child: Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 5,
+                      ),
+                    ),
+                    child: Icon(
+                      Icons.check,
+                      color: Colors.green,
+                      size: 60,
+                      weight: 10,
+                    ),
+                  ),
                 ),
-                SizedBox(height: 20),
-
-                // Scaling animated text
+                SizedBox(
+                  height: 30,
+                ),
                 TweenAnimationBuilder(
-                  tween: Tween<double>(begin: 0, end: 1), // Scale from 0 to 1
-                  duration: Duration(seconds: 5), // Duration for the animation
-                  curve: Curves.elasticOut, // Elastic effect for more pop
+                  tween: Tween<double>(begin: 0, end: 1),
+                  duration: Duration(seconds: 10),
+                  curve: Curves.elasticOut,
                   builder: (context, double scale, child) {
                     return Transform.scale(
-                      scale: scale, // Apply scaling
+                      scale: scale,
                       child: Text(
                         'Booking Confirmed!',
                         style: TextStyle(
@@ -86,9 +119,9 @@ class _BookingSuccessScreenState extends State<BookingSuccessScreen> with Single
                     );
                   },
                 ),
-                SizedBox(height: 10),
-
-                // Static subtext
+                SizedBox(
+                  height: 50,
+                ),
                 Text(
                   'Your booking has been successfully confirmed.',
                   style: TextStyle(
@@ -97,12 +130,11 @@ class _BookingSuccessScreenState extends State<BookingSuccessScreen> with Single
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 30),
-
-                // Done button
+                SizedBox(
+                  height: 40,
+                ),
                 ElevatedButton(
                   onPressed: () {
-                    // Action to return or continue
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
@@ -117,7 +149,7 @@ class _BookingSuccessScreenState extends State<BookingSuccessScreen> with Single
                     style: TextStyle(
                       fontFamily: "Poppins",
                       color: Colors.blueAccent,
-                      fontSize: 14,
+                      fontSize: 20,
                     ),
                   ),
                 ),

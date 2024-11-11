@@ -17,6 +17,7 @@ class RentalLocationSelectView extends StatefulWidget {
   State<RentalLocationSelectView> createState() => _RentalLocationSelectViewState();
 }
 
+
 class _RentalLocationSelectViewState extends State<RentalLocationSelectView> {
 
   final _selectedSegment = ValueNotifier('inventory'); // 'inventory' is selected initially
@@ -42,11 +43,14 @@ class _RentalLocationSelectViewState extends State<RentalLocationSelectView> {
     });
   }
 
+
+
   @override
   void dispose() {
     _pickupController.dispose();
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -275,6 +279,10 @@ class _RentalLocationSelectViewState extends State<RentalLocationSelectView> {
                           ),
                         ),
                   )),
+
+
+
+
 
             Spacer(),
             GestureDetector(

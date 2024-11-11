@@ -25,6 +25,7 @@ class HomeView extends StatefulWidget {
 class _NewHomeViewState extends State<HomeView> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
 @override
   void initState() {
     // TODO: implement initState
@@ -252,7 +253,9 @@ class _NewHomeViewState extends State<HomeView> {
 
                     PreBookingWidget(),
 
+                    const LocationShowWidget(),
 
+                    const BannerSlider(),
                     const  Padding(
                       padding:  EdgeInsets.symmetric(horizontal: 12,vertical: 8),
                       child: Row(
@@ -284,4 +287,5 @@ class _NewHomeViewState extends State<HomeView> {
       ),
     );
   }
+
 }
