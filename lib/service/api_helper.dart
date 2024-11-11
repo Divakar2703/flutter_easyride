@@ -33,4 +33,18 @@ class ApiHelper{
 
 
 
+  static String  getnotes = baseurl + 'User/getnotes';
+  static String  payment = baseurl + 'User/conv_charge';
+
+
+
+//===============Pree booking=========================================================
+  static String getPreebookvehicle = baseurl + 'User/getvehicle';
+  static String sendRequestDriverpreebook =
+      baseurl + 'User/sendReqForfindDriver';
+  static String finddriverpreebook = baseurl + 'User/findDriver';
+  static String preebookCab = baseurl + 'User/Bookcab';
+  static String cancelpreebooingvehicle = baseurl + 'User/CancleBookedCab';
+
+
 }

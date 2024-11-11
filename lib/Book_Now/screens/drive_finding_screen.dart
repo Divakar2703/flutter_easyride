@@ -383,37 +383,27 @@ import 'trip_details_screen.dart';
 
 
 
-class DriveFindingScreen extends StatefulWidget {
+import 'package:flutter/material.dart';
+
+class FindDriverScreen extends StatefulWidget {
   @override
   _FindDriverScreenState createState() => _FindDriverScreenState();
 }
 
-class _FindDriverScreenState extends State<DriveFindingScreen> {
-  final WebSocketService _webSocketService = WebSocketService();
-  DriverDetails? _driverDetails;
+class _FindDriverScreenState extends State<FindDriverScreen> {
+  late final DriverWebSocketService _webSocketService;
 
   @override
   void initState() {
     super.initState();
-    _webSocketService.connect();
-
-    // Listen to the driver details stream
-    _webSocketService.driverDetailsStream.listen((DriverDetails details) {
-      setState(() {
-        _driverDetails = details;
-      });
-    });
-  }
-
-  void _findDriver() {
-    final vehicleTypeId = 8;
-    final userId = 6;
-    _webSocketService.findDriver(vehicleTypeId, userId);
+    _webSocketService = DriverWebSocketService();
+    // Find driver with a sample vehicleTypeId and userId
+    _webSocketService.findDriver(8, 6); // Replace with actual IDs
   }
 
   @override
   void dispose() {
-    _webSocketService.dispose();
+    _webSocketService.disconnect();
     super.dispose();
   }
 
@@ -421,24 +411,28 @@ class _FindDriverScreenState extends State<DriveFindingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Find Driver')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: _findDriver,
-              child: Text('Find Driver'),
-            ),
-            if (_driverDetails != null) ...[
-              Text('Driver Name: ${_driverDetails!.driverName}'),
-              Text('Vehicle: ${_driverDetails!.vehicleName}'),
-              Text('Fare: ${_driverDetails!.totalFare}'),
-              // Display other details as needed
-            ] else
-              Text('Searching for driver...'),
-          ],
-        ),
+      body: StreamBuilder<DriverDetails>(
+        stream: _webSocketService.driverDetailsStream,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData) {
+            return Center(child: Text('No driver found'));
+          } else {
+            final driverDetails = snapshot.data!;
+            return ListTile(
+              title: Text(driverDetails.dropAddress),
+              subtitle: Text(driverDetails.driverName),
+              trailing: Text(driverDetails.dropAddress),
+            );
+          }
+        },
       ),
     );
   }
 }
+
+
+

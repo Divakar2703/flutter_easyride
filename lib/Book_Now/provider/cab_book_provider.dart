@@ -4,24 +4,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/model/driver_details.dart';
 import 'package:flutter_easy_ride/model/drop_location_history.dart';
 import 'package:flutter_easy_ride/model/vehicle_data.dart';
-import 'package:http/http.dart'as http;
+import '../../Pre_Booking/model/notes.dart';
+import '../../Pre_Booking/model/payment.dart';
 import '../../model/autocomplate_prediction.dart';
 import '../../model/coupon_data.dart';
 import '../../model/place_auto_complate_response.dart';
 import '../../service/api_helper.dart';
 import '../../service/network_utility.dart';
 import '../../utils/eve.dart';
-import '../../utils/local_storage.dart';
 
 
 class CabBookProvider with ChangeNotifier {
   String? _pickupLocation;
   String _dropLocation="";
+  int selectedInstructionIndex = -1;
   bool isLoading = true;
   List<AutocompletePrediction> placePredictions = [];
   List<AutocompletePrediction> pickPlacePredictions = [];
   final List<Vehicle> vehicle=[];
   CouponData? couponData;
+  Notes? notes;
+  Notes? get notesdetails => notes;
+  Payment? paytype;
+  Payment? get paytypes => paytype;
 
   VehicleResponse? vehicleResponse;
   DriverDetails? driverInfo;
@@ -33,6 +38,7 @@ final String apiKey='AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y';
   VehicleResponse? get vehicleRes => vehicleResponse;
   DriverDetails ? get driverdetails => driverInfo;
   HistoryResponse ? get dropHistoryData => historyResponse;
+
 
 
   void getCurrentLocation(){
@@ -57,6 +63,19 @@ final String apiKey='AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y';
     cabType=type;
     notifyListeners();
 
+  }
+
+  void setSelectedVehicle(String id){
+
+    selectedVehicle=id;
+    notifyListeners();
+
+  }
+
+  // notes
+  void setSelectedInstruction(int index) {
+    selectedInstructionIndex = index;
+    notifyListeners();
   }
 
   void placeAutoComplete(String query,String location) async {
@@ -174,17 +193,17 @@ final String apiKey='AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y';
     }
   }
 
-  Future<void> sendRequestToDriver(double pickLat,double pickLong,double dropLat,double dropLong,int vehicleID,String pickupAddress,String dropAddress) async {
+  Future<void> sendRequestToDriver() async {
     // Request body
     Map<String, dynamic> requestBody = {
-      "pickup_lat": pickLat,
-      "pickup_long":pickLong ,
+      "pickup_lat": ALatitude,
+      "pickup_long":ALongitude ,
       "drop_lat" : dropLat,
       "drop_long" : dropLong,
-      "vehicle_type_id" : vehicleID,
+      "vehicle_type_id" : selectedVehicle,
       "user_id" : 259 ,
       "added_by_web" : "asatvindia.in" ,
-      "pickup_address" : pickupAddress ,
+      "pickup_address" : address ,
       "drop_address": dropAddress
     };
 
@@ -438,7 +457,6 @@ final String apiKey='AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y';
       // Handle any exception
     }
   }
-
   Future<void> GetNotes() async {
     try {
       final response = await NetworkUtility.sendGetRequest(ApiHelper.getnotes);
@@ -453,7 +471,6 @@ final String apiKey='AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y';
       }
     } catch (Error) {}
   }
-
   Future<void> convcharge() async {
     Map<String, dynamic> requestbody = {};
     try {

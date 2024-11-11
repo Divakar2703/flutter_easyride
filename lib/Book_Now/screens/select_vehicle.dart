@@ -4,6 +4,7 @@ import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import '../../book_easyride/new_screen/confirm_booking.dart';
 import '../../common_widget/map_widget.dart';
 import '../../common_widget/vehicle_widget.dart';
 import '../../provider/map_provider.dart';
@@ -171,6 +172,7 @@ class _SelectVehicleState extends State<SelectVehicle> {
                                                       context,
                                                       listen: false)
                                                   .convcharge();
+                                              Navigator.push(context, MaterialPageRoute(builder: (context)=>ConfirmBooking()));
                                             },
                                             child: Row(
                                               children: [
@@ -185,6 +187,7 @@ class _SelectVehicleState extends State<SelectVehicle> {
                                               ],
                                             ),
                                           ),
+
                                           Icon(
                                             Icons.arrow_forward_ios_rounded,
                                             color: Colors.black,
@@ -237,12 +240,16 @@ class _SelectVehicleState extends State<SelectVehicle> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
+                                    Provider.of<CabBookProvider>(context, listen: false)
+                                        .sendRequestToDriver(
+
+                                    );
                                     // Add your confirm action here
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                DriveFindingScreen()));
+                                                FindDriverScreen()));
                                   },
                                   child: Container(
                                     width: MediaQuery.of(context).size.width,

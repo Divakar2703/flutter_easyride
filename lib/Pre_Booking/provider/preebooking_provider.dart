@@ -57,8 +57,7 @@ class PreebookingProvider with ChangeNotifier {
     };
 
     try {
-      final response = await NetworkUtility.sendPostRequest(
-          ApiHelper.getPreebookvehicle, requestbody);
+      final response = await NetworkUtility.sendPostRequest(ApiHelper.getPreebookvehicle, requestbody);
 
       if (response.statusCode == 200) {
         var getPreevehicle = jsonDecode(response.body);

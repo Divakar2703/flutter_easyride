@@ -1,18 +1,21 @@
 import 'dart:convert';
-import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_client/web_socket_client.dart';
+
 import '../../model/driver_details.dart';
 
-class WebSocketService {
+class DriverWebSocketService {
   final String url = 'wss://asatvindia.in:5001';
-  late WebSocketChannel _channel;
+  late final WebSocket _webSocket;
+  late Stream<DriverDetails> driverDetailsStream;
 
-  void connect() {
-    _channel = WebSocketChannel.connect(Uri.parse(url));
-    print("Connected to WebSocket: $url");
-  }
+  DriverWebSocketService() {
+    // Initialize WebSocket
+    _webSocket = WebSocket(Uri.parse(url));
 
-  void disconnect() {
-    _channel.sink.close();
+    // Listen to incoming messages and parse them into DriverDetails objects
+    driverDetailsStream = _webSocket.messages.map((message) {
+      return DriverDetails.fromJson(jsonDecode(message));
+    });
   }
 
   void findDriver(int vehicleTypeId, int userId) {
@@ -20,20 +23,35 @@ class WebSocketService {
       "vehicle_type_id": vehicleTypeId,
       "user_id": userId,
     };
-
-    print("req===${requestData}");
-    _channel.sink.add(jsonEncode(requestData));
+    _webSocket.send(jsonEncode(requestData));
+    print("Sent request: $requestData");
   }
 
-  Stream<DriverDetails> get driverDetailsStream {
-    return _channel.stream.map((message) {
-      final Map<String, dynamic> data = jsonDecode(message);
-      print("data===${data}");
-      return DriverDetails.fromJson(data);
-    });
-  }
-
-  void dispose() {
-    _channel.sink.close();
+  void disconnect() {
+    _webSocket.close();
   }
 }
+
+// Define your driver details model
+// class DriverDetails {
+//   final int id;
+//   final String name;
+//   final String vehicleType;
+//   final String location;
+//
+//   DriverDetails({
+//     required this.id,
+//     required this.name,
+//     required this.vehicleType,
+//     required this.location,
+//   });
+//
+//   factory DriverDetails.fromJson(Map<String, dynamic> json) {
+//     return DriverDetails(
+//       id: json['id'],
+//       name: json['name'],
+//       vehicleType: json['vehicle_type'],
+//       location: json['location'],
+//     );
+//   }
+// }

@@ -111,6 +111,7 @@ class _SelectPrebookingVehicleState extends State<SelectPrebookingVehicle> {
                                           .getOffers(int.parse(vehicle.id));
 
                                       selectedRows.add(index);
+                                      cabProvider.setSelectedVehicle(vehicle.id);
                                     }
                                   });
                                 },
