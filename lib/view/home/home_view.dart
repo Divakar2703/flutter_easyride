@@ -4,6 +4,8 @@ import 'package:flutter_easy_ride/service/api_helper.dart';
 import 'package:provider/provider.dart';
 import '../../nav_Bar.dart';
 import '../../new/home/components/end_screen.dart';
+import '../../order/components/pre_booking_widget.dart';
+import '../../order/pre_booking_order_view.dart';
 import '../../rental/recurring/components/select_hour.dart';
 import '../../rental/recurring/components/select_recurring_rental_view.dart';
 import '../../payment/payment_Screen.dart';
@@ -210,14 +212,47 @@ class _NewHomeViewState extends State<HomeView> {
                   [
 
                   GestureDetector(
-                    onTap: (){
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => SelectRecurringRentalView()));
-
-                    },
                       child: const LocationShowWidget()),
 
                     const BannerSlider(),
+
+                    Padding(
+                      padding:  EdgeInsets.symmetric(horizontal: 12,vertical: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Orders details",
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                              fontFamily: 'Poppins',
+
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => PreBookingOrderView()));
+                            },
+                            child: Text(
+                              "See all",
+                              style: TextStyle(
+                                fontSize:14,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xff1937d7),
+                                fontFamily: 'Poppins',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    PreBookingWidget(),
+
+
                     const  Padding(
                       padding:  EdgeInsets.symmetric(horizontal: 12,vertical: 8),
                       child: Row(
@@ -229,8 +264,8 @@ class _NewHomeViewState extends State<HomeView> {
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               color: Colors.black87,
-                              fontFamily: 'Poppins', // Set Poppins as the default font
-                              //letterSpacing: 1.0, // Adjust this value as needed
+                              fontFamily: 'Poppins',
+
                             ),
                           ),
 
