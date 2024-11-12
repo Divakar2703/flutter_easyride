@@ -398,11 +398,11 @@ class _FindDriverScreenState extends State<FindDriverScreen> {
   void initState() {
     super.initState();
 
-    final webSocketHelper = WebSocketHelper();
-    webSocketHelper.connect();
+    _webSocketService = WebSocketHelper();
+    _webSocketService.connect();
 
 // Send a request to find a driver
-    webSocketHelper.findDriver("10", "259");
+    _webSocketService.findDriver("10", "15");
     // _webSocketService = DriverWebSocketService();
     // // Find driver with a sample vehicleTypeId and userId
     // _webSocketService.findDriver(10, 259); // Replace with actual IDs
@@ -414,26 +414,26 @@ class _FindDriverScreenState extends State<FindDriverScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Find Driver')),
-      body: Text("finding data")
-      // StreamBuilder<DriverDetails>(
-      //   stream: _webSocketService.driverDetailsStream,
-      //   builder: (context, snapshot) {
-      //     if (snapshot.connectionState == ConnectionState.waiting) {
-      //       return Center(child: CircularProgressIndicator());
-      //     } else if (snapshot.hasError) {
-      //       return Center(child: Text('Error: ${snapshot.error}'));
-      //     } else if (!snapshot.hasData) {
-      //       return Center(child: Text('No driver found'));
-      //     } else {
-      //       final driverDetails = snapshot.data!;
-      //       return ListTile(
-      //         title: Text(driverDetails.dropAddress),
-      //         subtitle: Text(driverDetails.driverName),
-      //         trailing: Text(driverDetails.dropAddress),
-      //       );
-      //     }
-      //   },
-      // ),
+      body:
+      StreamBuilder<DriverDetails>(
+        stream: _webSocketService.driverDetailsStream,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData) {
+            return Center(child: Text('No driver found'));
+          } else {
+            final driverDetails = snapshot.data!;
+            return ListTile(
+              title: Text(driverDetails.dropAddress),
+              subtitle: Text(driverDetails.driverName),
+              trailing: Text(driverDetails.dropAddress),
+            );
+          }
+        },
+      ),
     );
   }
 }
