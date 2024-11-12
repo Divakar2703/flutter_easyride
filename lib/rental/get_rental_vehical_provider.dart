@@ -82,14 +82,19 @@ class GetRentalVehicleProvider with ChangeNotifier {
         {
           "pickup_lat": pickupLat,
           "pickup_long": pickupLong,
-          "hours": hours,
-          "kms": kms,
+          "hours": hours.toString(),
+          "kms": kms.toString(),
         },
       );
 
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
-        getRentalVehicleResponse = GetRentalVehicleResponse.fromJson(jsonResponse);
+
+        if (jsonResponse != null) {
+          getRentalVehicleResponse = GetRentalVehicleResponse.fromJson(jsonResponse);
+        } else {
+          throw Exception("Invalid JSON response: null");
+        }
       } else {
         print('Error fetching rental vehicles: ${response.statusCode}');
         getRentalVehicleResponse = null;

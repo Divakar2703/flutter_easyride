@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Import provider
-import 'package:flutter_easy_ride/service/network_utility.dart';
 import '../recurringbooking_provider.dart';
 
 class SelectHour extends StatefulWidget {
@@ -12,9 +11,8 @@ class SelectHour extends StatefulWidget {
 
 class _SelectHourState extends State<SelectHour> {
   String? selectedItem;
-  int selectedIndex = 0; // Default selected index
-  bool isExpanded = true; // Boolean flag to control visibility
-  bool isDataLoaded = false; // Flag to check if data is already loaded
+  int selectedIndex = 0;
+  bool isExpanded = true;
 
   @override
   void initState() {
@@ -30,20 +28,20 @@ class _SelectHourState extends State<SelectHour> {
     });
   }
 
-  // Method to fetch data using the provider
   void fetchRecurringData(String bookingType) {
     final provider = Provider.of<RecurringBookingProvider>(context, listen: false);
     provider.getRecurringBooking(
-      28.704060, // Example pickupLat
-      77.102493, // Example pickupLong
-      28.704060, // Example dropLat
-      77.102493, // Example dropLong
-      'web', // Example addedByWeb
-      'Pickup Address', // Example pickupAddress
-      'Drop Address', // Example dropAddress
-      bookingType, // Use dynamic booking type
-      12345, // Example userId
+      30.36581490852199,
+      78.04388081621565,
+      27.210052664323,
+      83.891678676009,
+      'asatvindia.in',
+      'Dr. Shyamu medical store, Turkaha, Uttar Pradesh 274801, India', // Example pickupAddress
+      '6V6V+J48, Turkaha, Uttar Pradesh 274801, India', // Example dropAddress
+      "recuring", // Use dynamic booking type
+      6, // Example userId
     );
+
   }
 
   @override
@@ -56,6 +54,7 @@ class _SelectHourState extends State<SelectHour> {
         }
 
         final response = provider.recurringRentalResponse!;
+
         return Column(
           children: [
             Row(

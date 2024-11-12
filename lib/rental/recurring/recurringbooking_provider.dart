@@ -4,45 +4,45 @@ import 'package:flutter_easy_ride/service/network_utility.dart';
 import '../../service/api_helper.dart';
 
 /// Recurring Rental Request Model
-class RecurringRentalRequest {
-  final double pickupLat;
-  final double pickupLong;
-  final double dropLat;
-  final double dropLong;
-  final String addedByWeb;
-  final String pickupAddress;
-  final String dropAddress;
-  final String bookingType;
-  final int userId;
-
-  // Constructor for the request model
-  RecurringRentalRequest({
-    required this.pickupLat,
-    required this.pickupLong,
-    required this.dropLat,
-    required this.dropLong,
-    required this.addedByWeb,
-    required this.pickupAddress,
-    required this.dropAddress,
-    required this.bookingType,
-    required this.userId,
-  });
-
-  // Method to convert the object to a JSON map
-  Map<String, dynamic> toJson() {
-    return {
-      'pickup_lat': pickupLat,
-      'pickup_long': pickupLong,
-      'drop_lat': dropLat,
-      'drop_long': dropLong,
-      'added_by_web': addedByWeb,
-      'pickup_address': pickupAddress,
-      'drop_address': dropAddress,
-      'booking_type': bookingType,
-      'user_id': userId,
-    };
-  }
-}
+// class RecurringRentalRequest {
+//   final double pickupLat;
+//   final double pickupLong;
+//   final double dropLat;
+//   final double dropLong;
+//   final String addedByWeb;
+//   final String pickupAddress;
+//   final String dropAddress;
+//   final String bookingType;
+//   final int userId;
+//
+//   // Constructor for the request model
+//   RecurringRentalRequest({
+//     required this.pickupLat,
+//     required this.pickupLong,
+//     required this.dropLat,
+//     required this.dropLong,
+//     required this.addedByWeb,
+//     required this.pickupAddress,
+//     required this.dropAddress,
+//     required this.bookingType,
+//     required this.userId,
+//   });
+//
+//   // Method to convert the object to a JSON map
+//   Map<String, dynamic> toJson() {
+//     return {
+//       'pickup_lat': pickupLat,
+//       'pickup_long': pickupLong,
+//       'drop_lat': dropLat,
+//       'drop_long': dropLong,
+//       'added_by_web': addedByWeb,
+//       'pickup_address': pickupAddress,
+//       'drop_address': dropAddress,
+//       'booking_type': bookingType,
+//       'user_id': userId,
+//     };
+//   }
+// }
 
 /// Recurring Rental Response Model
 class RecurringRentalResponse {
@@ -98,22 +98,45 @@ class RecurringBookingProvider with ChangeNotifier {
       String dropAddress,
       String bookingType,
       int userId) async {
-    var recurringRequest = RecurringRentalRequest(
-      pickupLat: pickupLat,
-      pickupLong: pickupLong,
-      dropLat: dropLat,
-      dropLong: dropLong,
-      addedByWeb: addedByWeb,
-      pickupAddress: pickupAddress,
-      dropAddress: dropAddress,
-      bookingType: bookingType,
-      userId: userId,
+    // var recurringRequest = RecurringRentalRequest(
+    //   pickupLat: pickupLat,
+    //   pickupLong: pickupLong,
+    //   dropLat: dropLat,
+    //   dropLong: dropLong,
+    //   addedByWeb: addedByWeb,
+    //   pickupAddress: pickupAddress,
+    //   dropAddress: dropAddress,
+    //   bookingType: bookingType,
+    //   userId: userId,
+    // );
+    print(
+        "Recurring Booking Request:\n"
+            "Pickup Latitude: $pickupLat\n"
+            "Pickup Longitude: $pickupLong\n"
+            "Drop Latitude: $dropLat\n"
+            "Drop Longitude: $dropLong\n"
+            "Added By Web: $addedByWeb\n"
+            "Pickup Address: $pickupAddress\n"
+            "Drop Address: $dropAddress\n"
+            "Booking Type: $bookingType\n"
+            "User ID: $userId"
     );
-
     try {
+      // print("recurringRequest=======================${recurringRequest.addedByWeb}==${recurringRequest..pickupLat}");
       final response = await NetworkUtility.sendPostRequest(
         ApiHelper.getRecurringBooking,
-        recurringRequest.toJson(),
+        {
+          'pickup_lat': pickupLat,
+          'pickup_long': pickupLong,
+          'drop_lat': dropLat,
+          'drop_long': dropLong,
+          'added_by_web': addedByWeb,
+          'pickup_address': pickupAddress,
+          'drop_address': dropAddress,
+          'booking_type': bookingType,
+          'user_id': userId,
+        }
+
       );
 
       print('Response Body: ${response.body}');
@@ -124,7 +147,7 @@ class RecurringBookingProvider with ChangeNotifier {
           var jsonResponse = jsonDecode(response.body);
 
           // Debug the response body
-          print('Parsed JSON: $jsonResponse');
+          print('Parsed JSON rcurring: $jsonResponse');
 
           // Check if "package" field exists and parse accordingly
           if (jsonResponse['package'] == null) {

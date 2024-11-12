@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/rental/components/rental_booking_details_view.dart';
 import 'package:flutter_easy_ride/rental/components/rentalbooking_provider.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import 'dart:math';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../../common_widget/map_widget.dart';
-import '../../provider/map_provider.dart';
+import '../get_rental_vehical_provider.dart';
 
 class SelectRentalPackegeView extends StatefulWidget {
   @override
@@ -17,19 +15,18 @@ class _SelectRentalPackegeViewState extends State<SelectRentalPackegeView> {
   String? _selectedDistance;
   String? _selectedDuration;
   String? _selectedCar;
-
   List<String> _availableDistances = [];
   Map<String, List<String>> _availableDurations = {};
 
-  List<Map<String, dynamic>> _availableCars = [
-    {
-      'class': 'Blue Classic',
-      'name': 'Sedan',
-      'seats': '5',
-      'rate': '50.00',
-      "lessRate": '30.00',
-      'image': 'assets/images/ride_car_two.png',
-    },
+  List<Map<String, dynamic>> _availableCars = [ {
+    'class': 'Blue Classic',
+    'name': 'Sedan',
+    'seats': '5',
+    'rate': '50.00',
+    "lessRate": '30.00',
+    'image': 'assets/images/ride_car_two.png',
+  },
+
     {
       'class': 'Blue Premium',
       'name': 'SUV',
@@ -45,8 +42,7 @@ class _SelectRentalPackegeViewState extends State<SelectRentalPackegeView> {
       'rate': '50.00',
       "lessRate": '30.00',
       'image': 'assets/images/ride_car_three.png',
-    },
-  ];
+    },];
 
   static const LatLng _startLocation = LatLng(30.365368, 78.044571);
 
@@ -58,42 +54,84 @@ class _SelectRentalPackegeViewState extends State<SelectRentalPackegeView> {
 
   void _fetchRentalAvailability() async {
     final prebookingProvider = Provider.of<RentalbookingProvider>(context, listen: false);
+    final vehicleProvider = Provider.of<GetRentalVehicleProvider>(context, listen: false);
+
     try {
-      // Assuming you have the required data for the API call
       await prebookingProvider.getRentalBooking(
-        30.365368, // pickupLat
-        78.044571, // pickupLong
-        "user_web", // addedByWeb
-        "Pickup Address", // pickupAddress
-        "rental", // bookingType
-        1, // userId
+        30.365368,
+        78.044571,
+        "user_web",
+        "Pickup Address",
+        "rental",
+        1,
       );
 
-      // After fetching data, update the UI
+      await vehicleProvider.getRentalVehicle(30.365368, 78.044571, 3, 10);
+
       setState(() {
         _availableDistances = prebookingProvider.rentalResponse?.km.map((km) => "$km km").toList() ?? [];
         _availableDurations = {
           for (int i = 0; i < _availableDistances.length; i++)
             _availableDistances[i]: prebookingProvider.rentalResponse?.hr.map((hr) => "$hr hr").toList() ?? []
         };
+
+        _availableCars = vehicleProvider.getRentalVehicleResponse?.vehicles.map((vehicle) {
+          return {
+            'class': vehicle.type,
+            'name': vehicle.name,
+            'seats': 'N/A', // Replace with actual seat count if available
+            'rate': vehicle.netFare.toString(),
+            'lessRate': vehicle.fare.toString(),
+            'image': vehicle.image,
+          };
+        }).toList() ?? [];
       });
     } catch (error) {
       print('Error fetching rental availability: $error');
     }
   }
 
+  void _fetchRentalVehicle() async {
+    final vehicleProvider = Provider.of<GetRentalVehicleProvider>(context, listen: false);
+
+    try {
+      await vehicleProvider.getRentalVehicle(
+        30.36581490852199,
+        78.04388081621565,
+        1,
+        20,
+      );
+
+      // await vehicleProvider.getRentalVehicle(30.365368, 78.044571, 3, 10);
+
+      setState(() {
+
+        _availableCars = vehicleProvider.getRentalVehicleResponse?.vehicles.map((vehicle) {
+          return {
+            'class': vehicle.type,
+            'name': vehicle.name,
+            'seats': 'N/A', // Replace with actual seat count if available
+            'rate': vehicle.netFare.toString(),
+            'lessRate': vehicle.fare.toString(),
+            'image': vehicle.image,
+          };
+        }).toList() ?? [];
+      });
+    } catch (error) {
+      print('Error fetching rental availability: $error');
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    final mapProvider = Provider.of<MapProvider>(context);
-    final prebookingProvider = Provider.of<RentalbookingProvider>(context);
-
     return Scaffold(
       body: Stack(
         children: [
-          MapWidget(
-            initialPosition: _startLocation,
-            markers: mapProvider.markers,
-            polylineCoordinates: mapProvider.polylineCoordinates,
+          // Map background
+          GoogleMap(
+            initialCameraPosition: CameraPosition(target: _startLocation, zoom: 14.0),
+            markers: Set.from([]), // Add markers if necessary
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -117,32 +155,11 @@ class _SelectRentalPackegeViewState extends State<SelectRentalPackegeView> {
                   // Distance selection
                   Row(
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Colors.grey.shade300,
-                            width: 1.0,
-                          ),
-                        ),
-                        child: CircleAvatar(
-                          radius: 13,
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            Icons.timelapse_rounded,
-                            color: Color(0xff1937d7),
-                            size: 18,
-                          ),
-                        ),
-                      ),
+                      Icon(Icons.timelapse_rounded, color: Color(0xff1937d7), size: 18),
+                      SizedBox(width: 8),
                       Text(
-                        "  Select a package",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                          fontFamily: 'Poppins',
-                        ),
+                        "Select a package",
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black87),
                       ),
                     ],
                   ),
@@ -173,9 +190,8 @@ class _SelectRentalPackegeViewState extends State<SelectRentalPackegeView> {
                               child: Text(
                                 distance,
                                 style: TextStyle(
-                                    fontSize: 14,
-                                    color: _selectedDistance == distance ? Colors.white : Colors.black,
-                                    fontFamily: "Poppins"
+                                  fontSize: 14,
+                                  color: _selectedDistance == distance ? Colors.white : Colors.black,
                                 ),
                               ),
                             ),
@@ -192,7 +208,7 @@ class _SelectRentalPackegeViewState extends State<SelectRentalPackegeView> {
                     height: 50,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: _availableDurations[_selectedDistance]!.length,
+                      itemCount: _availableDurations[_selectedDistance]?.length ?? 0,
                       itemBuilder: (context, index) {
                         String duration = _availableDurations[_selectedDistance]![index];
                         return GestureDetector(
@@ -200,6 +216,7 @@ class _SelectRentalPackegeViewState extends State<SelectRentalPackegeView> {
                             setState(() {
                               _selectedDuration = duration;
                               _selectedCar = null;
+                              _fetchRentalVehicle();
                             });
                           },
                           child: Container(
@@ -213,9 +230,8 @@ class _SelectRentalPackegeViewState extends State<SelectRentalPackegeView> {
                               child: Text(
                                 duration,
                                 style: TextStyle(
-                                    fontSize: 14,
-                                    color: _selectedDuration == duration ? Colors.white : Colors.black,
-                                    fontFamily: "Poppins"
+                                  fontSize: 14,
+                                  color: _selectedDuration == duration ? Colors.white : Colors.black,
                                 ),
                               ),
                             ),
@@ -224,25 +240,82 @@ class _SelectRentalPackegeViewState extends State<SelectRentalPackegeView> {
                       },
                     ),
                   )
-                      : Center(child: Text('Select a distance to view available durations')),
+                      : SizedBox.shrink(),
+
+                  // Car selection
+                 _selectedDuration != null
+                     ? Container(
+                    height: 170,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _availableCars.length,
+                      itemBuilder: (context, index) {
+                        var car = _availableCars[index];
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedCar = car['name'];
+                            });
+                          },
+                          child: Container(
+                            width: 140,
+                            margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: _selectedCar == car['name'] ? Color(0xff1937d7) : Colors.grey[300],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Image.asset(car['image'], height: 70, width: 120),
+                                Text(
+                                  car['class'],
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: _selectedCar == car['name'] ? Colors.white : Color(0xff1937d7),
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    Text(car['name'], style: TextStyle(fontSize: 11)),
+                                    SizedBox(width: 6),
+                                    Icon(Icons.person, size: 14),
+                                    Text(car['seats'], style: TextStyle(fontSize: 11)),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Text("₹ ${car['rate']}", style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                                    SizedBox(width: 8),
+                                    Text("₹ ${car['lessRate']}", style: TextStyle(fontSize: 12, decoration: TextDecoration.lineThrough)),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                     : SizedBox.shrink(),
 
                   Spacer(),
                   Center(
                     child: ElevatedButton(
                       onPressed: _selectedDistance != null && _selectedDuration != null && _selectedCar != null
-                          ? () async {
-                        // Call the provider method
+                          ? () {
                         Navigator.of(context).push(_createRoute());
                       }
                           : null,
                       child: Text(
                         'Continue',
-                        style: TextStyle(fontFamily: "Poppins", fontSize: 14, color: Colors.white),
+                        style: TextStyle(fontSize: 14, color: Colors.white),
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xff1937d7),
                         padding: EdgeInsets.symmetric(horizontal: 72, vertical: 15),
-                        textStyle: TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ),
                   ),
