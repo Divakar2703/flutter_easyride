@@ -66,7 +66,7 @@ final String apiKey='AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y';
   }
 
   void setSelectedVehicle(String id){
-
+print("selctud==$id");
     selectedVehicle=id;
     notifyListeners();
 
@@ -194,6 +194,7 @@ final String apiKey='AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y';
   }
 
   Future<void> sendRequestToDriver() async {
+    print("vehicleID==${selectedVehicle}");
     // Request body
     Map<String, dynamic> requestBody = {
       "pickup_lat": ALatitude,
@@ -206,6 +207,7 @@ final String apiKey='AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y';
       "pickup_address" : address ,
       "drop_address": dropAddress
     };
+    print("params====${requestBody}");
 
     try {
       final response = await NetworkUtility.sendPostRequest(ApiHelper.sendRequestDriver, requestBody);
@@ -310,7 +312,7 @@ final String apiKey='AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y';
       // Handle any exception
     }
   }
-  Future<void> paynow(int requestID,String paymentType,double conCharge,) async {
+  Future<void> paynow(String requestID,String paymentType,double conCharge,) async {
     // Request body
     Map<String, dynamic> requestBody = {
       "send_request_id":requestID,
@@ -319,10 +321,11 @@ final String apiKey='AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y';
       "paymenttype":paymentType, //online,codd,wallet
       "conv_charge":conCharge
     };
+    print("req===${requestBody}");
 
     try {
       final response = await NetworkUtility.sendPostRequest(ApiHelper.payNow, requestBody);
-      print('Response body: ${response.body}');
+      print('Paynow Response body: ${response.body}');
 
       if (response.statusCode == 200) {
 

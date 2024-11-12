@@ -9,6 +9,7 @@ import '../../book_easyride/new_screen/confirm_booking.dart';
 import '../../common_widget/map_widget.dart';
 import '../../model/driver_details.dart';
 import '../../provider/map_provider.dart';
+import '../../service/socket/socket_helper.dart';
 import '../../service/socket/web_socket_service.dart';
 import 'drive_looking_screen.dart';
 import 'trip_details_screen.dart'; 
@@ -391,45 +392,48 @@ class FindDriverScreen extends StatefulWidget {
 }
 
 class _FindDriverScreenState extends State<FindDriverScreen> {
-  late final DriverWebSocketService _webSocketService;
+  late final WebSocketHelper _webSocketService;
 
   @override
   void initState() {
     super.initState();
-    _webSocketService = DriverWebSocketService();
-    // Find driver with a sample vehicleTypeId and userId
-    _webSocketService.findDriver(8, 6); // Replace with actual IDs
+
+    final webSocketHelper = WebSocketHelper();
+    webSocketHelper.connect();
+
+// Send a request to find a driver
+    webSocketHelper.findDriver("10", "259");
+    // _webSocketService = DriverWebSocketService();
+    // // Find driver with a sample vehicleTypeId and userId
+    // _webSocketService.findDriver(10, 259); // Replace with actual IDs
   }
 
-  @override
-  void dispose() {
-    _webSocketService.disconnect();
-    super.dispose();
-  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Find Driver')),
-      body: StreamBuilder<DriverDetails>(
-        stream: _webSocketService.driverDetailsStream,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData) {
-            return Center(child: Text('No driver found'));
-          } else {
-            final driverDetails = snapshot.data!;
-            return ListTile(
-              title: Text(driverDetails.dropAddress),
-              subtitle: Text(driverDetails.driverName),
-              trailing: Text(driverDetails.dropAddress),
-            );
-          }
-        },
-      ),
+      body: Text("finding data")
+      // StreamBuilder<DriverDetails>(
+      //   stream: _webSocketService.driverDetailsStream,
+      //   builder: (context, snapshot) {
+      //     if (snapshot.connectionState == ConnectionState.waiting) {
+      //       return Center(child: CircularProgressIndicator());
+      //     } else if (snapshot.hasError) {
+      //       return Center(child: Text('Error: ${snapshot.error}'));
+      //     } else if (!snapshot.hasData) {
+      //       return Center(child: Text('No driver found'));
+      //     } else {
+      //       final driverDetails = snapshot.data!;
+      //       return ListTile(
+      //         title: Text(driverDetails.dropAddress),
+      //         subtitle: Text(driverDetails.driverName),
+      //         trailing: Text(driverDetails.dropAddress),
+      //       );
+      //     }
+      //   },
+      // ),
     );
   }
 }

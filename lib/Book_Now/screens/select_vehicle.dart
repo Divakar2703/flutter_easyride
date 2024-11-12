@@ -113,7 +113,11 @@ class _SelectVehicleState extends State<SelectVehicle> {
                                       isSelected: selectedRows.contains(
                                           index), // Check if the current index is in the selected rows
                                       onTap: () {
+
                                         setState(() {
+                                          selectedVehicle=vehicle.id;
+                                          setState(() {
+                                          });
                                           // Toggle the selection state
                                           if (selectedRows.contains(index)) {
                                             selectedRows.remove(
@@ -168,6 +172,10 @@ class _SelectVehicleState extends State<SelectVehicle> {
                                         children: [
                                           GestureDetector(
                                             onTap: () {
+                                              Provider.of<CabBookProvider>(context, listen: false)
+                                                  .paynow(selectedVehicle,"Online",0
+
+                                              );
                                               Provider.of<CabBookProvider>(
                                                       context,
                                                       listen: false)

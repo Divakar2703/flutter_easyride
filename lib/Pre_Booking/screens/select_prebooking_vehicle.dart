@@ -103,6 +103,8 @@ class _SelectPrebookingVehicleState extends State<SelectPrebookingVehicle> {
                                 assetPath: vehicle.image,
                                 isSelected: selectedRows.contains(index),
                                 onTap: () {
+
+
                                   setState(() {
                                     if (selectedRows.contains(index)) {
                                       selectedRows.remove(index);
@@ -111,7 +113,6 @@ class _SelectPrebookingVehicleState extends State<SelectPrebookingVehicle> {
                                           .getOffers(int.parse(vehicle.id));
 
                                       selectedRows.add(index);
-                                      cabProvider.setSelectedVehicle(vehicle.id);
                                     }
                                   });
                                 },
