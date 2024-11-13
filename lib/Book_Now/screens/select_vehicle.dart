@@ -248,10 +248,7 @@ class _SelectVehicleState extends State<SelectVehicle> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    Provider.of<CabBookProvider>(context, listen: false)
-                                        .sendRequestToDriver(
-
-                                    );
+                                    Provider.of<CabBookProvider>(context, listen: false).sendRequestToDriver();
                                     // Add your confirm action here
                                     Navigator.push(
                                         context,

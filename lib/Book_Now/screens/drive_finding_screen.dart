@@ -392,17 +392,24 @@ class FindDriverScreen extends StatefulWidget {
 }
 
 class _FindDriverScreenState extends State<FindDriverScreen> {
-  late final WebSocketHelper _webSocketService;
+//  late final WebSocketHelper _webSocketService;
+  final SocketHelper socketHelper = SocketHelper();
 
   @override
   void initState() {
     super.initState();
+    socketHelper.connect();
 
-    _webSocketService = WebSocketHelper();
-    _webSocketService.connect();
+    // Example: Call findDriver after connection
+    Future.delayed(Duration(seconds: 2), () {
+      socketHelper.findDriver(selectedVehicle, "15"); // Replace with actual IDs
+    });
+
+    // _webSocketService = WebSocketHelper();
+    // _webSocketService.connect();
 
 // Send a request to find a driver
-    _webSocketService.findDriver("10", "15");
+   // _webSocketService.findDriver(selectedVehicle, "15");
     // _webSocketService = DriverWebSocketService();
     // // Find driver with a sample vehicleTypeId and userId
     // _webSocketService.findDriver(10, 259); // Replace with actual IDs
@@ -412,28 +419,60 @@ class _FindDriverScreenState extends State<FindDriverScreen> {
 
   @override
   Widget build(BuildContext context) {
+    socketHelper.connect();
+
     return Scaffold(
       appBar: AppBar(title: Text('Find Driver')),
-      body:
-      StreamBuilder<DriverDetails>(
-        stream: _webSocketService.driverDetailsStream,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData) {
-            return Center(child: Text('No driver found'));
-          } else {
-            final driverDetails = snapshot.data!;
-            return ListTile(
-              title: Text(driverDetails.dropAddress),
-              subtitle: Text(driverDetails.driverName),
-              trailing: Text(driverDetails.dropAddress),
-            );
-          }
-        },
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          StreamBuilder<DriverDetails>(
+            stream: socketHelper.driverDetailsStream,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text("Error: ${snapshot.error}"));
+              } else if (!snapshot.hasData) {
+                return Center(child: Text("No driver data received"));
+              } else {
+                final driverDetails = snapshot.data!;
+                return Center(
+                  child: Text('Driver found: ${driverDetails.driverName}'), // Adjust based on DriverDetails fields
+                );
+              }
+            },
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              socketHelper.findDriver(selectedVehicle, "15"); // Replace with actual values
+            },
+            child: Text("Find Driver"),
+          ),
+        ],
       ),
+
+
+      // StreamBuilder<DriverDetails>(
+      //   stream: _webSocketService.driverDetailsStream,
+      //   builder: (context, snapshot) {
+      //     if (snapshot.connectionState == ConnectionState.waiting) {
+      //       return Center(child: CircularProgressIndicator());
+      //     } else if (snapshot.hasError) {
+      //       return Center(child: Text('Error: ${snapshot.error}'));
+      //     } else if (!snapshot.hasData) {
+      //       return Center(child: Text('No driver found'));
+      //     } else {
+      //       final driverDetails = snapshot.data!;
+      //       return ListTile(
+      //         title: Text(driverDetails.dropAddress),
+      //         subtitle: Text(driverDetails.driverName),
+      //         trailing: Text(driverDetails.dropAddress),
+      //       );
+      //     }
+      //   },
+      // ),
     );
   }
 }

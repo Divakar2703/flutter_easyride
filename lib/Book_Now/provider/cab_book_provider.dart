@@ -48,6 +48,7 @@ final String apiKey='AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y';
 
   void setDropLocation(String location,double lat,double long) {
     _dropLocation = location;
+    dropAddress=location;
     dropLat=lat;
     dropLong=long;
     notifyListeners();
