@@ -30,7 +30,7 @@ class _HistryDetailsState extends State<HistryDetails> {
         centerTitle: true,
         backgroundColor: Colors.blue,
         title: Text(
-          'Trip Histry Details',
+          'Trip History Details',
           style: TextStyle(color: Colors.white),
         ),
       ),
