@@ -14,16 +14,20 @@ class _PaymentScreenState extends State<PaymentScreen> {
       backgroundColor: const Color(0xfff3fdf6),
       appBar: AppBar(
         backgroundColor: Color(0xff1937d7),
-        title: Text('Payments',
+        title: Text(
+          'Payments',
           style: TextStyle(
               fontWeight: FontWeight.w500,
-              fontFamily: 'Poppins', 
+              fontFamily: 'Poppins',
               fontSize: 17,
-              color: Colors.white
-          ),
+              color: Colors.white),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back,color: Colors.white,size: 21,),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+            size: 21,
+          ),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -33,13 +37,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
-
             Padding(
               padding: const EdgeInsets.only(left: 8, bottom: 10),
               child: Row(
                 children: [
                   Image.asset(
-                    'assets/images/d.webp',// Replace with your image asset path
+                    'assets/images/d.webp', // Replace with your image asset path
                     //color: Colors.grey.shade600,
                     width: 30,
                     height: 30,
@@ -54,7 +57,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           fontSize: 15,
                           color: Colors.black87,
                           fontWeight: FontWeight.w500,
-                          fontFamily: 'Poppins', // Set Poppins as the default font
+                          fontFamily:
+                              'Poppins', // Set Poppins as the default font
                         ),
                       ),
                       Text(
@@ -63,7 +67,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           fontSize: 14,
                           color: Colors.black54,
                           fontWeight: FontWeight.w400,
-                          fontFamily: 'Poppins', // Set Poppins as the default font
+                          fontFamily:
+                              'Poppins', // Set Poppins as the default font
                         ),
                       ),
                     ],
@@ -82,8 +87,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 ],
               ),
             ),
-
-
             Divider(
               thickness: 1.0,
             ),
@@ -120,9 +123,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 ],
               ),
             ),
-
-
-
             SizedBox(height: 15),
             Row(
               children: [
@@ -175,7 +175,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
             Divider(
               thickness: 1.0,
             ),
-
             Padding(
               padding: const EdgeInsets.only(left: 8, bottom: 10),
               child: Row(
@@ -213,7 +212,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
             Divider(
               thickness: 1.0,
             ),
-
             Padding(
               padding: const EdgeInsets.only(left: 8, bottom: 10),
               child: Row(
@@ -285,7 +283,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 ],
               ),
             ),
-
           ],
         ),
       ),

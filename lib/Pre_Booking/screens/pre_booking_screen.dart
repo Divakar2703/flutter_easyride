@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
+import 'package:flutter_easy_ride/internate/networkconnection.dart';
 import 'package:provider/provider.dart';
 import '../../common_widget/pickup_drop_widget.dart';
 import '../../utils/routes.dart';
@@ -43,7 +44,7 @@ class _PreBookingScreenState extends State<PreBookingScreen> {
           'Pickup',
           style: TextStyle(
               fontWeight: FontWeight.w500,
-              fontFamily: 'Poppins', // Set Poppins as the default font
+              fontFamily: 'Poppins', 
               fontSize: 17,
               color: Colors.white),
         ),
@@ -60,6 +61,7 @@ class _PreBookingScreenState extends State<PreBookingScreen> {
       ),
       body: Column(
         children: [
+          ConnectivityChecker(),
           PickupDropWidget(
             pickupController: pickupController,
             dropController: dropController,
@@ -101,8 +103,7 @@ class _PreBookingScreenState extends State<PreBookingScreen> {
                           color: Color(0xff1937d7),
                           fontFamily:
                               'Poppins', // Set Poppins as the default font
-
-                          fontSize: 14.0,
+                         fontSize: 14.0,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -196,7 +197,6 @@ class _PreBookingScreenState extends State<PreBookingScreen> {
                               color: Colors.grey.shade800,
                               fontFamily:
                                   'Poppins', // Set Poppins as the default font
-
                               fontWeight: FontWeight.w500,
                             ),
                           )

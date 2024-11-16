@@ -3,25 +3,24 @@ import 'package:flutter/material.dart';
 class PickupDropWidget extends StatelessWidget {
   final TextEditingController pickupController;
   final TextEditingController dropController;
-  Function (String) onChange;
+  Function(String) onChange;
 
-  PickupDropWidget({
-    required this.pickupController,
-    required this.dropController,
-    required this.onChange
-  });
+  PickupDropWidget(
+      {required this.pickupController,
+      required this.dropController,
+      required this.onChange});
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(  // Enable scrolling for overflowing content
+    return SingleChildScrollView(
+      // Enable scrolling for overflowing content
       child: Container(
         padding: const EdgeInsets.all(12.0),
         decoration: BoxDecoration(
-          color: Color(0xff1937d7),  // Light background color for the container
+          color: Color(0xff1937d7), // Light background color for the container
           borderRadius: BorderRadius.only(
-            bottomRight: Radius.circular(20),
-            bottomLeft: Radius.circular(20)
-          ),
+              bottomRight: Radius.circular(20),
+              bottomLeft: Radius.circular(20)),
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.2),
@@ -44,9 +43,6 @@ class PickupDropWidget extends StatelessWidget {
 
             // Tracker Icon with vertical line
             _buildTrackerIcon(),
-
-          
-            
 
             // Drop Location Input
             _buildLocationInput(
@@ -75,20 +71,30 @@ class PickupDropWidget extends StatelessWidget {
         Expanded(
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.3),  // Background color of the text field
+              color: Colors.white
+                  .withOpacity(0.3), // Background color of the text field
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: Colors.white12, width: 1.5),
             ),
             child: TextFormField(
               cursorColor: Colors.white,
-              onChanged: (value)=>onChange(value),
+              onChanged: (value) => onChange(value),
               controller: controller,
-              style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w400,fontFamily: "Poppins",fontSize: 14),
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: "Poppins",
+                  fontSize: 14),
               decoration: InputDecoration(
                 hintText: hint,
-                hintStyle: const TextStyle(color: Colors.white60,fontWeight: FontWeight.w400,fontFamily: "Poppins",fontSize: 14),
+                hintStyle: const TextStyle(
+                    color: Colors.white60,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: "Poppins",
+                    fontSize: 14),
                 border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 1),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 1),
               ),
             ),
           ),
@@ -108,7 +114,7 @@ class PickupDropWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.more_vert, color: Colors.white, size: 24.0),
-               // Container(height: 20, width: 2, color: Colors.grey.shade400),
+                // Container(height: 20, width: 2, color: Colors.grey.shade400),
               ],
             ),
           ),
@@ -121,5 +127,3 @@ class PickupDropWidget extends StatelessWidget {
     );
   }
 }
-
-

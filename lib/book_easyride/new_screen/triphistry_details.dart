@@ -19,12 +19,12 @@ class _HistryDetailsState extends State<HistryDetails> {
 
     super.initState();
   }
-
   double distance = 34.0;
 
   @override
   Widget build(BuildContext context) {
     final details = Provider.of<TriphistryProvider>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -52,14 +52,14 @@ class _HistryDetailsState extends State<HistryDetails> {
                                 fontFamily: 'Poppins',
                                 fontSize: 13,
                                 fontWeight: FontWeight.w500),
-                          )
+                          ),
                         ],
                       ),
                     ],
                   ),
                   Column(
                     children: [
-                      Text(details.triphistory!.vehicle,
+                      Text(details.triphistory?.vehicle.toString() ?? 'N/A',
                           style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 13,
@@ -91,7 +91,7 @@ class _HistryDetailsState extends State<HistryDetails> {
                   ),
                   Column(
                     children: [
-                      Text(details.triphistory!.entryDate,
+                      Text(details.triphistory?.entryDate ?? 'N/A',
                           style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 13,
@@ -108,22 +108,26 @@ class _HistryDetailsState extends State<HistryDetails> {
                     children: [
                       Row(
                         children: [
-                          Text('Date of Ride',
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500))
+                          Text(
+                            'Date of Ride',
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500),
+                          )
                         ],
                       ),
                     ],
                   ),
                   Column(
                     children: [
-                      Text('July 28th 2021 11:24 Am',
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500))
+                      Text(
+                        'July 28th 2021 11:24 Am',
+                        style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500),
+                      )
                     ],
                   )
                 ],
@@ -136,18 +140,20 @@ class _HistryDetailsState extends State<HistryDetails> {
                     children: [
                       Row(
                         children: [
-                          Text('RideID',
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500))
+                          Text(
+                            'RideID',
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500),
+                          )
                         ],
                       ),
                     ],
                   ),
                   Column(
                     children: [
-                      Text(details.triphistory!.bookId,
+                      Text(details.triphistory?.bookId ?? 'NA',
                           style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 13,
@@ -170,8 +176,8 @@ class _HistryDetailsState extends State<HistryDetails> {
                             child: Container(
                               width: 80,
                               height: 80,
-                              child:
-                                  Image.network(details.triphistory!.driverImg),
+                              child: Image.network(
+                                  details.triphistory?.driverImg ?? 'NA'),
                             ),
                           ),
                         ],
@@ -186,7 +192,7 @@ class _HistryDetailsState extends State<HistryDetails> {
                     children: [
                       Row(
                         children: [
-                          Text(details.triphistory!.driverName,
+                          Text(details.triphistory?.driverName ?? 'NA',
                               style: TextStyle(
                                   fontFamily: 'Poppins',
                                   fontSize: 13,
@@ -233,7 +239,8 @@ class _HistryDetailsState extends State<HistryDetails> {
                     child: Container(
                       width: 80,
                       height: 80,
-                      child: Image.network(details.triphistory!.vehicleImage),
+                      child: Image.network(
+                          details.triphistory?.vehicleImage ?? 'NA'),
                     ),
                   ),
                   SizedBox(
@@ -253,11 +260,13 @@ class _HistryDetailsState extends State<HistryDetails> {
                     children: [
                       Row(
                         children: [
-                          Text('Fare',
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500))
+                          Text(
+                            'Fare',
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500),
+                          )
                         ],
                       ),
                     ],
@@ -267,7 +276,7 @@ class _HistryDetailsState extends State<HistryDetails> {
                       Row(
                         children: [
                           Text(
-                            details.triphistory!.totalFare,
+                            details.triphistory?.totalFare ?? 'NA',
                             style: TextStyle(
                                 fontFamily: 'Poppins',
                                 fontSize: 13,
@@ -293,22 +302,26 @@ class _HistryDetailsState extends State<HistryDetails> {
                     children: [
                       Row(
                         children: [
-                          Text('Coin',
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500))
+                          Text(
+                            'Coin',
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500),
+                          )
                         ],
                       ),
                     ],
                   ),
                   Column(
                     children: [
-                      Text('0',
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500))
+                      Text(
+                        '0',
+                        style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500),
+                      )
                     ],
                   )
                 ],
@@ -323,18 +336,20 @@ class _HistryDetailsState extends State<HistryDetails> {
                     children: [
                       Row(
                         children: [
-                          Text('Ride Status',
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500))
+                          Text(
+                            'Ride Status',
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500),
+                          )
                         ],
                       ),
                     ],
                   ),
                   Column(
                     children: [
-                      Text(details.triphistory!.rideStatus,
+                      Text(details.triphistory?.rideStatus ?? 'NA',
                           style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 13,
@@ -364,7 +379,7 @@ class _HistryDetailsState extends State<HistryDetails> {
                   ),
                   Column(
                     children: [
-                      Text(details.triphistory!.paymentStatus,
+                      Text(details.triphistory?.paymentStatus ?? 'NA',
                           style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 13,
@@ -394,11 +409,11 @@ class _HistryDetailsState extends State<HistryDetails> {
                   ),
                   Column(
                     children: [
-                      Text(details.triphistory!.paymenttype,
+                      Text(details.triphistory?.paymenttype ?? 'NA',
                           style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 13,
-                              fontWeight: FontWeight.w500))
+                              fontWeight: FontWeight.w500),),
                     ],
                   )
                 ],
@@ -424,11 +439,11 @@ class _HistryDetailsState extends State<HistryDetails> {
                   ),
                   Column(
                     children: [
-                      Text(details.triphistory!.vehicalNumber,
+                      Text(details.triphistory?.vehicalNumber ?? 'NA',
                           style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 13,
-                              fontWeight: FontWeight.w500))
+                              fontWeight: FontWeight.w500),)
                     ],
                   )
                 ],
@@ -452,11 +467,13 @@ class _HistryDetailsState extends State<HistryDetails> {
                   ),
                   Column(
                     children: [
-                      Text(details.triphistory!.status,
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500))
+                      Text(
+                        details.triphistory?.status ?? '',
+                        style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500),
+                      ),
                     ],
                   )
                 ],
@@ -469,30 +486,38 @@ class _HistryDetailsState extends State<HistryDetails> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('4.51km',
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500)),
-                        Text('Distance',
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500))
+                        Text(
+                          '4.51km',
+                          style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        Text(
+                          'Distance',
+                          style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500),
+                        )
                       ],
                     ),
                     Column(
                       children: [
-                        Text('11.0 mins',
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500)),
-                        Text('Duration',
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500))
+                        Text(
+                          '11.0 mins',
+                          style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        Text(
+                          'Duration',
+                          style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500),
+                        )
                       ],
                     )
                   ],
@@ -508,7 +533,7 @@ class _HistryDetailsState extends State<HistryDetails> {
                   SizedBox(width: 5),
                   Expanded(
                     child: Text(
-                      details.triphistory!.pickupAddress,
+                      details.triphistory?.pickupAddress ?? 'NA',
                       style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 13,
@@ -526,7 +551,7 @@ class _HistryDetailsState extends State<HistryDetails> {
                   SizedBox(width: 3),
                   Expanded(
                     child: Text(
-                      details.triphistory!.dropAddress,
+                      details.triphistory?.dropAddress ?? 'NA',
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 13,
@@ -592,11 +617,13 @@ class _HistryDetailsState extends State<HistryDetails> {
                       SizedBox(
                         height: 10,
                       ),
-                      Text('I want to report an issue about a Captain',
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500)),
+                      Text(
+                        'I want to report an issue about a Captain',
+                        style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500),
+                      ),
                     ],
                   ),
                 ],

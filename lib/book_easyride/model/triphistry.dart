@@ -19,8 +19,6 @@ class TripHistory {
   final String? entryDate;
   final String? isArrivedDestination;
     final String? item;
-  
-
   TripHistory({
     this.item,
     this.id,
@@ -166,6 +164,8 @@ class ListElement {
         entryDate: json["entry_date"],
         isArrivedDestination: json["is_arrived_destination"],
     );
+
+  get bookingId => null;
 
     Map<String, dynamic> toJson() => {
         "id": id,

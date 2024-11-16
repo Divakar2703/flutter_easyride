@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/Pre_Booking/screens/image_slider.dart';
 import 'package:lottie/lottie.dart';
-
 class BookingSuccessScreen extends StatefulWidget {
   const BookingSuccessScreen({super.key});
 
@@ -10,7 +9,7 @@ class BookingSuccessScreen extends StatefulWidget {
 }
 
 class _BookingSuccessScreenState extends State<BookingSuccessScreen>
-    with TickerProviderStateMixin {
+  with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
   late AnimationController controller;
@@ -161,3 +160,5 @@ class _BookingSuccessScreenState extends State<BookingSuccessScreen>
     );
   }
 }
+
+
