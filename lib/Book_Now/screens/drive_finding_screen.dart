@@ -399,11 +399,8 @@ class _FindDriverScreenState extends State<FindDriverScreen> {
   void initState() {
     super.initState();
     socketHelper.connect();
-
     // Example: Call findDriver after connection
     socketHelper.findDriver(selectedVehicle, "15"); // Replace with actual IDs
-
-
     // _webSocketService = WebSocketHelper();
     // _webSocketService.connect();
 
@@ -413,8 +410,6 @@ class _FindDriverScreenState extends State<FindDriverScreen> {
     // // Find driver with a sample vehicleTypeId and userId
     // _webSocketService.findDriver(10, 259); // Replace with actual IDs
   }
-
-
 
   @override
   Widget build(BuildContext context) {
