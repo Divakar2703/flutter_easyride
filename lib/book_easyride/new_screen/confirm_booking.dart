@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
 import 'package:provider/provider.dart';
+import '../../model/driver_details.dart';
+import '../../service/socket/socket_helper.dart';
+import '../../utils/eve.dart';
 import 'time.dart';
 
 class ConfirmBooking extends StatefulWidget {
@@ -13,10 +16,15 @@ class ConfirmBooking extends StatefulWidget {
 }
 
 class _ConfirmBookingState extends State<ConfirmBooking> {
+  final SocketHelper socketHelper = SocketHelper();
+
   @override
   void initState() {
-    final convcharges =
-        Provider.of<CabBookProvider>(context, listen: false).convcharge();
+    socketHelper.connect();
+
+    // Example: Call findDriver after connection
+   // socketHelper.findDriver(selectedVehicle, "15"); // Replace with actual IDs
+   // final convcharges = Provider.of<CabBookProvider>(context, listen: false).convcharge();
 
     super.initState();
   }
@@ -43,28 +51,48 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              buildBookingTimeContainer(),
-              SizedBox(height: 10),
-              buildDriverInfo(),
-              SizedBox(height: 10),
-              buildRideDetails(),
-              SizedBox(height: 10),
-              buildLocationInfo(),
-              SizedBox(height: 20),
-              // convcharge(),
-              SizedBox(height: 10),
-              buildPriceDetails(),
-              SizedBox(height: 20),
-              buildConfirmButton(),
-            ],
-          ),
-        ),
+      body: StreamBuilder<DriverDetails>(
+        stream: socketHelper.driverDetailsStream,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text("Error: ${snapshot.error}"));
+          } else if (!snapshot.hasData) {
+            return Center(child: Text("No driver data received"));
+          } else {
+            final driverDetails = snapshot.data!;
+            return       Padding(
+              padding: EdgeInsets.all(20),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+
+                    buildBookingTimeContainer(),
+                    SizedBox(height: 10),
+                    buildDriverInfo(driverDetails.driverProfilePic,driverDetails.driverName,driverDetails.mobileNo),
+                    SizedBox(height: 10),
+                    buildRideDetails(driverDetails.userJourneyDistance.toString(),driverDetails.driverAway.toString(),driverDetails.vehicleImage,driverDetails.vehicleName),
+                    SizedBox(height: 10),
+                    buildLocationInfo(driverDetails.pickupAddress,driverDetails.dropAddress),
+                    SizedBox(height: 20),
+                    // convcharge(),
+                    SizedBox(height: 10),
+                    buildPriceDetails(),
+                    SizedBox(height: 20),
+                    buildConfirmButton(int.parse(driverDetails.sendRequestId),driverDetails.totalFare),
+                  ],
+                ),
+              ),
+            );
+
+        }
+        },
       ),
+
+
+
+
     );
   }
 
@@ -88,65 +116,175 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
     );
   }
 
-  Widget buildDriverInfo() {
+  Widget buildDriverInfo(String image,String name,String number,) {
     return Container(
-      decoration: containerDecoration(),
-      padding: EdgeInsets.all(8.0),
-      width: double.infinity,
-      height: 90,
-      child: Row(
-        children: [
-          Image.asset(
-            "assets/images/driver1.jpg",
-            width: 40,
-            height: 40,
-            fit: BoxFit.cover,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 3,
+            blurRadius: 7,
+            offset: Offset(0, 3),
           ),
-          SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              'Sachin Kumar',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w500,
-                fontSize: 13,
-              ),
-              overflow: TextOverflow.ellipsis,
+        ],
+      ),
+      padding: EdgeInsets.all(12.0),
+      width: double.infinity,
+      height: 120,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Driver Profile Picture
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8.0),
+            child: Image.network(
+              image,
+              width: 60,
+              height: 60,
+              fit: BoxFit.cover,
             ),
           ),
+          SizedBox(width: 12),
+
+          // Driver Details
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Driver Name and Contact
+                Text(
+                  name,
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: 8),
+                Text(
+                  '📞 $number',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 13,
+                    color: Colors.grey[700],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Vehicle Details
         ],
       ),
     );
+
+    //   Container(
+    //   decoration: containerDecoration(),
+    //   padding: EdgeInsets.all(8.0),
+    //   width: double.infinity,
+    //   height: 90,
+    //   child: Row(
+    //     children: [
+    //       Image.asset(
+    //         "assets/images/driver1.jpg",
+    //         width: 40,
+    //         height: 40,
+    //         fit: BoxFit.cover,
+    //       ),
+    //       SizedBox(width: 10),
+    //       Expanded(
+    //         child: Text(
+    //           'Sachin Kumar',
+    //           style: TextStyle(
+    //             fontFamily: 'Poppins',
+    //             fontWeight: FontWeight.w500,
+    //             fontSize: 13,
+    //           ),
+    //           overflow: TextOverflow.ellipsis,
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // );
   }
 
-  Widget buildRideDetails() {
+  Widget buildRideDetails(String distance,String away,String vehicleImg,String vehicleName,) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+      padding: EdgeInsets.all(10),
       decoration: containerDecoration(),
-      child: Column(
+      child:  Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('assets/images/ride1.jpg', width: 40, height: 40),
-              SizedBox(width: 20),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Arvind Yadav', style: textStyle()),
-                    Text('Sivam Kumar', style: textStyle()),
-                  ],
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: Image.network(
+                  vehicleImg,
+                  width: 60,
+                  height: 40,
+                  fit: BoxFit.cover,
                 ),
               ),
-              Text('Ramesh', style: textStyle()),
+              SizedBox(height: 4),
+              Text(
+                vehicleName,
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                ),
+              ),
+
             ],
           ),
-          SizedBox(height: 10),
-          Row(
+          SizedBox(width: 20),
+          Column(
             children: [
-              Image.asset("assets/images/ride.png", width: 40, height: 40),
-              SizedBox(width: 20),
-              Text('RIDE DETAILS', style: textStyle()),
+              Text(
+                'Driver arrives',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 13,
+                  color: Colors.green[700],
+                ),
+              ),
+              SizedBox(height: 4),
+
+              Text(
+                'in $away min',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 13,
+                  color: Colors.green[700],
+                ),
+              ),
+            ],
+          ),
+          Column(
+            children: [
+              Text(
+                'Distance',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 15,
+                  color: Colors.blueAccent,
+                ),
+              ),
+              SizedBox(height: 4),
+
+              Text(
+                '$distance km',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 13,
+                  color: Colors.red,
+                ),
+              ),
             ],
           ),
         ],
@@ -154,14 +292,14 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
     );
   }
 
-  Widget buildLocationInfo() {
+  Widget buildLocationInfo(String pickupAddress,String dropAddress) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
       decoration: containerDecoration(),
       child: Column(
         children: [
           locationRow(
-              Icons.location_on, Colors.green, 'Noida Sector 16, India'),
+              Icons.location_on, Colors.green, '$pickupAddress'),
           SizedBox(height: 5),
           Row(
             children: [
@@ -187,7 +325,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
             ),
           ),
           locationRow(
-              Icons.location_on, Colors.red, 'New Delhi West, Delhi, India'),
+              Icons.location_on, Colors.red, '$dropAddress'),
         ],
       ),
     );
@@ -257,26 +395,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment:  CrossAxisAlignment.end,
-            mainAxisAlignment:  MainAxisAlignment.end,
-            children: [
-              Text(
-                convcharges.paytype!.convCharge == null
-                    ? 'convcharge'
-                    : 'Convcharge',
-                style: TextStyle(
-                    fontSize: 13,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w500),
-              ),
-              SizedBox(width: 10,),
-               Text(convcharges.paytype!.convCharge),
-               SizedBox(width: 3),
-               Text('₹')
-            ],
-          ),
-         
+
           Row(
             children: [
               Image.asset("assets/images/rupaya.jpg", width: 40, height: 40),
@@ -287,7 +406,27 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
               ),
             ],
           ),
+
           SizedBox(height: 10),
+          Row(
+            crossAxisAlignment:  CrossAxisAlignment.start,
+            mainAxisAlignment:  MainAxisAlignment.start,
+            children: [
+              Text(
+                convcharges.paytype!.convCharge == null
+                    ? 'Conv charge'
+                    : 'Conv charge',
+                style: TextStyle(
+                    fontSize: 13,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w500),
+              ),
+              SizedBox(width: 10,),
+              Text(convcharges.paytype!.convCharge),
+              SizedBox(width: 3),
+              Text('₹')
+            ],
+          ),
           SizedBox(height: 10),
           DropdownButtonHideUnderline(
             child: DropdownButton<String>(
@@ -329,20 +468,48 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
     );
   }
 
-  Widget buildConfirmButton() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.blue,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 100),
-      child: Text(
-        'Confirm Booking',
-        style: TextStyle(
+  Widget buildConfirmButton(int requestID,double fare,) {
+    var cabBookProvider=Provider.of<CabBookProvider>(context);
+    return InkWell(
+      onTap:(){
+        cabBookProvider.bookCab(requestID, "COD", "", fare, 0);
+
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 100),
+        child: Consumer<CabBookProvider>(
+          builder: (BuildContext context, CabBookProvider value, Widget? child) {
+            print("status===${value.confirmBookingStatus}");
+            if(value.confirmBookingStatus=="success"){
+              socketHelper.confirmOrRejectRequest(reqId: requestID.toString(), isConfirm: "1", isReject: "0");
+              return Text(
+                'Confirmed',
+                style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
+                    color: Colors.white),
+              );
+
+          }
+            else {
+            return Text(
+            'Confirm Booking',
+            style: TextStyle(
             fontFamily: 'Poppins',
             fontWeight: FontWeight.w500,
             fontSize: 13,
             color: Colors.white),
+            );
+
+            }
+          },
+
+        ),
       ),
     );
   }
@@ -366,4 +533,6 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
     return TextStyle(
         fontFamily: 'Poppins', fontWeight: FontWeight.w500, fontSize: 13);
   }
+
 }
+

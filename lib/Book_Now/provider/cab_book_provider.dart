@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/Pre_Booking/screens/confirm_booking_screen.dart';
+import 'package:flutter_easy_ride/main.dart';
+import 'package:flutter_easy_ride/model/booking_request.dart';
 import 'package:flutter_easy_ride/model/driver_details.dart';
 import 'package:flutter_easy_ride/model/drop_location_history.dart';
 import 'package:flutter_easy_ride/model/vehicle_data.dart';
@@ -24,6 +27,8 @@ class CabBookProvider with ChangeNotifier {
   final List<Vehicle> vehicle=[];
   CouponData? couponData;
   Notes? notes;
+  String? bookingStatus;
+
   Notes? get notesdetails => notes;
   Payment? paytype;
   Payment? get paytypes => paytype;
@@ -31,13 +36,16 @@ class CabBookProvider with ChangeNotifier {
   VehicleResponse? vehicleResponse;
   DriverDetails? driverInfo;
   HistoryResponse? historyResponse;
+  BookingRequest?bookingReq;
   //final String apiKey = 'AIzaSyAlcZM-RHySJIQmUwOaJmJCVPZcuMKS70Y'; // Replace with your Google API Key
-final String apiKey='AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y';
+final String apiKey='AIzaSyDzwtZHoEVgjThw18yh2qLCkO-hvPE6i94';
   String? get pickupLocation => _pickupLocation;
   String? get dropLocation => _dropLocation;
   VehicleResponse? get vehicleRes => vehicleResponse;
   DriverDetails ? get driverdetails => driverInfo;
   HistoryResponse ? get dropHistoryData => historyResponse;
+  BookingRequest? get bookingRequest =>  bookingReq;
+  String ? get confirmBookingStatus=>bookingStatus;
 
 
 
@@ -194,7 +202,7 @@ print("selctud==$id");
     }
   }
 
-  Future<void> sendRequestToDriver() async {
+  Future<void> sendRequestToDriver(String vehicleid) async {
     print("vehicleID==${selectedVehicle}");
     // Request body
     Map<String, dynamic> requestBody = {
@@ -202,7 +210,7 @@ print("selctud==$id");
       "pickup_long":ALongitude ,
       "drop_lat" : dropLat,
       "drop_long" : dropLong,
-      "vehicle_type_id" : selectedVehicle,
+      "vehicle_type_id" : vehicleid,
       "user_id" : 15 ,
       "added_by_web" : "asatvindia.in" ,
       "pickup_address" : address ,
@@ -215,6 +223,11 @@ print("selctud==$id");
       print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
+         var jsondata=jsonDecode(response.body);
+
+         bookingReq = BookingRequest.fromJson(jsondata);
+         notifyListeners();
+
 
       } else {
         print('Error: ${response.statusCode}, ${response.body}');
@@ -253,26 +266,37 @@ print("selctud==$id");
       // Handle any exception
     }
   }
-  Future<void> bookCab(int requestID,String bookID,String paymentType,String orderID,String transID,double amount,double conCharge,) async {
+  Future<void> bookCab(int requestID,String paymentType,String transID,double amount,double conCharge,) async {
     // Request body
     Map<String, dynamic> requestBody = {
       "send_request_id":requestID,
-      "user_id":259,
+      "user_id":15,
       "added_by_web":"www.bits.teamtest.co.in",
-      "booking_id":bookID,
+      "booking_id":bookingID,
       "paymenttype":paymentType,
       "order_id":orderID,
       "tarns_id":transID,
       "TXN_AMOUNT":amount,
       "conv_charge":conCharge,
-      "user_phone":"7505145405"
+      "user_phone":"7505145405",
+      "booking_type":"book_now"
     };
+
+    print("params==${requestBody}");
 
     try {
       final response = await NetworkUtility.sendPostRequest(ApiHelper.bookCab, requestBody);
       print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
+        var jsondata=jsonDecode(response.body);
+        var status=jsondata["status"];
+        if(status=="success"){
+          bookingStatus=status;
+
+          Navigator.push(navigatorKey.currentContext!, MaterialPageRoute(builder: (context)=>BookingSuccessScreen()));
+notifyListeners();
+        }
 
       } else {
         print('Error: ${response.statusCode}, ${response.body}');
@@ -286,16 +310,9 @@ print("selctud==$id");
   Future<void> CancelCab(int requestID,String bookID,String paymentType,String orderID,String transID,double amount,double conCharge,) async {
     // Request body
     Map<String, dynamic> requestBody = {
-      "send_request_id":requestID,
-      "user_id":259,
-      "added_by_web":"www.bits.teamtest.co.in",
-      "booking_id":bookID,
-      "paymenttype":paymentType,
-      "order_id":orderID,
-      "tarns_id":transID,
-      "TXN_AMOUNT":amount,
-      "conv_charge":conCharge,
-      "user_phone":"7505145405"
+      "booking_id":"Book-00075307",
+      "reason":"plan changed",
+      "user_phone":"8238375356"
     };
 
     try {
@@ -313,7 +330,7 @@ print("selctud==$id");
       // Handle any exception
     }
   }
-  Future<void> paynow(String requestID,String paymentType,double conCharge,) async {
+  Future<void> paynow(int requestID,String paymentType,double conCharge,) async {
     // Request body
     Map<String, dynamic> requestBody = {
       "send_request_id":requestID,
@@ -329,6 +346,12 @@ print("selctud==$id");
       print('Paynow Response body: ${response.body}');
 
       if (response.statusCode == 200) {
+        var jsondata=jsonDecode(response.body);
+        var orderid=jsondata["order_id"];
+        orderID=orderid;
+        var bookingid=jsondata["booking_id"];
+        bookingID=bookingid;
+        notifyListeners();
 
       } else {
         print('Error: ${response.statusCode}, ${response.body}');

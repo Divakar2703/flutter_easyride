@@ -12,7 +12,7 @@ import 'Book_Now/screens/book_now_screen.dart';
 import 'Pre_Booking/provider/preebooking_provider.dart';
 
 import 'view/home/home_view.dart';
-
+var navigatorKey=GlobalKey<NavigatorState>();
 void main() {
   runApp(MultiProvider(
       providers: [
@@ -64,6 +64,7 @@ class _MyAppState extends State<MyApp> {
     return Consumer<ApiProvider>(
       builder: (BuildContext context, value, Widget? child) {
         return MaterialApp(
+          navigatorKey: navigatorKey,
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
           theme: ThemeData(

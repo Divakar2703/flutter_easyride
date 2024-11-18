@@ -401,9 +401,8 @@ class _FindDriverScreenState extends State<FindDriverScreen> {
     socketHelper.connect();
 
     // Example: Call findDriver after connection
-    Future.delayed(Duration(seconds: 2), () {
-      socketHelper.findDriver(selectedVehicle, "15"); // Replace with actual IDs
-    });
+    socketHelper.findDriver(selectedVehicle, "15"); // Replace with actual IDs
+
 
     // _webSocketService = WebSocketHelper();
     // _webSocketService.connect();
@@ -454,25 +453,7 @@ class _FindDriverScreenState extends State<FindDriverScreen> {
       ),
 
 
-      // StreamBuilder<DriverDetails>(
-      //   stream: _webSocketService.driverDetailsStream,
-      //   builder: (context, snapshot) {
-      //     if (snapshot.connectionState == ConnectionState.waiting) {
-      //       return Center(child: CircularProgressIndicator());
-      //     } else if (snapshot.hasError) {
-      //       return Center(child: Text('Error: ${snapshot.error}'));
-      //     } else if (!snapshot.hasData) {
-      //       return Center(child: Text('No driver found'));
-      //     } else {
-      //       final driverDetails = snapshot.data!;
-      //       return ListTile(
-      //         title: Text(driverDetails.dropAddress),
-      //         subtitle: Text(driverDetails.driverName),
-      //         trailing: Text(driverDetails.dropAddress),
-      //       );
-      //     }
-      //   },
-      // ),
+
     );
   }
 }

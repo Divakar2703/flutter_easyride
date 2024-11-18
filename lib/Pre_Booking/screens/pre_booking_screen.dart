@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
+import 'package:flutter_easy_ride/Pre_Booking/screens/select_pickup_time.dart';
 import 'package:provider/provider.dart';
 import '../../common_widget/pickup_drop_widget.dart';
 import '../../utils/routes.dart';
@@ -208,7 +209,8 @@ class _PreBookingScreenState extends State<PreBookingScreen> {
           Spacer(),
           GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, Routes.selectpickuptimegin);
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>SelectPickupTime()));
+             // Navigator.pushNamed(context, Routes.selectpickuptimegin);
             },
             child: Container(
               margin: EdgeInsets.only(left: 10, right: 10),
