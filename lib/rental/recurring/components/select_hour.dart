@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; // Import provider
+import '../recurringbooking_provider.dart';
 
 class SelectHour extends StatefulWidget {
   const SelectHour({super.key});
@@ -9,169 +11,205 @@ class SelectHour extends StatefulWidget {
 
 class _SelectHourState extends State<SelectHour> {
   String? selectedItem;
-  int selectedIndex = 0; // Default selected index
-  bool isExpanded = true; // Boolean flag to control visibility
+  int selectedIndex = 0;
+  bool isExpanded = true;
 
+  @override
+  void initState() {
+    super.initState();
+    // Call fetchRecurringData once when the widget is first initialized
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!isDataLoaded) {
+        fetchRecurringData('hourly'); // Default to hourly booking type
+        setState(() {
+          isDataLoaded = true; // Set the flag to true to prevent further reloads
+        });
+      }
+    });
+  }
+
+  void fetchRecurringData(String bookingType) {
+    final provider = Provider.of<RecurringBookingProvider>(context, listen: false);
+    provider.getRecurringBooking(
+      30.36581490852199,
+      78.04388081621565,
+      27.210052664323,
+      83.891678676009,
+      'asatvindia.in',
+      'Dr. Shyamu medical store, Turkaha, Uttar Pradesh 274801, India', // Example pickupAddress
+      '6V6V+J48, Turkaha, Uttar Pradesh 274801, India', // Example dropAddress
+      "recuring", // Use dynamic booking type
+      6, // Example userId
+    );
+
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
+    return Consumer<RecurringBookingProvider>(
+      builder: (context, provider, child) {
+        // Check if data has been loaded
+        if (provider.recurringRentalResponse == null) {
+          return Center(child: CircularProgressIndicator()); // Show loading indicator if response is null
+        }
+
+        final response = provider.recurringRentalResponse!;
+
+        return Column(
           children: [
+            Row(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.grey.shade300,
+                      width: 1.0,
+                    ),
+                  ),
+                  child: CircleAvatar(
+                    radius: 13,
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                      Icons.timelapse_rounded,
+                      color: Color(0xff1937d7),
+                      size: 18,
+                    ),
+                  ),
+                ),
+                Text(
+                  "  Select a package",
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                    fontFamily: 'Poppins',
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
             Container(
+              height: 45.0,
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
+                borderRadius: BorderRadius.circular(10.0),
+                color: Colors.grey.shade100,
                 border: Border.all(
-                  color: Colors.grey.shade300, // Change this to your desired border color
-                  width: 1.0,
+                  color: Color(0xff5168e6),
                 ),
               ),
-              child: CircleAvatar(
-                radius: 13,
-                backgroundColor: Colors.white, // Change this to your desired background color
-                child: Icon(
-                  Icons.timelapse_rounded,
-                  color: Color(0xff1937d7),
-                  size: 18,
-                ),
-              ),
-            ),
-
-            Text(
-              "  Select a package",
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-                fontFamily: 'Poppins',
-              ),
-            ),
-          ],
-        ),
-
-        SizedBox(height: 10,),
-        Container(
-        //  margin: EdgeInsets.symmetric(horizontal: 14, vertical: 0),
-          height: 45.0,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
-            color: Colors.grey.shade100,
-            border: Border.all(
-              color: Color(0xff5168e6),
-            ),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: DropdownButton<String>(
-                    value: selectedItem,
-                    hint: Text(
-                      "Select a package",
-                      style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'Poppins',
-                      ),
-                    ),
-                    icon: Icon(
-                      Icons.keyboard_arrow_down,
-                      color: Colors.black54,
-                    ),
-                    isExpanded: true,
-                    underline: SizedBox(),
-                    items: <String>['2 Hours, 20Km', '5 Hours, 80Km', '8 Hours, 90Km',]
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      child: DropdownButton<String>(
+                        value: selectedItem,
+                        hint: Text(
+                          "Select a package",
                           style: TextStyle(
+                            color: Colors.black87,
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
-                            color: Colors.black87,
                             fontFamily: 'Poppins',
                           ),
                         ),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedItem = newValue;
-                      });
-                    },
+                        icon: Icon(
+                          Icons.keyboard_arrow_down,
+                          color: Colors.black54,
+                        ),
+                        isExpanded: true,
+                        underline: SizedBox(),
+                        items: response.km.map<DropdownMenuItem<String>>((km) {
+                          // Assuming you want to display km values as package options
+                          return DropdownMenuItem<String>(
+                            value: "$km Hours, ${response.km} Km",
+                            child: Text(
+                              "$km Hours, ${response.hr} Km",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black87,
+                                fontFamily: 'Poppins',
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedItem = newValue;
+                          });
+                          fetchRecurringData('hourly'); // Fetch data when selection changes
+                        },
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        ),
-        SizedBox(height: 15,),
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              isExpanded = !isExpanded; // Toggle visibility
-            });
-          },
-          child: Row(
-        //    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Colors.grey.shade300, // Change this to your desired border color
-                    width: 1.0, // Change the width as needed
-                  ),
-                ),
-                child: CircleAvatar(
-                  radius: 13,
-                  backgroundColor: Colors.white, // Change this to your desired background color
-                  child: Icon(
-                    Icons.car_crash_outlined,
-                    color: Color(0xff1937d7),
-                    size: 18,
-                  ),
-                ),
-              ),
-              Text(
-                "  Select category",
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                  fontFamily: 'Poppins',
-                ),
-              ),
-              Spacer(),
-              Icon(
-                isExpanded
-                    ? Icons.keyboard_arrow_up_rounded
-                    : Icons.keyboard_arrow_down_rounded,
-                size: 26,
-                color: Colors.black87,
-              ),
-            ],
-          ),
-        ),
-        if (isExpanded)
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                _buildCategoryCard(0, 'assets/images/ride_car_two.png', 'Blue Classic', 'SUV', '5', '534.00', '754.00'),
-                _buildCategoryCard(1, 'assets/images/ride_car_one.png', 'Blue Premium', 'Sedan', '4', '124.00', '164.00'),
-                _buildCategoryCard(2, 'assets/images/ride_car_three.png', 'Blue Classic', 'Hatchback', '6', '864.00', '994.00'),
-              ],
             ),
-          ),
-      ],
+            SizedBox(height: 15),
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  isExpanded = !isExpanded; // Toggle visibility
+                });
+              },
+              child: Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.grey.shade300,
+                        width: 1.0,
+                      ),
+                    ),
+                    child: CircleAvatar(
+                      radius: 13,
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        Icons.car_crash_outlined,
+                        color: Color(0xff1937d7),
+                        size: 18,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    "  Select category",
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                      fontFamily: 'Poppins',
+                    ),
+                  ),
+                  Spacer(),
+                  Icon(
+                    isExpanded
+                        ? Icons.keyboard_arrow_up_rounded
+                        : Icons.keyboard_arrow_down_rounded,
+                    size: 26,
+                    color: Colors.black87,
+                  ),
+                ],
+              ),
+            ),
+            if (isExpanded)
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    _buildCategoryCard(0, 'assets/images/ride_car_two.png', 'Blue Classic', 'SUV', '5', '534.00', '754.00'),
+                    _buildCategoryCard(1, 'assets/images/ride_car_one.png', 'Blue Premium', 'Sedan', '4', '124.00', '164.00'),
+                    _buildCategoryCard(2, 'assets/images/ride_car_three.png', 'Blue Classic', 'Hatchback', '6', '864.00', '994.00'),
+                  ],
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
-
 
   Widget _buildCategoryCard(int index, String image, String title, String type, String seats, String price, String oldPrice) {
     bool isSelected = selectedIndex == index;
@@ -182,7 +220,7 @@ class _SelectHourState extends State<SelectHour> {
         });
       },
       child: Container(
-        margin: EdgeInsets.only(left: 8,top: 10),
+        margin: EdgeInsets.only(left: 8, top: 10),
         padding: EdgeInsets.only(left: 12, right: 12, bottom: 12),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -248,7 +286,7 @@ class _SelectHourState extends State<SelectHour> {
                 Text(
                   price,
                   style: TextStyle(
-                    fontSize: 13,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: Colors.green.shade700,
                     fontFamily: 'Poppins',

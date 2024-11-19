@@ -6,6 +6,7 @@ import '../../common_widget/pickup_drop_widget.dart';
 import '../../utils/routes.dart';
 import '../../view/map/map_screen.dart';
 
+
 class PreBookingScreen extends StatefulWidget {
   const PreBookingScreen({super.key});
 
@@ -68,6 +69,7 @@ class _PreBookingScreenState extends State<PreBookingScreen> {
               cabProvider.placeAutoComplete(value, "Drop");
             },
           ),
+
           GestureDetector(
             onTap: () {
               Navigator.push(

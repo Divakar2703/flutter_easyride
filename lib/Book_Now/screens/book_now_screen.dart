@@ -42,6 +42,7 @@ class _BookNowScreenState extends State<BookNowScreen> {
     // });
   }
 
+
   void _getCurrentLocation() async {
     try {
       Position position = await Geolocator.getCurrentPosition(
@@ -68,6 +69,7 @@ class _BookNowScreenState extends State<BookNowScreen> {
       print('Error: $e');
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

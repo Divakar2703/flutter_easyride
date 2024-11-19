@@ -4,6 +4,9 @@ import 'package:flutter_easy_ride/book_easyride/provider/triphistry_provider.dar
 import 'package:flutter_easy_ride/provider/api_provider.dart';
 import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
 import 'package:flutter_easy_ride/provider/map_provider.dart';
+import 'package:flutter_easy_ride/rental/components/rentalbooking_provider.dart';
+import 'package:flutter_easy_ride/rental/get_rental_vehical_provider.dart';
+import 'package:flutter_easy_ride/rental/recurring/recurringbooking_provider.dart';
 import 'package:flutter_easy_ride/splesh_Screen.dart';
 import 'package:flutter_easy_ride/utils/converter_function.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +24,12 @@ void main() {
         ChangeNotifierProvider(create: (_)=>MapProvider()),
         ChangeNotifierProvider(create: (_)=>ProgressBarState()),
         ChangeNotifierProvider(create: (_)=>TriphistryProvider()),
-        ChangeNotifierProvider(create: (_)=>PreebookingProvider())
+        ChangeNotifierProvider(create: (_)=>PreebookingProvider()),
+        ChangeNotifierProvider(create: (_) => RentalbookingProvider()),
+        ChangeNotifierProvider(create: (_) => RecurringBookingProvider()),
+        ChangeNotifierProvider(create: (_) => GetRentalVehicleProvider()),
+
+
 
       ],
       child:
