@@ -6,15 +6,12 @@ class Routes {
   static const String homeview = '/homeview';
   static const String selectpickuptimegin = '/helectPickupTime';
   static const String profile = 'profile';
-
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case homeview:
         return MaterialPageRoute(builder: (_) => HomeView());
-
       case selectpickuptimegin:
         return MaterialPageRoute(builder: (_) => SelectPickupTime());
-
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

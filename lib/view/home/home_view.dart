@@ -204,8 +204,7 @@ class _NewHomeViewState extends State<HomeView> {
               SliverList(
                 delegate: SliverChildListDelegate(
                   [
-
-                  const LocationShowWidget(),
+                    const LocationShowWidget(),
 
                     const BannerSlider(),
                     const  Padding(

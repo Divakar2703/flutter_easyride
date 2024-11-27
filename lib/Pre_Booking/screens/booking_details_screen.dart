@@ -119,6 +119,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
       child: Column(
         children: [
           Container(
+            
             height: 300,
             color: Colors.grey.shade300,
           ),

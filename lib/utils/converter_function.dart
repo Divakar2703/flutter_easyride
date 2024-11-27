@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -13,4 +12,4 @@ class ConverterFunction{
     }
     return Color(int.parse("0x$hexColor"));
   }
-}
+} 

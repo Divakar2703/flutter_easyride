@@ -7,6 +7,9 @@ class ThemeConfig {
   // final BookingConfig preBooking;
   // final BookingConfig rental;
 
+
+
+
   ThemeConfig({
     required this.lightTheme,
     // required this.darkTheme,
@@ -14,6 +17,7 @@ class ThemeConfig {
     // required this.preBooking,
     // required this.rental,
   });
+
 
   factory ThemeConfig.fromJson(Map<String, dynamic> json) {
     return ThemeConfig(
@@ -26,6 +30,7 @@ class ThemeConfig {
     //   rental: BookingConfig.fromJson(json['rental']),
     );
   }
+
 }
 
 class ThemeDataConfig {

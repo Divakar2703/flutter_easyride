@@ -1,6 +1,5 @@
 
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/model/theme_config.dart';
 import 'package:flutter_easy_ride/service/api_helper.dart';
@@ -9,15 +8,14 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart'as http;
 import 'package:permission_handler/permission_handler.dart';
-
 import '../utils/eve.dart';
 import '../utils/local_storage.dart';
+
+
 
 class ApiProvider with ChangeNotifier{
   ThemeConfig? themeConfig;
   ThemeConfig? get themeConfigg => themeConfig;
-
-
   Future<void> getCurrentLocation() async {
     print("hi");
     PermissionStatus permission = await Permission.location.request();
@@ -64,8 +62,6 @@ class ApiProvider with ChangeNotifier{
       print('Error sending POST request: $e');
     }
   }
-
-
   Future<void> fetchTheme() async {
     final String url = ApiHelper.getTheme;
     print("url===$url");
