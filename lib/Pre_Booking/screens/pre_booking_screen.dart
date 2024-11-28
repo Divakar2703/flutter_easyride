@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
-import 'package:flutter_easy_ride/internate/networkconnection.dart';
+import 'package:flutter_easy_ride/Pre_Booking/screens/select_pickup_time.dart';
 import 'package:provider/provider.dart';
 import '../../common_widget/pickup_drop_widget.dart';
+import '../../internate/networkconnection.dart';
 import '../../utils/routes.dart';
 import '../../view/map/map_screen.dart';
 
@@ -44,7 +45,7 @@ class _PreBookingScreenState extends State<PreBookingScreen> {
           'Pickup',
           style: TextStyle(
               fontWeight: FontWeight.w500,
-              fontFamily: 'Poppins', 
+              fontFamily: 'Poppins', // Set Poppins as the default font
               fontSize: 17,
               color: Colors.white),
         ),
@@ -66,9 +67,11 @@ class _PreBookingScreenState extends State<PreBookingScreen> {
             pickupController: pickupController,
             dropController: dropController,
             onChange: (value) {
+              dropController.text=value;
               cabProvider.placeAutoComplete(value, "Drop");
             },
           ),
+
           GestureDetector(
             onTap: () {
               Navigator.push(
@@ -117,64 +120,15 @@ class _PreBookingScreenState extends State<PreBookingScreen> {
             thickness: 1.5,
             color: Colors.grey.shade300,
           ),
-          if (cabProvider.placePredictions.isNotEmpty)
-            Container(
-                height: 100,
-                child: ListView.builder(
-                  itemCount: cabProvider.placePredictions.length,
-                  itemBuilder: (context, index) => InkWell(
-                    onTap: () {
-                      cabProvider.getDropLocation(
-                          cabProvider.placePredictions[index].description ??
-                              "");
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.watch_later_outlined,
-                                color: Colors.grey.shade800,
-                                size: 20,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                cabProvider
-                                        .placePredictions[index].description ??
-                                    "dehradun",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey.shade800,
-                                  fontFamily:
-                                      'Poppins', // Set Poppins as the default font
 
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              )
-                            ],
-                          ),
-                          Divider(
-                            color: Colors.grey.shade200,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                )),
-          if (cabProvider.pickPlacePredictions.isNotEmpty)
+          if (cabProvider.suggetions.isNotEmpty)
             Container(
                 height: 100,
                 child: ListView.builder(
-                  itemCount: cabProvider.pickPlacePredictions.length,
+                  itemCount: cabProvider.suggetions.length,
                   itemBuilder: (context, index) => InkWell(
                     onTap: () {
-                      cabProvider.getDropLocation(
-                          cabProvider.pickPlacePredictions[index].description ??
-                              "");
+                      cabProvider.getDropLocation(cabProvider.suggetions[index].placePrediction.text.text??"",cabProvider.suggetions[index].placePrediction.placeId??"","PreBooking");
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -188,16 +142,19 @@ class _PreBookingScreenState extends State<PreBookingScreen> {
                           SizedBox(
                             width: 5,
                           ),
-                          Text(
-                            cabProvider
-                                    .pickPlacePredictions[index].description ??
-                                "dehradun",
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.grey.shade800,
-                              fontFamily:
-                                  'Poppins', // Set Poppins as the default font
-                              fontWeight: FontWeight.w500,
+                          Container(
+                            width: MediaQuery.of(context).size.width*0.8,
+                            child: Text(
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis, // Show ellipsis if text exceeds the limit
+                              cabProvider.suggetions[index].placePrediction.text.text??"dehradun",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey.shade800,
+                                fontFamily: 'Poppins', // Set Poppins as the default font
+
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                           )
                         ],
@@ -208,7 +165,8 @@ class _PreBookingScreenState extends State<PreBookingScreen> {
           Spacer(),
           GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, Routes.selectpickuptimegin);
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>SelectPickupTime()));
+             // Navigator.pushNamed(context, Routes.selectpickuptimegin);
             },
             child: Container(
               margin: EdgeInsets.only(left: 10, right: 10),

@@ -8,7 +8,7 @@ class ProgressIndicatorPage extends StatefulWidget {
 
 class _ProgressIndicatorPageState extends State<ProgressIndicatorPage> {
   double _progress = 0.0;
-  static const int totalDurationInSeconds = 1 * 60;
+  static const int totalDurationInSeconds = 1 * 120;
   int remainingTimeInSeconds = totalDurationInSeconds;
   Timer? timer;
   @override

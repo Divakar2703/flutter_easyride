@@ -4,7 +4,7 @@ import '../view/home/home_view.dart';
 
 class Routes {
   static const String homeview = '/homeview';
-  static const String selectpickuptimegin = '/helectPickupTime';
+  static const String selectpickuptimegin = '/selectPickupTime';
   static const String profile = 'profile';
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {

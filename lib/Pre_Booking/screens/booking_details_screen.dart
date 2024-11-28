@@ -848,7 +848,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
             child: Consumer<CabBookProvider>(
               builder: (context, provider, child) {
                 if (provider.notes == null ||
-                    provider.notes!.deliveryNotes == null) {
+                    provider.notes!.deliveryNotes== null) {
                   return Center(child: CircularProgressIndicator());
                 }
 

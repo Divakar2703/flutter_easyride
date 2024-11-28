@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/Pre_Booking/model/finddriver.dart';
 import 'package:flutter_easy_ride/service/network_utility.dart';
+import 'package:flutter_easy_ride/utils/eve.dart';
 import '../../service/api_helper.dart';
 import '../model/requestdriver.dart';
 
@@ -11,23 +12,24 @@ class PreebookingProvider with ChangeNotifier {
   FindDriver? findDriver;
   FindDriver? get findDriverinfo => findDriver;
 
+
   var data1;
   var getPreevehicle1;
-  Future<void> confirmpreebook() async {
+  Future<void> confirmpreebook(String selectedDate,String selectedTime) async {
     Map<String, dynamic> requestbody = {
-      "pickup_lat": 18.4848933,
-      "pickup_long": 73.9369676,
-      "drop_lat": 27.210052664323,
-      "drop_long": 83.891678676009,
+      "pickup_lat": ALatitude,
+      "pickup_long": ALongitude,
+      "drop_lat": dropLat,
+      "drop_long": dropLong,
       "added_by_web": "asatvindia.in",
-      "pickup_address":
-          "Dr. Shyamu medical store, Turkaha, Uttar Pradesh 2 74801, India",
-      "drop_address": "6V6V+J48, Turkaha, Uttar Pradesh 274801, India",
+      "pickup_address": address,
+      "drop_address": dropAddress,
       "booking_type": "pre_booking",
-      "user_id": 6,
-      "selectedtime": "11.40",
-      "selectdate": "26/10/2024"
+      "user_id": 15,
+      "selectedtime": selectedTime,
+      "selectdate": selectedDate
     };
+    print("request===${requestbody}");
 
     try {
       final response = await NetworkUtility.sendPostRequest(
@@ -47,7 +49,6 @@ class PreebookingProvider with ChangeNotifier {
       throw 'Data is not found';
     }
   }
-
   Future<void> getprebookvehicle() async {
     Map<String, dynamic> requestbody = {
       "pickup_lat": 24.856874349764823,
@@ -55,10 +56,8 @@ class PreebookingProvider with ChangeNotifier {
       "drop_lat": 24.858874743013917,
       "drop_long": 74.61150946823327
     };
-
     try {
-      final response = await NetworkUtility.sendPostRequest(
-          ApiHelper.getPreebookvehicle, requestbody);
+      final response = await NetworkUtility.sendPostRequest(ApiHelper.getPreebookvehicle, requestbody);
 
       if (response.statusCode == 200) {
         var getPreevehicle = jsonDecode(response.body);
@@ -73,7 +72,6 @@ class PreebookingProvider with ChangeNotifier {
       throw 'Error please do code';
     }
   }
-
   Future<void> SendpreebookrequestDriver(
       double pickLat,
       double pikLong,
@@ -153,7 +151,6 @@ class PreebookingProvider with ChangeNotifier {
       }
     } catch (Error) {}
   }
-
   Future<void> Cancialpreebook(
       String BookID, String reason, int usenumber) async {
     Map<String, dynamic> requestbody = {
@@ -161,7 +158,6 @@ class PreebookingProvider with ChangeNotifier {
       "reason": reason,
       "user_phone": usenumber,
     };
-
     try {
       final response = await NetworkUtility.sendPostRequest(
           ApiHelper.cancelpreebooingvehicle, requestbody);

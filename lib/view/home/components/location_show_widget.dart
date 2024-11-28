@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/provider/api_provider.dart';
 import 'package:flutter_easy_ride/utils/converter_function.dart';
+import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:provider/provider.dart';
 
 class LocationShowWidget extends StatelessWidget {
@@ -27,7 +28,7 @@ class LocationShowWidget extends StatelessWidget {
               ),
               borderRadius: BorderRadius.circular(40)
           ),
-          child: const Row(
+          child:  Row(
             children: [
               Icon(
                 Icons.location_on_rounded,
@@ -35,14 +36,18 @@ class LocationShowWidget extends StatelessWidget {
                 size: 18,
               ),
               SizedBox(width: 10,),
-              Text(
-                "Delhi mg rode,",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: 'Poppins', // Set Poppins as the default font
+              Container(width: MediaQuery.of(context).size.width*0.5,
+                child: Text(
+                  "${address},",
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Poppins', // Set Poppins as the default font
+                  ),
                 ),
               ),
               Spacer(),
