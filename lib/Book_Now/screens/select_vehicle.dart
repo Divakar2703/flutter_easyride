@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/Book_Now/common_widget/shimmer_loader.dart';
 import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../book_easyride/new_screen/confirm_booking.dart';
@@ -244,11 +245,17 @@ class _SelectVehicleState extends State<SelectVehicle> {
                                   builder: (BuildContext context, provider, Widget? child) {
                                     return GestureDetector(
                                       onTap: () {
-                                        socketHelper.connect();
-                                        socketHelper.findDriver(selectedVehicle, "15"); // Replace with actual IDs
-                                        // Provider.of<CabBookProvider>(context, listen: false).sendRequestToDriver();
-                                       Provider.of<CabBookProvider>(context, listen: false).paynow(provider.bookingReq!.reqId,"COD",0);
-                                        Navigator.push(context, MaterialPageRoute(builder: (context)=>ConfirmBooking()));
+                                        if(selectedVehicle!=""){
+                                          socketHelper.connect();
+                                          socketHelper.findDriver(selectedVehicle, "15"); // Replace with actual IDs
+                                          // Provider.of<CabBookProvider>(context, listen: false).sendRequestToDriver();
+                                          Provider.of<CabBookProvider>(context, listen: false).paynow(provider.bookingReq!.reqId,"COD",0);
+                                          Navigator.push(context, MaterialPageRoute(builder: (context)=>ConfirmBooking()));
+                                        }
+                                        else{
+                                          Fluttertoast.showToast(msg: "Please Select the vehicle");
+                                        }
+
 
                                         // Add your confirm action here
                                        // Navigator.push(context, MaterialPageRoute(builder: (context) => FindDriverScreen()));

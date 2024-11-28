@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/book_easyride/provider/triphistry_provider.dart';
 import 'package:flutter_easy_ride/provider/api_provider.dart';
 import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
+import 'package:flutter_easy_ride/provider/dashboard_provider.dart';
 import 'package:flutter_easy_ride/provider/map_provider.dart';
 import 'package:flutter_easy_ride/rental/components/rentalbooking_provider.dart';
 import 'package:flutter_easy_ride/rental/get_rental_vehical_provider.dart';
@@ -14,6 +15,7 @@ import 'Book_Now/provider/drive_looking_provider.dart';
 import 'Book_Now/screens/book_now_screen.dart';
 import 'Pre_Booking/provider/preebooking_provider.dart';
 
+import 'check_api.dart';
 import 'view/home/home_view.dart';
 var navigatorKey=GlobalKey<NavigatorState>();
 void main() {
@@ -28,17 +30,13 @@ void main() {
         ChangeNotifierProvider(create: (_) => RentalbookingProvider()),
         ChangeNotifierProvider(create: (_) => RecurringBookingProvider()),
         ChangeNotifierProvider(create: (_) => GetRentalVehicleProvider()),
-
-
-
+        ChangeNotifierProvider(create:(_) => DashboardProvider()),
       ],
       child:
       //MyApp()
       DevicePreview(
-          builder: (BuildContext context) {
-            return MyApp();
-          },
-          )
+        builder: (BuildContext context) {
+            return MyApp();},)
   ));
 
 }
@@ -80,7 +78,11 @@ class _MyAppState extends State<MyApp> {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          home:  HomeView(),
+          home:  ChangeNotifierProvider(
+
+              create: (BuildContext context)=>DashboardProvider(),
+              child: HomeView())
+          //BookRideScreen(),
         );
       },
     );

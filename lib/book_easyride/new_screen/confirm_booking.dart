@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/Book_Now/common_widget/shimmer_loader.dart';
 import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
 import 'package:provider/provider.dart';
 import '../../model/driver_details.dart';
@@ -51,7 +52,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: StreamBuilder<DriverDetails>(
+      body: bookingID!=""? StreamBuilder<DriverDetails>(
         stream: socketHelper.driverDetailsStream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -88,10 +89,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
 
         }
         },
-      ),
-
-
-
+      ):ShimmerLoader()
 
     );
   }

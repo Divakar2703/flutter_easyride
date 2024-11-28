@@ -66,7 +66,11 @@ class _PreBookingScreenState extends State<PreBookingScreen> {
             pickupController: pickupController,
             dropController: dropController,
             onChange: (value) {
+              dropController.text=value;
               cabProvider.placeAutoComplete(value, "Drop");
+              setState(() {
+
+              });
             },
           ),
 
@@ -119,64 +123,15 @@ class _PreBookingScreenState extends State<PreBookingScreen> {
             thickness: 1.5,
             color: Colors.grey.shade300,
           ),
-          if (cabProvider.placePredictions.isNotEmpty)
-            Container(
-                height: 100,
-                child: ListView.builder(
-                  itemCount: cabProvider.placePredictions.length,
-                  itemBuilder: (context, index) => InkWell(
-                    onTap: () {
-                      cabProvider.getDropLocation(
-                          cabProvider.placePredictions[index].description ??
-                              "");
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.watch_later_outlined,
-                                color: Colors.grey.shade800,
-                                size: 20,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                cabProvider
-                                        .placePredictions[index].description ??
-                                    "dehradun",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey.shade800,
-                                  fontFamily:
-                                      'Poppins', // Set Poppins as the default font
 
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              )
-                            ],
-                          ),
-                          Divider(
-                            color: Colors.grey.shade200,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                )),
-          if (cabProvider.pickPlacePredictions.isNotEmpty)
+          if (cabProvider.suggetions.isNotEmpty)
             Container(
                 height: 100,
                 child: ListView.builder(
-                  itemCount: cabProvider.pickPlacePredictions.length,
+                  itemCount: cabProvider.suggetions.length,
                   itemBuilder: (context, index) => InkWell(
                     onTap: () {
-                      cabProvider.getDropLocation(
-                          cabProvider.pickPlacePredictions[index].description ??
-                              "");
+                      cabProvider.getDropLocation(cabProvider.suggetions[index].placePrediction.text.text??"",cabProvider.suggetions[index].placePrediction.placeId??"","PreBooking");
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -190,17 +145,19 @@ class _PreBookingScreenState extends State<PreBookingScreen> {
                           SizedBox(
                             width: 5,
                           ),
-                          Text(
-                            cabProvider
-                                    .pickPlacePredictions[index].description ??
-                                "dehradun",
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.grey.shade800,
-                              fontFamily:
-                                  'Poppins', // Set Poppins as the default font
+                          Container(
+                            width: MediaQuery.of(context).size.width*0.8,
+                            child: Text(
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis, // Show ellipsis if text exceeds the limit
+                              cabProvider.suggetions[index].placePrediction.text.text??"dehradun",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey.shade800,
+                                fontFamily: 'Poppins', // Set Poppins as the default font
 
-                              fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                           )
                         ],

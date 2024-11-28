@@ -47,13 +47,16 @@ class ApiHelper{
   static String cancelpreebooingvehicle = baseurl + 'User/CancleBookedCab';
 
 
-
   // rental
  static String getRentalBooking = baseurl + "User/rental_booking";
  static String getRecurringBooking = baseurl + "User/rental_booking";
 
 
   static String getRentalVehicle = baseurl + "User/get_rental_vehicle";
+
+
+  static String dashboard = baseurl + "User/dashboard";
+  static String cab_request_on_user_id = baseurl + "User/cab_request_on_user_id";
 
 
 }

@@ -1,3 +1,5 @@
+import 'package:flutter_easy_ride/model/vehicle_data.dart';
+
 double ALatitude=24.854975080601193;
 double ALongitude=74.61296919531905;
 String address="Tilak Nagar  Senthri East Chittorgarh, Rajasthan 312025";
@@ -10,6 +12,7 @@ String? selectedBank;
 String bookingID="";
 String orderID="";
 String selectedPaymentMethod="COD";
+Vehicle? vehicleDetails;
 
 
 final List<Map<String, dynamic>> banks = [
