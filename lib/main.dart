@@ -9,7 +9,6 @@ import 'package:flutter_easy_ride/view/home/home_view.dart';
 import 'package:provider/provider.dart';
 import 'Book_Now/provider/drive_looking_provider.dart';
 import 'Pre_Booking/provider/preebooking_provider.dart';
-
 import 'book_easyride/provider/triphistry_provider.dart';
 void main() {
   runApp(

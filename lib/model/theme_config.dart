@@ -42,7 +42,7 @@ class ThemeDataConfig {
   // final AppBarThemeConfig appBarTheme;
   // final TextThemeConfig textTheme;
   // final IconThemeConfig iconTheme;
-   final GradientConfig gradient;
+  //  final GradientConfig gradient;
 
   ThemeDataConfig({
     required this.primaryColor,
@@ -53,7 +53,7 @@ class ThemeDataConfig {
     // required this.appBarTheme,
     // required this.textTheme,
     // required this.iconTheme,
-     required this.gradient,
+    //  required this.gradient,
   });
 
   factory ThemeDataConfig.fromJson(Map<String, dynamic> json) {
@@ -66,7 +66,7 @@ class ThemeDataConfig {
       // appBarTheme: AppBarThemeConfig.fromJson(json['appBarTheme']),
       // textTheme: TextThemeConfig.fromJson(json['textTheme']),
       // iconTheme: IconThemeConfig.fromJson(json['iconTheme']),
-       gradient: GradientConfig.fromJson(json['gradient']),
+      //  gradient: GradientConfig.fromJson(json['gradient']),
     );
   }
 
@@ -80,7 +80,7 @@ class ThemeDataConfig {
       // appBarTheme: AppBarThemeConfig.empty(),
       // textTheme: TextThemeConfig.empty(),
       // iconTheme: IconThemeConfig.empty(),
-       gradient: GradientConfig.empty(),
+      //  gradient: GradientConfig.empty(),
     );
   }
 }
