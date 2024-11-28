@@ -8,6 +8,7 @@ class ConnectivityChecker extends StatefulWidget {
   @override
   _ConnectivityCheckerState createState() => _ConnectivityCheckerState();
 }
+
 class _ConnectivityCheckerState extends State<ConnectivityChecker> {
   bool _isConnected = false;
   bool _hasCheckedInitially = false;
@@ -62,11 +63,11 @@ class _ConnectivityCheckerState extends State<ConnectivityChecker> {
             padding: EdgeInsets.only(left: 30, right: 30),
             child: Container(
               margin: EdgeInsets.only(left: 10),
-              decoration: BoxDecoration(              
+              decoration: BoxDecoration(
                color: Color.fromARGB(200, 100, 200, 200),
                 borderRadius: BorderRadius.circular(5.0),
                 boxShadow: [
-                  BoxShadow(                  
+                  BoxShadow(
                     blurRadius: 0.1,
                     spreadRadius: 0.2,
                     offset: Offset(1, 1),

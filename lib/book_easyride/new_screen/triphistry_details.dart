@@ -192,7 +192,7 @@ class _HistryDetailsState extends State<HistryDetails> {
                     children: [
                       Row(
                         children: [
-                          Text(details.triphistory?.driverName ?? 'NA',
+                          Text(details.triphistory!.driverName,
                               style: TextStyle(
                                   fontFamily: 'Poppins',
                                   fontSize: 13,
