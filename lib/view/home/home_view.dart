@@ -18,8 +18,6 @@ class HomeView extends StatefulWidget {
   State<HomeView> createState() => _NewHomeViewState();
 }
 class _NewHomeViewState extends State<HomeView> {
-
-
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 @override
@@ -46,10 +44,10 @@ class _NewHomeViewState extends State<HomeView> {
       backgroundColor: AppColors.backgroundColor,
       body: Consumer<ApiProvider>(
         builder: (BuildContext context, ApiProvider value, Widget? child) {
-          return value.loading?ShimmerLoader():Stack(
+          return
+            value.loading?ShimmerLoader():Stack(
             children: [
               CustomScrollView(
-
                 slivers: [
                   SliverAppBar(
                     backgroundColor: AppColors.primaryBlue,
@@ -84,7 +82,8 @@ class _NewHomeViewState extends State<HomeView> {
                                       Material(
                                         shape: const CircleBorder(),
                                         elevation: 4, // Adjust elevation as needed
-                                        child: SizedBox(
+                                        child:
+                                        SizedBox(
                                           width: 38.0, // Adjust width as needed
                                           height: 38.0, // Adjust height as needed
                                           child: IconButton(
@@ -209,11 +208,11 @@ class _NewHomeViewState extends State<HomeView> {
                   SliverList(
                     delegate: SliverChildListDelegate(
                       [
-
-                        GestureDetector(
-                            child: const LocationShowWidget()),
-
-                         BannerSlider(banners: dashboardProvider.dashboardResponse!.banner,),
+                        // GestureDetector(
+                        //     child: const LocationShowWidget()),
+                        //  BannerSlider(banners: dashboardProvider.dashboardResponse!.banner,
+                        //
+                        //  ),
 
                         Padding(
                           padding:  EdgeInsets.symmetric(horizontal: 12,vertical: 8),

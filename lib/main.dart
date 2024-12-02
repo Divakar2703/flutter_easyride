@@ -8,13 +8,11 @@ import 'package:flutter_easy_ride/rental/components/rentalbooking_provider.dart'
 import 'package:flutter_easy_ride/rental/get_rental_vehical_provider.dart';
 import 'package:flutter_easy_ride/rental/recurring/recurringbooking_provider.dart';
 import 'package:flutter_easy_ride/utils/converter_function.dart';
+import 'package:flutter_easy_ride/view/home/home_view.dart';
 import 'package:provider/provider.dart';
 import 'Book_Now/provider/drive_looking_provider.dart';
 import 'Pre_Booking/provider/preebooking_provider.dart';
-
 import 'book_easyride/provider/triphistry_provider.dart';
-import 'check_api.dart';
-import 'view/home/home_view.dart';
 
 var navigatorKey = GlobalKey<NavigatorState>();
 void main() {
@@ -66,23 +64,20 @@ class _MyAppState extends State<MyApp> {
     return Consumer<ApiProvider>(
       builder: (BuildContext context, value, Widget? child) {
         return MaterialApp(
-            navigatorKey: navigatorKey,
-            debugShowCheckedModeBanner: false,
-            title: 'Flutter Demo',
-            theme: ThemeData(
-              primaryColor: ConverterFunction.parseColor(
-                  value.themeConfigg!.lightTheme.primaryColor),
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-              useMaterial3: true,
-            ),
-            home:
-            ChangeNotifierProvider(
-                create: (BuildContext context) => DashboardProvider(),
-                child: HomeView())
-
-            );
-        // BookRideScreen(),
-        // );
+          navigatorKey: navigatorKey,
+          debugShowCheckedModeBanner: false,
+          title: 'Flutter Demo',
+          // theme: ThemeData(
+          //   primaryColor: ConverterFunction.parseColor(
+          //       value.themeConfigg!.lightTheme.primaryColor),
+          //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          //   useMaterial3: true,
+          // ),
+          home: ChangeNotifierProvider(
+            create: (BuildContext context) => DashboardProvider(),
+            child: HomeView(),
+          ),
+        );
       },
     );
   }

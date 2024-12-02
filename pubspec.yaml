@@ -72,7 +72,10 @@ dependencies:
   web_socket_client: ^0.1.5
   socket_io_client: ^3.0.1
   internet_connection_checker: ^1.0.0+1
-
+  custom_info_window: ^1.0.1
+  uuid:
+  image:
+  location: ^7.0.1
 
 dev_dependencies:
   flutter_test:

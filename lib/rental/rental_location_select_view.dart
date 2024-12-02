@@ -6,6 +6,7 @@ import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:provider/provider.dart';
 
 import '../Book_Now/provider/cab_book_provider.dart';
+import '../common_widget/custombutton.dart';
 import '../view/map/map_screen.dart';
 import 'components/select_rental_packege_view.dart';
 
@@ -268,37 +269,47 @@ class _RentalLocationSelectViewState extends State<RentalLocationSelectView> {
                 Navigator.of(context).push(_createRoute());
 
               },
-              child: Container(
-                //  margin: EdgeInsets.symmetric(horizontal: 24,vertical: 16),
-                height: 44,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Color(0xff1937d7),
-                ),
-                child:Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Select rental packege",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Poppins', // Set Poppins as the default font
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
+              child:Customtbutton(
+                text: "Set Pickup time",
+
               ),
+
+              // Container(
+              //   //  margin: EdgeInsets.symmetric(horizontal: 24,vertical: 16),
+              //   height: 44,
+              //   width: double.infinity,
+              //   decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(5),
+              //       color: Color(0xff1937d7),
+              //   ),
+              //   child:Row(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //
+              //
+              //
+              //
+              //       Text(
+              //         "Select rental packege",
+              //         textAlign: TextAlign.center,
+              //         style: TextStyle(
+              //           color: Colors.white,
+              //           fontFamily: 'Poppins', // Set Poppins as the default font
+              //           fontSize: 15.0,
+              //           fontWeight: FontWeight.w500,
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+
             ),
+            SizedBox(height: 10,),
           ],
         ),
       ),
     );
   }
-
   Route _createRoute() {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => SelectRentalPackegeView(),

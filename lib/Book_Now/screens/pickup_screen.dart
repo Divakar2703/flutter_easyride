@@ -4,6 +4,7 @@ import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
 import 'package:flutter_easy_ride/service/LocationApiUtils.dart';
 import 'package:provider/provider.dart';
 
+import '../../common_widget/custombutton.dart';
 import '../../common_widget/gradient_button_widget.dart';
 import '../../common_widget/pickup_drop_widget.dart';
 import '../../view/map/map_screen.dart';
@@ -369,7 +370,9 @@ class _PickupScreenState extends State<PickupScreen> {
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => SelectVehicle()));
             },
-            child: GradientButton()
+            child: Customtbutton(
+              text: "Continue",
+            )
             // Container(
             //   //  margin: EdgeInsets.symmetric(horizontal: 24,vertical: 16),
             //   height: 44,
@@ -395,6 +398,7 @@ class _PickupScreenState extends State<PickupScreen> {
             //   ),
             // ),
           ),
+          SizedBox(height: 10,),
         ],
       ),
     );

@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../Book_Now/provider/cab_book_provider.dart';
 import '../../book_easyride/model/triphistry.dart';
+import '../../common_widget/custombutton.dart';
 import '../../common_widget/map_widget.dart';
 import '../../common_widget/vehicle_widget.dart';
 import '../../provider/map_provider.dart';
@@ -35,10 +36,8 @@ class _SelectPrebookingVehicleState extends State<SelectPrebookingVehicle> {
     // Provider.of<PreebookingProvider>(context, listen: false).getprebookvehicle();
 
     final mapProvider = Provider.of<MapProvider>(context, listen: false);
-    mapProvider.loadMapData(
-        ALatitude, ALongitude, dropLat,dropLong);
-    mapProvider.getPolyPoints(
-        ALatitude, ALongitude, dropLat, dropLong);
+    mapProvider.loadMapData(ALatitude, ALongitude, dropLat, dropLong);
+    mapProvider.getPolyPoints(ALatitude, ALongitude, dropLat, dropLong);
   }
 
   @override
@@ -105,25 +104,25 @@ class _SelectPrebookingVehicleState extends State<SelectPrebookingVehicle> {
                                 assetPath: vehicle.image,
                                 isSelected: selectedRows.contains(index),
                                 onTap: () {
-
-
                                   setState(() {
-                                    selectedVehicle=vehicle.id;
-                                    vehicleDetails=cabProvider.vehicleResponse?.vehicle[index];
-                                    setState(() {
-                                    });
+                                    selectedVehicle = vehicle.id;
+                                    vehicleDetails = cabProvider
+                                        .vehicleResponse?.vehicle[index];
+                                    setState(() {});
                                     // Toggle the selection state
                                     if (selectedRows.contains(index)) {
                                       selectedRows.remove(
                                           index); // Deselect if already selected
                                     } else {
-                                      cabProvider.getOffers(
-                                          int.parse(vehicle.id));
-                                      selectedRows.add(
-                                          index); // Select if not selected
-                                      cabProvider.sendRequestToDriver(vehicle.id);
+                                      cabProvider
+                                          .getOffers(int.parse(vehicle.id));
+                                      selectedRows
+                                          .add(index); // Select if not selected
+                                      cabProvider
+                                          .sendRequestToDriver(vehicle.id);
                                     }
-                                  });                                },
+                                  });
+                                },
                               );
                             },
                           );
@@ -163,32 +162,20 @@ class _SelectPrebookingVehicleState extends State<SelectPrebookingVehicle> {
                       }),
                     ),
                     // Confirm Button
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).push(_createRoute());
-               
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.all(10),
-                            backgroundColor: Color(0xff1937d7), // Button color
-                          ),
-                          child: Text('Confirm',
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontFamily: "Poppins",
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w400)),
-                        ),
-                      ),
-                    ),
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(_createRoute());
+                        },
+                        child: Customtbutton(
+                          text: "Confirm",
+                        )),
                   ],
                 ),
               ),
             ),
+          ),
+          SizedBox(
+            height: 10,
           ),
         ],
       ),
