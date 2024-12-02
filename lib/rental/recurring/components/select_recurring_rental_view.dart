@@ -59,7 +59,6 @@ class _SelectRecurringRentalViewState extends State<SelectRecurringRentalView> {
              ],
            ),
          ),
-        
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16,vertical: 4),
               width: double.infinity,
@@ -111,9 +110,6 @@ class _SelectRecurringRentalViewState extends State<SelectRecurringRentalView> {
                     color: Color(0xff1937d7),
                     size: 16,
                   ),
-        
-        
-        
                 ],
               ),
             ),

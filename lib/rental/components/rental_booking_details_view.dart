@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/common_widget/custombutton.dart';
 import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -263,15 +264,19 @@ class _RentalBookingDetailsViewState extends State<RentalBookingDetailsView> {
                     padding: const EdgeInsets.all(10.0),
                     child: SizedBox(
                       width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
+                      child: GestureDetector(
+                        onTap: () {
                           Navigator.push(context, MaterialPageRoute(builder: (context)=>BookingSuccessScreen()));
                         },
-                        style: ElevatedButton.styleFrom(
-
-                          padding: EdgeInsets.all(10), backgroundColor:  Color(0xff1937d7), // Button color
-                        ),
-                        child: Text('Confirm ', style: TextStyle(fontSize: 14,fontFamily:"Poppins",color: Colors.white,fontWeight: FontWeight.w400)),
+                        // style: ElevatedButton.styleFrom(
+                        //
+                        //   padding: EdgeInsets.all(10), backgroundColor:  Color(0xff1937d7), // Button color
+                        // ),
+                        child:
+                          Customtbutton(
+                            text: "Confirm",
+                          )
+                        // Text('Confirm ', style: TextStyle(fontSize: 14,fontFamily:"Poppins",color: Colors.white,fontWeight: FontWeight.w400)),
                       ),
                     ),
                   ),

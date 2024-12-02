@@ -7,7 +7,6 @@ import 'package:flutter_easy_ride/provider/map_provider.dart';
 import 'package:flutter_easy_ride/rental/components/rentalbooking_provider.dart';
 import 'package:flutter_easy_ride/rental/get_rental_vehical_provider.dart';
 import 'package:flutter_easy_ride/rental/recurring/recurringbooking_provider.dart';
-import 'package:flutter_easy_ride/utils/converter_function.dart';
 import 'package:flutter_easy_ride/view/home/home_view.dart';
 import 'package:provider/provider.dart';
 import 'Book_Now/provider/drive_looking_provider.dart';
