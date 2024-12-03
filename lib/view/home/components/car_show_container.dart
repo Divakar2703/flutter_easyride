@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../Book_Now/screens/book_now_screen.dart';
 import '../../../Pre_Booking/screens/pre_booking_screen.dart';
+import '../../../rental/rental_hourly_and_recurring_view.dart';
 import '../../../rental/rental_location_select_view.dart';
 
 class CarShowContainer extends StatefulWidget {
@@ -61,8 +62,9 @@ class _CarShowContainerState extends State<CarShowContainer> with TickerProvider
     } else if (label == "Rental") {
       destination = RentalLocationSelectView();
     } else {
-      destination = BookNowScreen();
+      destination = RentalHourlyAndRecurringView();
     }
+
 
     Navigator.of(context).push(_createRoute(destination));
   }

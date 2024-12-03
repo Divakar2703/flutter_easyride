@@ -38,26 +38,7 @@ class _PickupScreenState extends State<RecurringLocationSelectView> {
       pickupController.text = cabProvider.pickupLocation!;
       dropController.text=cabProvider.dropLocation??"";
     }
-    return Scaffold(
-      backgroundColor: const Color(0xfff3fdf6),
-      appBar: AppBar(
-        backgroundColor: Color(0xff1937d7),
-        title: Text('Create Recurring Package',
-          style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontFamily: 'Poppins',
-              fontSize: 17,
-              color: Colors.white
-          ),
-        ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back,color: Colors.white,size: 21,),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ),
-      body:Column(
+    return Column(
         children: [
           RentaleRecurringLocationAddWidget(
             pickupController: pickupController,
@@ -146,7 +127,6 @@ class _PickupScreenState extends State<RecurringLocationSelectView> {
             ),
           ),
         ],
-      ),
     );
   }
 }
