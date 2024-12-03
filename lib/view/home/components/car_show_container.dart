@@ -60,9 +60,9 @@ class _CarShowContainerState extends State<CarShowContainer> with TickerProvider
     if (label == "PreBooking") {
       destination = PreBookingScreen();
     } else if (label == "Rental") {
-      destination = RentalLocationSelectView();
-    } else {
       destination = RentalHourlyAndRecurringView();
+    } else {
+      destination = BookNowScreen();
     }
 
 
