@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../Book_Now/screens/select_vehicle.dart';
+import '../../common_widget/custombutton.dart';
 import '../../utils/eve.dart';
 
 // class MapPage extends StatefulWidget {
@@ -320,17 +321,17 @@ class _MapPageState extends State<MapPage> {
             child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.9,
               height: MediaQuery.of(context).size.height * 0.06,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.black,
-                  backgroundColor: const Color(0xff1937d7),
-                  elevation: 0,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(7.0),
-                  ),
-                ),
-                onPressed: () async {
+              child: GestureDetector(
+                // style: ElevatedButton.styleFrom(
+                //   foregroundColor: Colors.black,
+                //   backgroundColor: const Color(0xff1937d7),
+                //   elevation: 0,
+                //   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                //   shape: RoundedRectangleBorder(
+                //     borderRadius: BorderRadius.circular(7.0),
+                //   ),
+                // ),
+                onTap: () async {
                   cabProvider.addDropLocation(dropLat.toString(),
                       dropLong.toString(), dropAddress, "book_now");
                   Navigator.push(
@@ -338,15 +339,22 @@ class _MapPageState extends State<MapPage> {
                     MaterialPageRoute(builder: (context) => SelectVehicle()),
                   );
                 },
-                child: const Text(
-                  'Proceed',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
+                child: Customtbutton(
+                  text: "Proceed",
+
+
+                )
+                // const
+                // Text(
+                //   'Proceed',
+                //   style: TextStyle(
+                //     fontSize: 18,
+                //     fontFamily: 'Poppins',
+                //     fontWeight: FontWeight.w600,
+                //     color: Colors.white,
+                //   ),
+                // ),
+
               ),
             ),
           ),
