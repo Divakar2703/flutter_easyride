@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/Book_Now/common_widget/shimmer_loader.dart';
 import 'package:flutter_easy_ride/utils/eve.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../book_easyride/new_screen/confirm_booking.dart';
@@ -14,7 +12,7 @@ import '../../provider/map_provider.dart';
 import '../../service/socket/socket_helper.dart';
 import '../Components/promocode.dart';
 import '../provider/cab_book_provider.dart';
-import 'drive_finding_screen.dart';
+
 
 final Color kDarkBlueColor = const Color(0xff1937d7);
 

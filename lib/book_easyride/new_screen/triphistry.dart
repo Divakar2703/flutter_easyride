@@ -182,7 +182,6 @@ class _TripHistoryState extends State<TripHistory> {
   void initState() {
     historyProvider = Provider.of<TriphistryProvider>(context, listen: false);
     historyProvider.GetHistory();
-
     super.initState();
   }
 

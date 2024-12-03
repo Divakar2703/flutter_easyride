@@ -9,8 +9,6 @@ import '../../provider/dashboard_provider.dart';
 import '../../utils/colors.dart';
 import 'components/car_show_container.dart';
 import 'components/add_banner_widget.dart';
-import 'components/banner_slider.dart';
-import 'components/location_show_widget.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);

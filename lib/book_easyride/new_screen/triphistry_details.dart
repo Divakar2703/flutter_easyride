@@ -24,14 +24,13 @@ class _HistryDetailsState extends State<HistryDetails> {
   @override
   Widget build(BuildContext context) {
     final details = Provider.of<TriphistryProvider>(context, listen: false);
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.blue,
         title: Text(
           'Trip Histry Details',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white, fontFamily: "Poppins", fontSize:15),
         ),
       ),
       body: Padding(
@@ -114,7 +113,8 @@ class _HistryDetailsState extends State<HistryDetails> {
                                 fontFamily: 'Poppins',
                                 fontSize: 13,
                                 fontWeight: FontWeight.w500),
-                          )
+                          ),
+
                         ],
                       ),
                     ],
@@ -157,7 +157,7 @@ class _HistryDetailsState extends State<HistryDetails> {
                           style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 13,
-                              fontWeight: FontWeight.w500))
+                              fontWeight: FontWeight.w500),),
                     ],
                   )
                 ],

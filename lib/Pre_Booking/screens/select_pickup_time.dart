@@ -115,7 +115,6 @@ class _SelectPickupTimeState extends State<SelectPickupTime> {
                                 .format(date); // Day (Mon, Tue, etc.)
                             String dateLabel = DateFormat('d MMM')
                                 .format(date); // Date (12 Jul, etc.)
-
                             return GestureDetector(
                               onTap: () {
                                 setState(() {
@@ -215,8 +214,8 @@ class _SelectPickupTimeState extends State<SelectPickupTime> {
 
                       // Confirm Booking button
                       Center(
-                        child: ElevatedButton(
-                            onPressed: _selectedDate != null &&
+                        child: GestureDetector(
+                            onTap: _selectedDate != null &&
                                     _selectedTime != null
                                 ? () {
                                     // Handle booking logic here

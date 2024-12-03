@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/Book_Now/screens/select_vehicle.dart';
 import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
-import 'package:flutter_easy_ride/service/LocationApiUtils.dart';
 import 'package:provider/provider.dart';
-
 import '../../common_widget/custombutton.dart';
-import '../../common_widget/gradient_button_widget.dart';
 import '../../common_widget/pickup_drop_widget.dart';
 import '../../view/map/map_screen.dart';
 

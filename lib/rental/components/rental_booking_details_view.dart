@@ -360,7 +360,7 @@ class _RentalBookingDetailsViewState extends State<RentalBookingDetailsView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Enter Promo Code",
+                "Enter Promo Code ",
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold,fontFamily: "Poppins"),
               ),
               SizedBox(height: 16),
@@ -373,11 +373,13 @@ class _RentalBookingDetailsViewState extends State<RentalBookingDetailsView> {
               ),
               SizedBox(height: 16),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
+
                 children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(backgroundColor: Color(0xff1937d7)),
-                    onPressed: () {
+
+                  GestureDetector(
+                    // style: ElevatedButton.styleFrom(backgroundColor: Color(0xff1937d7)),
+                    onTap: () {
                       // Apply promo code logic
                       setState(() {
                         if (_promoController.text.isNotEmpty) {
@@ -389,7 +391,11 @@ class _RentalBookingDetailsViewState extends State<RentalBookingDetailsView> {
                       });
                       Navigator.pop(context); // Close the bottom sheet
                     },
-                    child: Text("Apply",style: TextStyle(color: Colors.white,fontFamily: "Poppins",fontWeight: FontWeight.w400),),
+                    child:
+                      Customtbutton(
+                        text: "Apply",
+                      )
+                    // Text("Apply",style: TextStyle(color: Colors.white,fontFamily: "Poppins",fontWeight: FontWeight.w400),),
                   ),
                 ],
               )
@@ -462,9 +468,10 @@ class _RentalBookingDetailsViewState extends State<RentalBookingDetailsView> {
           SizedBox(height: 16),
           Align(
             alignment: Alignment.bottomRight,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor:  Color(0xff1937d7)),
-              onPressed: () {
+            child: GestureDetector(
+              // style: ElevatedButton.styleFrom(backgroundColor:  Color(0xff1937d7)
+              // ),
+              onTap: () {
                 // Update selected date and time
                 setState(() {
                   selectedDate = dateOptions[selectedDateIndex];
@@ -472,14 +479,16 @@ class _RentalBookingDetailsViewState extends State<RentalBookingDetailsView> {
                 });
                 Navigator.pop(context); // Close the bottom sheet
               },
-              child: Text("Done",style: TextStyle(color: Colors.white,fontFamily: "poppins",),),
+              child: Customtbutton(
+                text: "Done",
+              )
+              // Text("Done",style: TextStyle(color: Colors.white,fontFamily: "poppins",),),
             ),
           )
         ],
       ),
     );
   }
-
 
   void _showPickupNotesBottomSheet(BuildContext context) {
     TextEditingController _notesController = TextEditingController();
@@ -732,7 +741,6 @@ class _RentalBookingDetailsViewState extends State<RentalBookingDetailsView> {
                               ),
                             ),
                             SizedBox(height: 20),
-
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: mQuery.size.width * 0.045),
                               child: TextField(
@@ -749,21 +757,29 @@ class _RentalBookingDetailsViewState extends State<RentalBookingDetailsView> {
                             SizedBox(height: 20),
                             SizedBox(
                               width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: () {
+                              child: GestureDetector(
+                                onTap: () {
                                   // Handle save notes logic here
                                   String notes = _notesController.text;
                                   // You can now save 'notes' or pass it to your backend or state management
                                   Navigator.pop(context);  // Close the bottom sheet
                                 },
-                                style: ElevatedButton.styleFrom(
-                                  padding: EdgeInsets.all(12),
-                                  backgroundColor: Color(0xff1937d7), // Button color
-                                ),
-                                child: Text(
-                                  'Save Notes',
-                                  style: TextStyle(fontSize: 16, color: Colors.white),
-                                ),
+                                // style: ElevatedButton.styleFrom(
+                                //   padding: EdgeInsets.all(12),
+                                //   backgroundColor: Color(0xff1937d7), // Button color
+                                // ),
+
+                                child: Customtbutton(
+                                  text: "Save Notes",
+                                )
+                                // Text(
+                                //   'Save Notes',
+                                //   style: TextStyle(fontSize: 16, color: Colors.white),
+                                // ),
+
+
+
+
                               ),
                             ),
                           ],
@@ -836,19 +852,23 @@ class _RentalBookingDetailsViewState extends State<RentalBookingDetailsView> {
                       SizedBox(height: 20),
                       SizedBox(
                         width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
+                        child: GestureDetector(
+                          onTap: () {
                             // Handle payment confirmation here
                             Navigator.pop(context); // Close the bottom sheet
                           },
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.all(12),
-                            backgroundColor: Color(0xff1937d7),
-                          ),
-                          child: Text(
-                            'Confirm Payment',
-                            style: TextStyle(fontSize: 16, color: Colors.white),
-                          ),
+                          // style: ElevatedButton.styleFrom(
+                          //   padding: EdgeInsets.all(12),
+                          //   backgroundColor: Color(0xff1937d7),
+                          // ),
+                          child:
+                            Customtbutton(
+                              text: "Confirm Payment",
+                            )
+                          // Text(
+                          //   'Confirm Payment',
+                          //   style: TextStyle(fontSize: 16, color: Colors.white),
+                          // ),
                         ),
                       ),
                     ],

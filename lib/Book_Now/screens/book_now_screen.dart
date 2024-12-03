@@ -3,13 +3,12 @@ import 'package:flutter_easy_ride/Book_Now/common_widget/shimmer_loader.dart';
 import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
 import 'package:flutter_easy_ride/Book_Now/screens/pickup_screen.dart';
 import 'package:flutter_easy_ride/Book_Now/screens/select_vehicle.dart';
-import 'package:flutter_easy_ride/provider/api_provider.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-
 import '../../utils/eve.dart';
+
 
 class BookNowScreen extends StatefulWidget {
   const BookNowScreen({super.key});
@@ -77,76 +76,76 @@ class _BookNowScreenState extends State<BookNowScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       //   appBar: AppBar(title: Text('Choose Your Ride')),
-      body: SingleChildScrollView(
-        child: cabBookProvider.isLoading
-            ? ShimmerLoader()
-            : Column(
-                children: [
-                  // Map with search box on top
-                  Stack(
-                    children: [
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.5,
-                        child: GoogleMap(
-                          onTap: _handleMapTap,
-                          initialCameraPosition: CameraPosition(
-                            target: _currentLocation,
-                            zoom: 14.0,
-                          ),
-                          onMapCreated: (GoogleMapController controller) {},
-                          markers: {
-                            Marker(
-                              markerId: MarkerId('currentLocation'),
-                              position: _currentLocation,
-                            ),
-                          },
+      body: cabBookProvider.isLoading
+          ? ShimmerLoader()
+          : Column(
+              children: [
+                // Map with search box on top
+                Stack(
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      child: GoogleMap(
+                        onTap: _handleMapTap,
+                        initialCameraPosition: CameraPosition(
+                          target: _currentLocation,
+                          zoom: 14.0,
                         ),
+                        onMapCreated: (GoogleMapController controller) {},
+                        markers: {
+                          Marker(
+                            markerId: MarkerId('currentLocation'),
+                            position: _currentLocation,
+                          ),
+                        },
                       ),
-                      Positioned(
-                        top: 40,
-                        left: 15,
-                        right: 15,
-                        child: GestureDetector(
-                          onTap: () {
-                            // Navigate to another screen with door open animation
-                            Navigator.push(
-                              context,
-                              createDoorOpenPageRoute(PickupScreen()),
-                            );
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 15),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black12,
-                                  blurRadius: 4,
-                                  spreadRadius: 2,
-                                ),
-                              ],
-                            ),
-                            child: TextFormField(
-                              enabled: false,
-                              controller: pickupController,
-                              //  initialValue: '${pickupAddress}',
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                prefixIcon: Icon(Icons.location_on),
+                    ),
+                    Positioned(
+                      top: 40,
+                      left: 15,
+                      right: 15,
+                      child: GestureDetector(
+                        onTap: () {
+                          // Navigate to another screen with door open animation
+                          Navigator.push(
+                            context,
+                            createDoorOpenPageRoute(PickupScreen()),
+                          );
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 4,
+                                spreadRadius: 2,
                               ),
+                            ],
+                          ),
+                          child: TextFormField(
+                            enabled: false,
+                            controller: pickupController,
+                            //  initialValue: '${pickupAddress}',
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              prefixIcon: Icon(Icons.location_on),
                             ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
-        
-                  SizedBox(
-                    height: 10,
-                  ),
-                  // Choose a Ride section
-                  Padding(
+                    ),
+                  ],
+                ),
+
+                SizedBox(
+                  height: 10,
+                ),
+                // Choose a Ride section
+                SingleChildScrollView(
+                  child: Padding(
                     padding:
                         const EdgeInsets.symmetric(vertical: 15, horizontal: 18),
                     child: Column(
@@ -201,52 +200,57 @@ class _BookNowScreenState extends State<BookNowScreen> {
                       ],
                     ),
                   ),
-        
-                  // Divider
-                  Divider(),
-                  SizedBox(
-                    height: 10,
-                  ),
-        
-                  // Destination search box and history
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Column(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            // Navigate to another screen with door open animation
-                            cabBookProvider.setCabType("");
-                            Navigator.push(
-                              context,
-                              createDoorOpenPageRoute(PickupScreen()),
-                            );
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 15),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(25),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black12,
-                                  blurRadius: 4,
-                                  spreadRadius: 2,
-                                ),
-                              ],
-                            ),
-                            child: TextFormField(
-                              enabled: false,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Where to go?',
-                                prefixIcon: Icon(Icons.search),
+                ),
+
+                // Divider
+                Divider(),
+                SizedBox(
+                  height: 10,
+                ),
+
+                // Destination search box and history
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          // Navigate to another screen with door open animation
+                          cabBookProvider.setCabType("");
+                          Navigator.push(
+                            context,
+                            createDoorOpenPageRoute(PickupScreen()),
+                          );
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(25),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 4,
+                                spreadRadius: 2,
                               ),
+                            ],
+                          ),
+                          child: TextFormField(
+                            enabled: false,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Where to go?',
+                              prefixIcon: Icon(Icons.search),
                             ),
                           ),
                         ),
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.2,
+                      ),
+                      SingleChildScrollView(
+                        child: SizedBox(
+                          height: 100,
+                          // height: MediaQuery.of(context).size.height * 0.2,
+                          // height: MediaQuery.of(context).size.height,
+
                           child: Consumer<CabBookProvider>(
                             builder: (BuildContext context,
                                 CabBookProvider provider, Widget? child) {
@@ -258,7 +262,7 @@ class _BookNowScreenState extends State<BookNowScreen> {
                                   itemBuilder: (context, index) {
                                     var data =
                                         provider.dropHistoryData?.list[index];
-        
+
                                     return InkWell(
                                         onTap: () {
                                           cabBookProvider.setDropLocation(
@@ -266,7 +270,7 @@ class _BookNowScreenState extends State<BookNowScreen> {
                                             double.parse(data.dropLat),
                                             double.parse(data.dropLong),
                                           );
-        
+
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -317,13 +321,13 @@ class _BookNowScreenState extends State<BookNowScreen> {
                                   });
                             },
                           ),
-                        )
-                      ],
-                    ),
+                        ),
+                      )
+                    ],
                   ),
-                ],
-              ),
-      ),
+                ),
+              ],
+            ),
     );
   }
 

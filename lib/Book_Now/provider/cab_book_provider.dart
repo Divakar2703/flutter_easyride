@@ -14,7 +14,6 @@ import '../../Pre_Booking/model/payment.dart';
 import '../../model/autocomplate_prediction.dart';
 import '../../model/coupon_data.dart';
 import '../../model/location_suggetions.dart';
-import '../../model/place_auto_complate_response.dart';
 import '../../service/api_helper.dart';
 import '../../service/network_utility.dart';
 import '../../utils/eve.dart';
