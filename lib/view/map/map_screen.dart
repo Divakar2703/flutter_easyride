@@ -306,15 +306,15 @@ class _MapPageState extends State<MapPage> {
                       dropAddress!.length > 30
                           ? '${dropAddress!.substring(0, 30)}...'
                           : dropAddress!,
-                    ),
-                  ],
+                      ),
+                    ],
                 ),
               ),
             ),
           ),
         
           Positioned(
-            bottom: 20, 
+            bottom: 20,
             left: MediaQuery.of(context).size.width * 0.05,
             right: MediaQuery.of(context).size.width * 0.05,
             child: SizedBox(
