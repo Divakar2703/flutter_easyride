@@ -18,14 +18,14 @@ class _SelectHourState extends State<SelectHour> {
   void initState() {
     super.initState();
     // Call fetchRecurringData once when the widget is first initialized
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!isDataLoaded) {
-        fetchRecurringData('hourly'); // Default to hourly booking type
-        setState(() {
-          isDataLoaded = true; // Set the flag to true to prevent further reloads
-        });
-      }
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   if (!isDataLoaded) {
+    //     fetchRecurringData('hourly'); // Default to hourly booking type
+    //     setState(() {
+    //       isDataLoaded = true; // Set the flag to true to prevent further reloads
+    //     });
+    //   }
+    // });
   }
 
   void fetchRecurringData(String bookingType) {
