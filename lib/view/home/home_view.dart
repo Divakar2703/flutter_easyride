@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/Book_Now/common_widget/shimmer_loader.dart';
 import 'package:flutter_easy_ride/provider/api_provider.dart';
+import 'package:flutter_easy_ride/provider/dashboard_provider.dart';
 import 'package:flutter_easy_ride/service/api_helper.dart';
 import 'package:provider/provider.dart';
 import '../../nav_Bar.dart';
@@ -35,6 +37,9 @@ class _NewHomeViewState extends State<HomeView> {
         .then((_) {
       // After fetching auth, call the next method
       Provider.of<ApiProvider>(context, listen: false).fetchAuth();
+      Provider.of<DashboardProvider>(context, listen: false).fetchDashboard();
+      Provider.of<DashboardProvider>(context, listen: false).pendingBooking();
+
     })
         .catchError((error) {
       // Handle errors if needed
@@ -44,246 +49,250 @@ class _NewHomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+  var dashboardProvider=Provider.of<DashboardProvider>(context);
 
     return Scaffold(
       key: _scaffoldKey,
       drawer: const NavBar(),
       backgroundColor: AppColors.backgroundColor,
-      body: Stack(
-        children: [
-          CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                backgroundColor: AppColors.primaryBlue,
-                expandedHeight: 280.0,
-                floating: false,
-                pinned: true,
-                flexibleSpace: FlexibleSpaceBar(
-                  collapseMode: CollapseMode.pin,
-                  background: Stack(
-                    children: [
-                      Container(
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              AppColors.primaryBlue,
-                              AppColors.gradientEnd,
-                            ],
-                            stops: [0.79, 0.31], // First 70% green, last 30% white
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
+      body: Consumer<ApiProvider>(
+        builder: (BuildContext context, ApiProvider value, Widget? child) {
+          return value.loading?ShimmerLoader():Stack(
+            children: [
+              CustomScrollView(
+                slivers: [
+                  SliverAppBar(
+                    backgroundColor: AppColors.primaryBlue,
+                    expandedHeight: 280.0,
+                    floating: false,
+                    pinned: true,
+                    flexibleSpace: FlexibleSpaceBar(
+                      collapseMode: CollapseMode.pin,
+                      background: Stack(
+                        children: [
+                          Container(
+                            decoration: const BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  AppColors.primaryBlue,
+                                  AppColors.gradientEnd,
+                                ],
+                                stops: [0.79, 0.31], // First 70% green, last 30% white
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 9,right: 14,top: 44),
-                          child: Column(
-                            children: [
-                              Row(
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 9,right: 14,top: 44),
+                              child: Column(
                                 children: [
-                                  Material(
-                                    shape: const CircleBorder(),
-                                    elevation: 4, // Adjust elevation as needed
-                                    child: SizedBox(
-                                      width: 38.0, // Adjust width as needed
-                                      height: 38.0, // Adjust height as needed
-                                      child: IconButton(
-                                        onPressed: () {
-                                          _scaffoldKey.currentState?.openDrawer(); // Open the drawer
-                                        },
-                                        splashRadius: 20,
-                                        iconSize: 22.0, // Adjust icon size as needed
-                                        icon: const Icon(
-                                          Icons.menu,
-                                          color: Colors.transparent,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(50.0),
-                                        ),
-                                        child: Material(
-                                          elevation: 2,
-                                          borderRadius: BorderRadius.circular(50.0),
-                                          child: Container(
-                                            height: 44.0,
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(50.0),
-                                              color: Colors.grey.shade200,
-                                            ),
-                                            child: const Row(
-                                              children: [
-                                                Expanded(
-                                                  child: TextField(
-                                                    decoration: InputDecoration(
-                                                      hintText: 'Where To?',
-                                                      hintStyle:  TextStyle(
-                                                        color: Colors.black54,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.w400,
-                                                        fontFamily: 'Poppins', // Set Poppins as the default font
-                                                      ),
-                                                      border: InputBorder.none,
-                                                      contentPadding:  EdgeInsets.symmetric(
-                                                          horizontal: 32.0, vertical: 12),
-                                                      prefixIcon:  Padding(
-                                                        padding: EdgeInsets.all(12.0),
-                                                        child: Icon(
-                                                          Icons.search_outlined,
-                                                          color: Colors.black54,
-                                                        ),
-                                                      ),
-                                                      suffixIcon:  Padding(
-                                                        padding: EdgeInsets.all(11.0),
-                                                        child: Icon(
-                                                          Icons.mic,
-                                                          color: Colors.black54,
-                                                          size: 22,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
+                                  Row(
+                                    children: [
+                                      Material(
+                                        shape: const CircleBorder(),
+                                        elevation: 4, // Adjust elevation as needed
+                                        child: SizedBox(
+                                          width: 38.0, // Adjust width as needed
+                                          height: 38.0, // Adjust height as needed
+                                          child: IconButton(
+                                            onPressed: () {
+                                              _scaffoldKey.currentState?.openDrawer(); // Open the drawer
+                                            },
+                                            splashRadius: 20,
+                                            iconSize: 22.0, // Adjust icon size as needed
+                                            icon: const Icon(
+                                              Icons.menu,
+                                              color: Colors.transparent,
                                             ),
                                           ),
                                         ),
                                       ),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(50.0),
+                                            ),
+                                            child: Material(
+                                              elevation: 2,
+                                              borderRadius: BorderRadius.circular(50.0),
+                                              child: Container(
+                                                height: 44.0,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(50.0),
+                                                  color: Colors.grey.shade200,
+                                                ),
+                                                child: const Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: TextField(
+                                                        decoration: InputDecoration(
+                                                          hintText: 'Where To?',
+                                                          hintStyle:  TextStyle(
+                                                            color: Colors.black54,
+                                                            fontSize: 15,
+                                                            fontWeight: FontWeight.w400,
+                                                            fontFamily: 'Poppins', // Set Poppins as the default font
+                                                          ),
+                                                          border: InputBorder.none,
+                                                          contentPadding:  EdgeInsets.symmetric(
+                                                              horizontal: 32.0, vertical: 12),
+                                                          prefixIcon:  Padding(
+                                                            padding: EdgeInsets.all(12.0),
+                                                            child: Icon(
+                                                              Icons.search_outlined,
+                                                              color: Colors.black54,
+                                                            ),
+                                                          ),
+                                                          suffixIcon:  Padding(
+                                                            padding: EdgeInsets.all(11.0),
+                                                            child: Icon(
+                                                              Icons.mic,
+                                                              color: Colors.black54,
+                                                              size: 22,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const  SizedBox(height: 22,),
+                                  ShaderMask(
+                                    shaderCallback: (bounds) =>const LinearGradient(
+                                      colors: [
+                                        AppColors.yellowText,
+                                        AppColors.lightYellowText
+                                      ],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ).createShader(bounds),
+                                    child: const Text(
+                                      "Easy Ride",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 34,
+                                        color: Colors.white, // This color will be masked by the gradient
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: 'Poppins', // Set Poppins as the default font
+                                      ),
                                     ),
                                   ),
+                                  const  Text(
+                                    "Ride Easy, Arrive Happy",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white, // This color will be masked by the gradient
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Poppins', // Set Poppins as the default font
+                                    ),
+                                  ),
+
                                 ],
                               ),
-                              const  SizedBox(height: 22,),
-                              ShaderMask(
-                                shaderCallback: (bounds) =>const LinearGradient(
-                                  colors: [
-                                    AppColors.yellowText,
-                                    AppColors.lightYellowText
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ).createShader(bounds),
-                                child: const Text(
-                                  "Easy Ride",
-                                  textAlign: TextAlign.center,
+                            ),
+                          ),
+
+                        ],
+                      ),
+                    ),
+                    bottom: const PreferredSize(
+                      preferredSize:  Size.fromHeight(63.0),
+                      child: Padding(
+                        padding:  EdgeInsets.symmetric(horizontal: 6,vertical: 4),
+                        child:CarShowContainer(),
+                      ),
+                    ),
+                  ),
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
+
+                        GestureDetector(
+                            child: const LocationShowWidget()),
+
+                         BannerSlider(banners: dashboardProvider.dashboardResponse!.banner,),
+
+                        Padding(
+                          padding:  EdgeInsets.symmetric(horizontal: 12,vertical: 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Orders details",
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
+                                  fontFamily: 'Poppins',
+
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: (){
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) => PreBookingOrderView()));
+                                },
+                                child: Text(
+                                  "See all",
                                   style: TextStyle(
-                                    fontSize: 34,
-                                    color: Colors.white, // This color will be masked by the gradient
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'Poppins', // Set Poppins as the default font
+                                    fontSize:14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xff1937d7),
+                                    fontFamily: 'Poppins',
                                   ),
                                 ),
                               ),
-                              const  Text(
-                                "Ride Easy, Arrive Happy",
-                                textAlign: TextAlign.center,
+                            ],
+                          ),
+                        ),
+
+                        PreBookingWidget(bookingList: dashboardProvider.bookinglist,),
+
+
+                        const  Padding(
+                          padding:  EdgeInsets.symmetric(horizontal: 12,vertical: 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Commute smarter",
                                 style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.white, // This color will be masked by the gradient
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: 'Poppins', // Set Poppins as the default font
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
+                                  fontFamily: 'Poppins',
+
                                 ),
                               ),
 
                             ],
                           ),
                         ),
-                      ),
+                        const SizedBox(height: 5,),
+                        const AddBannerWidget(),
 
-                    ],
-                  ),
-                ),
-                bottom: const PreferredSize(
-                  preferredSize:  Size.fromHeight(63.0),
-                  child: Padding(
-                    padding:  EdgeInsets.symmetric(horizontal: 6,vertical: 4),
-                    child:CarShowContainer(),
-                  ),
-                ),
-              ),
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  [
-
-                  GestureDetector(
-                      child: const LocationShowWidget()),
-
-                    const BannerSlider(),
-
-                    Padding(
-                      padding:  EdgeInsets.symmetric(horizontal: 12,vertical: 8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Orders details",
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black87,
-                              fontFamily: 'Poppins',
-
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: (){
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) => PreBookingOrderView()));
-                            },
-                            child: Text(
-                              "See all",
-                              style: TextStyle(
-                                fontSize:14,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xff1937d7),
-                                fontFamily: 'Poppins',
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      ],
                     ),
-
-                    PreBookingWidget(),
-
-                    const LocationShowWidget(),
-
-                    const BannerSlider(),
-                    const  Padding(
-                      padding:  EdgeInsets.symmetric(horizontal: 12,vertical: 8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Commute smarter",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black87,
-                              fontFamily: 'Poppins',
-
-                            ),
-                          ),
-
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 5,),
-                    const AddBannerWidget(),
-
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
-          ),
-        ],
+          );
+
+        },
       ),
     );
   }

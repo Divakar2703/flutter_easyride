@@ -268,7 +268,7 @@ class _SelectRentalPackegeViewState extends State<SelectRentalPackegeView> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Image.asset(car['image'], height: 70, width: 120),
+                                Image.network(car['image'], height: 70, width: 120),
                                 Text(
                                   car['class'],
                                   style: TextStyle(

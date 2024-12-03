@@ -32,9 +32,6 @@ class _SelectPickupTimeState extends State<SelectPickupTime> {
     final cabBookProvider =
         Provider.of<CabBookProvider>(context, listen: false);
     cabBookProvider.findDriver(9);
-
-    Provider.of<PreebookingProvider>(context, listen: false).confirmpreebook();
-
     final mapProvider = Provider.of<MapProvider>(context, listen: false);
     mapProvider.loadMapData(
         ALatitude, ALongitude, 30.32455712895656, 78.00607616176579);
@@ -212,7 +209,7 @@ class _SelectPickupTimeState extends State<SelectPickupTime> {
                               // Handle booking logic here
                               Provider.of<PreebookingProvider>(context,
                                       listen: false)
-                                  .confirmpreebook();
+                                  .confirmpreebook(_selectedDate.toString(),_selectedTime.toString());
 
                               CustomSnackbar(
                                 message: 'Request has been send successfully',
@@ -233,7 +230,7 @@ class _SelectPickupTimeState extends State<SelectPickupTime> {
                             }
                           : null,
                       child: Text(
-                        'Confirm Bookingm',
+                        'Confirm Booking',
                         style: TextStyle(
                             fontFamily: "Poppins",
                             fontSize: 14,

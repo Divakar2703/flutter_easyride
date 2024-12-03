@@ -14,6 +14,7 @@ class DriverWebSocketService {
 
     // Listen to incoming messages and parse them into DriverDetails objects
     driverDetailsStream = _webSocket.messages.map((message) {
+      print("msg===${message}");
       return DriverDetails.fromJson(jsonDecode(message));
     });
   }
@@ -32,26 +33,3 @@ class DriverWebSocketService {
   }
 }
 
-// Define your driver details model
-// class DriverDetails {
-//   final int id;
-//   final String name;
-//   final String vehicleType;
-//   final String location;
-//
-//   DriverDetails({
-//     required this.id,
-//     required this.name,
-//     required this.vehicleType,
-//     required this.location,
-//   });
-//
-//   factory DriverDetails.fromJson(Map<String, dynamic> json) {
-//     return DriverDetails(
-//       id: json['id'],
-//       name: json['name'],
-//       vehicleType: json['vehicle_type'],
-//       location: json['location'],
-//     );
-//   }
-// }

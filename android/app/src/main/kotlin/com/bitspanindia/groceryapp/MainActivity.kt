@@ -1,4 +1,4 @@
-package com.example.flutter_easy_ride
+package com.bitspanindia.groceryapp
 
 import io.flutter.embedding.android.FlutterActivity
 

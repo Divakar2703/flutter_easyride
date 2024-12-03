@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../model/booking.dart';
+
 class PreBookingWidget extends StatelessWidget {
-  const PreBookingWidget({super.key});
+  List<Booking> bookingList;
+   PreBookingWidget({super.key,required this.bookingList});
 
   final List<Map<String, dynamic>> bookingData = const [
     {
@@ -36,9 +39,9 @@ class PreBookingWidget extends StatelessWidget {
         ListView.builder(
           padding: EdgeInsets.zero,
           shrinkWrap: true,
-          itemCount: bookingData.length,
+          itemCount: bookingList.length,
           itemBuilder: (context, index) {
-            var data = bookingData[index];
+            var data = bookingList[index];
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4),
               child: Card(
@@ -55,7 +58,7 @@ class PreBookingWidget extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            data['carType'],
+                            data.bookingType,
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontFamily: 'Poppins',
@@ -70,7 +73,7 @@ class PreBookingWidget extends StatelessWidget {
                             size: 20,
                           ),
                           Text(
-                            data['price'],
+                            data.totalFare,
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontFamily: 'Poppins',
@@ -84,7 +87,7 @@ class PreBookingWidget extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            data['startTime'],
+                            "Start",
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontFamily: 'Poppins',
@@ -110,7 +113,7 @@ class PreBookingWidget extends StatelessWidget {
                               ),
                             ),
                             child: Text(
-                              data['duration'],
+                              data.userJourneyDistance,
                               style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontFamily: 'Poppins',
@@ -127,7 +130,7 @@ class PreBookingWidget extends StatelessWidget {
                           ),
                           SizedBox(width: 20),
                           Text(
-                            data['endTime'],
+                            "End",
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontFamily: 'Poppins',
@@ -141,23 +144,30 @@ class PreBookingWidget extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text(
-                            data['startLocation'],
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Poppins',
-                              fontSize: 15,
-                              color: Colors.black87,
+                          Container(
+                            width:MediaQuery.of(context).size.width*0.4,
+                            child: Text(
+                              data.pickupAddress,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Poppins',
+                                fontSize: 12,
+                                color: Colors.black87,
+                              ),
                             ),
                           ),
                           Spacer(),
-                          Text(
-                            data['endLocation'],
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Poppins',
-                              fontSize: 15,
-                              color: Colors.black87,
+                          Container(
+                            width:MediaQuery.of(context).size.width*0.4,
+
+                            child: Text(
+                              data.dropAddress,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Poppins',
+                                fontSize: 12,
+                                color: Colors.black87,
+                              ),
                             ),
                           ),
                         ],
@@ -167,7 +177,7 @@ class PreBookingWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Text(
-                            data['route'],
+                            "Status",
                             style: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontFamily: 'Poppins',
@@ -177,7 +187,7 @@ class PreBookingWidget extends StatelessWidget {
                           ),
                           Spacer(),
                           Text(
-                            data['returnRoute'],
+                            data.rideStatus,
                             style: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontFamily: 'Poppins',

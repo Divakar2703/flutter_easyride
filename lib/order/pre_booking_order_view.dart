@@ -34,7 +34,7 @@ class _PreBookingOrderViewState extends State<PreBookingOrderView> {
       body: Column(
         children: [
           SizedBox(height: 5,),
-          PreBookingWidget()
+         // PreBookingWidget()
         ],
       ),
     );

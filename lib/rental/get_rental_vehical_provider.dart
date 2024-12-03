@@ -13,7 +13,7 @@ class RentalVehicle {
   final double fare;
   final String discount;
   final double netFare;
-  final int km;
+ // final int km;
 
   RentalVehicle({
     required this.id,
@@ -25,7 +25,7 @@ class RentalVehicle {
     required this.fare,
     required this.discount,
     required this.netFare,
-    required this.km,
+  //  required this.km,
   });
 
   factory RentalVehicle.fromJson(Map<String, dynamic> json) {
@@ -39,7 +39,7 @@ class RentalVehicle {
       fare: json['fare'].toDouble(),
       discount: json['discount'],
       netFare: json['net_fare'].toDouble(),
-      km: json['km'],
+    //  km: json['km'],
     );
   }
 }

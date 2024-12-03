@@ -70,15 +70,15 @@ class _PickupScreenState extends State<RecurringLocationSelectView> {
             color: Colors.grey.shade300,
           ),
 
-          if(cabProvider.placePredictions.isNotEmpty)
+          if(cabProvider.suggetions.isNotEmpty)
             Container(
                 height: 100,
                 child: ListView.builder(
-                  itemCount: cabProvider.placePredictions.length,
+                  itemCount: cabProvider.suggetions.length,
                   itemBuilder: (context, index) =>
                       InkWell(
                         onTap: (){
-                          cabProvider.getDropLocation(cabProvider.placePredictions[index].description??"");
+                          cabProvider.getDropLocation(cabProvider.suggetions[index].placePrediction.text.text??"",cabProvider.suggetions[index].placePrediction.placeId??"","Recuring");
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
@@ -89,14 +89,19 @@ class _PickupScreenState extends State<RecurringLocationSelectView> {
                                   Icon(Icons.watch_later_outlined,
                                     color: Colors.grey.shade800,size: 20,),
                                   SizedBox(width: 10,),
-                                  Text(
-                                    cabProvider.placePredictions[index].description??"dehradun",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey.shade800,
-                                      fontFamily: 'Poppins', // Set Poppins as the default font
+                                  Container(
+                                    width: MediaQuery.of(context).size.width*0.8,
+                                    child: Text(
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis, // Show ellipsis if text exceeds the limit
+                                      cabProvider.suggetions[index].placePrediction.text.text??"dehradun",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey.shade800,
+                                        fontFamily: 'Poppins', // Set Poppins as the default font
 
-                                      fontWeight: FontWeight.w400,
+                                        fontWeight: FontWeight.w400,
+                                      ),
                                     ),
                                   )
                                 ],
@@ -107,38 +112,7 @@ class _PickupScreenState extends State<RecurringLocationSelectView> {
                         ),
                       ),
                 )),
-          if(cabProvider.pickPlacePredictions.isNotEmpty)
-            Container(
-                height: 100,
-                child: ListView.builder(
-                  itemCount: cabProvider.pickPlacePredictions.length,
-                  itemBuilder: (context, index) =>
-                      InkWell(
-                        onTap: (){
-                          cabProvider.getDropLocation(cabProvider.pickPlacePredictions[index].description??"");
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              Icon(Icons.location_on_outlined,
-                                color: Colors.grey.shade800,size: 20,),
-                              SizedBox(width: 5,),
-                              Text(
-                                cabProvider.pickPlacePredictions[index].description??"dehradun",
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.grey.shade800,
-                                  fontFamily: 'Poppins', // Set Poppins as the default font
 
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                )),
 
 
           Spacer(),
