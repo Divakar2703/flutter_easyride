@@ -10,6 +10,8 @@ import 'package:flutter_easy_ride/rental/get_rental_vehical_provider.dart';
 import 'package:flutter_easy_ride/rental/recurring/recurringbooking_provider.dart';
 import 'package:flutter_easy_ride/splesh_Screen.dart';
 import 'package:flutter_easy_ride/utils/converter_function.dart';
+import 'package:flutter_easy_ride/view/dashboard/dashboard/home_dashboard.dart';
+import 'package:flutter_easy_ride/view/dashboard/dashboard_map.dart';
 import 'package:provider/provider.dart';
 import 'Book_Now/provider/drive_looking_provider.dart';
 import 'Book_Now/screens/book_now_screen.dart';
@@ -78,10 +80,11 @@ class _MyAppState extends State<MyApp> {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          home:  ChangeNotifierProvider(
-
-              create: (BuildContext context)=>DashboardProvider(),
-              child: HomeView())
+          home:
+          // ChangeNotifierProvider(
+          //     create: (BuildContext context)=>DashboardProvider(),
+          //     child: HomeView())
+          DashboardMap()
           //BookRideScreen(),
         );
       },
