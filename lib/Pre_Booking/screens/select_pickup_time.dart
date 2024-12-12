@@ -34,9 +34,9 @@ class _SelectPickupTimeState extends State<SelectPickupTime> {
     cabBookProvider.findDriver(9);
     final mapProvider = Provider.of<MapProvider>(context, listen: false);
     mapProvider.loadMapData(
-        ALatitude, ALongitude, 30.32455712895656, 78.00607616176579);
+        ALatitude, ALongitude, dropLat, dropLong);
     mapProvider.getPolyPoints(
-        ALatitude, ALongitude, 30.32455712895656, 78.00607616176579);
+        ALatitude, ALongitude,dropLat, dropLong);
     _generateRandomAvailability(); // Generate random available dates and times
   }
 

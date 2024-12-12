@@ -13,6 +13,8 @@ String bookingID="";
 String orderID="";
 String selectedPaymentMethod="COD";
 Vehicle? vehicleDetails;
+String BookingType="book_now";
+double selectedFare=0.0;
 
 
 final List<Map<String, dynamic>> banks = [

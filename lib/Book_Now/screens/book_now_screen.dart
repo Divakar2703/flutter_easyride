@@ -182,7 +182,7 @@ class _BookNowScreenState extends State<BookNowScreen> {
                                   createDoorOpenPageRoute(PickupScreen()),
                                 );
                               },
-                              child: rideOption('Car', 'assets/icon/auto.png')),
+                              child: rideOption('Car', 'assets/icon/car.png')),
                     ],
                   ),
                 ),

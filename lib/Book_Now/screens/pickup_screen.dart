@@ -240,8 +240,7 @@ class _PickupScreenState extends State<PickupScreen> {
           GestureDetector(
             onTap: () {
 
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MapPage()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => MapPage()));
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,

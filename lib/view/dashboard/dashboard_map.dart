@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
+import 'package:flutter_easy_ride/model/nearby_vehicle.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../Book_Now/screens/select_vehicle.dart';
+import '../../provider/api_provider.dart';
+import '../../provider/dashboard_provider.dart';
 import '../../utils/eve.dart';
-import '../dashboard/home_dashboard.dart';
-
-
-
-
+import 'home_dashboard.dart';
 class DashboardMap extends StatefulWidget {
   const DashboardMap({Key? key}) : super(key: key);
 
@@ -22,11 +21,20 @@ class _MapPageState extends State<DashboardMap> {
   LatLng? sourceLocation;
   LatLng? destLocation;
   String? address = '';
+  Set<Circle> _circles = {}; // Define a set for the circle
+  Set<Marker> _markers = {}; // Define a set for cab markers
 
   @override
   void initState() {
     super.initState();
     _getCurrentLocation();
+    Provider.of<ApiProvider>(context, listen: false)
+        .getCurrentLocation();
+    Provider.of<ApiProvider>(context, listen: false).fetchAuth();
+    Provider.of<DashboardProvider>(context, listen: false).fetchDashboard();
+    Provider.of<DashboardProvider>(context, listen: false).getLocationVehicles();
+    Provider.of<DashboardProvider>(context, listen: false).pendingBooking();
+
   }
 
   void _getCurrentLocation() async {
@@ -36,6 +44,25 @@ class _MapPageState extends State<DashboardMap> {
       );
       setState(() {
         sourceLocation = LatLng(position.latitude, position.longitude);
+
+        // Add a circle around the current location
+        _circles.add(
+          Circle(
+            circleId: const CircleId('currentLocation'),
+            center: sourceLocation!,
+            radius: 50, // Radius in meters
+            fillColor: Colors.blue.withOpacity(0.2), // Fill color with transparency
+            strokeColor: Colors.blue, // Stroke color
+            strokeWidth: 2, // Stroke width
+          ),
+        );
+        _markers.add(
+          Marker(
+            markerId: const MarkerId('Source'),
+            position: sourceLocation!,
+            infoWindow: const InfoWindow(title: 'You'),
+          ),
+        );
       });
 
       List<Placemark> placemarks = await placemarkFromCoordinates(
@@ -53,14 +80,44 @@ class _MapPageState extends State<DashboardMap> {
     }
   }
 
+  Future<void> _addCabMarkers(List<NearbyCab> vehicles) async {
+    final BitmapDescriptor customIcon = await BitmapDescriptor.fromAssetImage(
+      const ImageConfiguration(size: Size(48, 48)), // Define the size
+      'assets/icon/auto.png', // Path to your custom icon
+    );
+
+    for (var vehicle in vehicles) {
+      try {
+        double lat = double.parse(vehicle.curr_lat);
+        double lng = double.parse(vehicle.curr_long);
+
+        _markers.add(
+          Marker(
+            markerId: MarkerId(vehicle.id),
+            position: LatLng(lat, lng),
+            infoWindow: InfoWindow(title: vehicle.name),
+            icon: customIcon??BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
+          ),
+        );
+      } catch (e) {
+        print("Error adding marker for vehicle ${vehicle.name}: $e");
+      }
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    final cabProvider = Provider.of<CabBookProvider>(context);
+    final cabProvider = Provider.of<DashboardProvider>(context);
+
+    // Update cab markers whenever cab data is updated
+    if (cabProvider.vehicleData!.vehicle.isNotEmpty) {
+      _addCabMarkers(cabProvider.vehicleData!.vehicle);
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-
           if (sourceLocation != null)
             Container(
               height: MediaQuery.of(context).size.height,
@@ -68,9 +125,11 @@ class _MapPageState extends State<DashboardMap> {
                 onTap: _handleMapTap,
                 initialCameraPosition: CameraPosition(
                   target: sourceLocation!,
-                  zoom: 15,
+                  zoom: 14,
                 ),
-                markers: _buildMarkers(),
+                markers: _markers,
+                //_buildMarkers(),
+                circles: _circles, // Add circles to the Google Map
                 buildingsEnabled: false,
                 zoomControlsEnabled: false,
                 myLocationButtonEnabled: false,
@@ -91,9 +150,7 @@ class _MapPageState extends State<DashboardMap> {
                     shape: const CircleBorder(),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(20),
-                      onTap: () {
-
-                      },
+                      onTap: () {},
                       child: Container(
                         width: 36,
                         height: 36,
@@ -109,16 +166,6 @@ class _MapPageState extends State<DashboardMap> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 20),
-                  const Text(
-                    'Cab Booking',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                      fontSize: 15,
-                      fontFamily: 'Poppins',
-                    ),
-                  ),
                   const Spacer(),
                   Material(
                     color: Colors.white,
@@ -126,9 +173,7 @@ class _MapPageState extends State<DashboardMap> {
                     shape: const CircleBorder(),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(20),
-                      onTap: () {
-
-                      },
+                      onTap: () {},
                       child: Container(
                         width: 36,
                         height: 36,
@@ -149,37 +194,22 @@ class _MapPageState extends State<DashboardMap> {
             ),
           ),
 
-          Positioned(
-            bottom: 20,
-            left: MediaQuery.of(context).size.width * 0.05,
-            right: MediaQuery.of(context).size.width * 0.05,
-            child: GestureDetector(
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(24),
-                        topRight: Radius.circular(24),
-                      ),
-                    ),
-                    builder: (context) {
-                      final screenHeight = MediaQuery.of(context).size.height;
-                      return ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20),
-                        ),
-                        child: SizedBox(
-                          height: screenHeight - 115,
-                          child: const HomeDashboard(),
-                        ),
-                      );
-                    },
-                  );
-                },
-                child: Icon(Icons.keyboard_arrow_up,size: 40,)),
+          DraggableScrollableSheet(
+            initialChildSize: 0.2,
+            minChildSize: 0.2,
+            maxChildSize: 0.85,
+            builder: (context, scrollController) {
+              return Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
+                ),
+                child: HomeDashboard(scrollController: scrollController),
+              );
+            },
           ),
         ],
       ),
@@ -189,22 +219,21 @@ class _MapPageState extends State<DashboardMap> {
   Set<Marker> _buildMarkers() {
     Set<Marker> markers = {};
 
-    if (destLocation != null) {
-      markers.add(
-        Marker(
-          markerId: MarkerId('Destination'),
-          position: destLocation!,
-        ),
-      );
-    }
+    // if (destLocation != null) {
+    //   markers.add(
+    //     Marker(
+    //       markerId: MarkerId('Destination'),
+    //       position: destLocation!,
+    //     ),
+    //   );
+    // }
     markers.add(
       Marker(
         markerId: MarkerId('Source'),
         position: sourceLocation!,
-        infoWindow: InfoWindow(title: 'Source Location'),
+        infoWindow: InfoWindow(title: 'You'),
       ),
     );
-
     return markers;
   }
 
@@ -228,3 +257,5 @@ class _MapPageState extends State<DashboardMap> {
     }
   }
 }
+
+

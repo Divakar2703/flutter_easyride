@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../../model/nearby_vehicle.dart';
+import '../../model/vehicle_data.dart';
+
 class NearByCab extends StatefulWidget {
-  const NearByCab({super.key});
+  NearByVehicle? vehicleResponse;
+
+   NearByCab({super.key,required this.vehicleResponse});
 
   @override
   State<NearByCab> createState() => _NearByCabState();
@@ -20,13 +25,14 @@ class _NearByCabState extends State<NearByCab> {
       height: 230,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: cabs.length,
+        itemCount: widget.vehicleResponse?.vehicle.length,
         itemBuilder: (context, index) {
+          var cabs=widget.vehicleResponse?.vehicle[index];
 
           return _buildCabContainer(
-            cabs[index]['name']!,
-            cabs[index]['availability']!,
-            cabs[index]['image']!,
+            cabs!.name,
+            cabs.description,
+            cabs.image,
           );
         },
       ),
@@ -57,7 +63,7 @@ class _NearByCabState extends State<NearByCab> {
               topLeft: Radius.circular(12),
               topRight: Radius.circular(12),
             ),
-            child: Image.asset(
+            child: Image.network(
               imagePath,
               height: 150,
               width: double.infinity,

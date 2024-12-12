@@ -133,7 +133,7 @@ class _SelectVehicleState extends State<SelectVehicle> {
                                                 int.parse(vehicle.id));
                                             selectedRows.add(
                                                 index); // Select if not selected
-                                            cabProvider.sendRequestToDriver(vehicle.id);
+                                            cabProvider.sendRequestToDriver(vehicle.id,"book_now");
                                           }
                                         });
                                       },

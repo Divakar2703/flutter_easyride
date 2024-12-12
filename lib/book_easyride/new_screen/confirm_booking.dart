@@ -79,7 +79,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                     SizedBox(height: 20),
                     // convcharge(),
                     SizedBox(height: 10),
-                    buildPriceDetails(),
+                    buildPriceDetails(driverDetails.totalFare),
                     SizedBox(height: 20),
                     buildConfirmButton(int.parse(driverDetails.sendRequestId),driverDetails.totalFare),
                   ],
@@ -384,7 +384,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
   //   );
   // }
 
-  Widget buildPriceDetails() {
+  Widget buildPriceDetails(double totalfare) {
     final convcharges = Provider.of<CabBookProvider>(context);
 
     return Container(
@@ -420,11 +420,39 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                     fontWeight: FontWeight.w500),
               ),
               SizedBox(width: 10,),
-              Text(convcharges.paytype!.convCharge),
-              SizedBox(width: 3),
-              Text('₹')
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(convcharges.paytype!.convCharge),
+                  SizedBox(width: 3),
+                  Text('₹'),
+                ],
+              )
             ],
           ),
+          Row(
+            crossAxisAlignment:  CrossAxisAlignment.start,
+            mainAxisAlignment:  MainAxisAlignment.start,
+            children: [
+              Text(
+                'Total Fare',
+                style: TextStyle(
+                    fontSize: 13,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w500),
+              ),
+              SizedBox(width: 10,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(totalfare.toString()),
+                  SizedBox(width: 3),
+                  Text('₹'),
+                ],
+              )
+            ],
+          ),
+
           SizedBox(height: 10),
           DropdownButtonHideUnderline(
             child: DropdownButton<String>(

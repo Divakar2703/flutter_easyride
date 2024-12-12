@@ -1,13 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/Book_Now/screens/book_now_screen.dart';
+import 'package:flutter_easy_ride/Pre_Booking/screens/pre_booking_screen.dart';
+
+import '../../../rental/rental_hourly_and_recurring_view.dart';
 
 class PreBookingRentalBookNowCard extends StatelessWidget {
   const PreBookingRentalBookNowCard({super.key});
 
   void navigate(BuildContext context, String destination) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Text(destination)), // Replace with your actual destination widget.
-    );
+    if(destination=="Book Now"){
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>BookNowScreen()));
+
+    }
+    else if(destination=="Pre-Booking"){
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>PreBookingScreen()));
+
+    }
+    else{
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => RentalHourlyAndRecurringView()), // Replace with your actual destination widget.
+      );
+    }
+
   }
 
   Widget _buildCard(String title, IconData icon, BuildContext context) {

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../../../model/dashboard.dart';
+
 class PreBookingScheduleCard extends StatefulWidget {
-  const PreBookingScheduleCard({super.key});
+  DashboardResponse? dashboardResponse;
+
+   PreBookingScheduleCard({super.key,required this.dashboardResponse});
 
   @override
   State<PreBookingScheduleCard> createState() => _PreBookingScheduleCardState();

@@ -109,56 +109,25 @@ class _SelectPrebookingVehicleState extends State<SelectPrebookingVehicle> {
 
                                   setState(() {
                                     selectedVehicle=vehicle.id;
+                                    selectedFare=vehicle.fare;
                                     vehicleDetails=cabProvider.vehicleResponse?.vehicle[index];
                                     setState(() {
                                     });
                                     // Toggle the selection state
                                     if (selectedRows.contains(index)) {
-                                      selectedRows.remove(
-                                          index); // Deselect if already selected
+                                      selectedRows.remove(index); // Deselect if already selected
                                     } else {
                                       cabProvider.getOffers(
                                           int.parse(vehicle.id));
                                       selectedRows.add(
                                           index); // Select if not selected
-                                      cabProvider.sendRequestToDriver(vehicle.id);
+                                      cabProvider.sendRequestToDriver(vehicle.id,"pre_booking");
                                     }
                                   });                                },
                               );
                             },
                           );
 
-                          // return ListView.builder(
-                          //   shrinkWrap: true,
-                          //   itemCount:
-                          //       cabProvider.vehicleResponse?.vehicle.length,
-                          //   itemBuilder: (BuildContext context, int index) {
-                          //     var vehicle =
-                          //         cabProvider.vehicleResponse?.vehicle[index];
-                          //     return VehicleListItem(
-                          //       title: vehicle!.name,
-                          //       subtitle: vehicle.description,
-                          //       price: vehicle.fare.toString(),
-                          //       time: "2 min",
-                          //       assetPath: vehicle.image,
-                          //       isSelected: selectedRows.contains(
-                          //           index), // Check if the current index is in the selected rows
-                          //       onTap: () {
-                          //         setState(() {
-                          //           // Toggle the selection state
-                          //           if (selectedRows.contains(index)) {
-                          //             selectedRows.remove(
-                          //                 index); // Deselect if already selected
-                          //           } else {
-                          //             cabProvider.getOffers(int.parse(vehicle.id));
-                          //             selectedRow.add(index);
-                          //                 // Select if not selected
-                          //           }
-                          //         });
-                          //       },
-                          //     );
-                          //   },
-                          // );
                         }
                       }),
                     ),

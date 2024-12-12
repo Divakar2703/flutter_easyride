@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../Book_Now/Components/promocode.dart';
 import '../../common_widget/map_widget.dart';
 import '../../provider/map_provider.dart';
 import 'confirm_booking_screen.dart';
@@ -171,7 +172,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Row(
+                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -183,7 +184,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                           SizedBox(
                             width: 10,
                           ),
-                          Text("₹120",
+                          Text("₹$selectedFare",
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -339,12 +340,14 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
   }
 
   void _onPromoTap() {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return _buildPromoCodeBottomSheet(context);
-      },
-    );
+     openPromocodeBottomSheet(context);
+
+    // showModalBottomSheet(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return _buildPromoCodeBottomSheet(context);
+    //   },
+    // );
   }
 
   Widget _buildPromoCodeBottomSheet(BuildContext context) {

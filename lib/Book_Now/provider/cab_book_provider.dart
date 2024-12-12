@@ -82,7 +82,6 @@ final String apiKey='AIzaSyDzwtZHoEVgjThw18yh2qLCkO-hvPE6i94';
 print("selctud==$id");
     selectedVehicle=id;
     notifyListeners();
-
   }
 
   // notes
@@ -149,6 +148,7 @@ if(dropAddress!=""&& booking_type=="BookNow"){
       "drop_lat": dropLat,
       "drop_long": dropLong
     };
+    print("params===${requestBody}");
 
     try {
       final response = await NetworkUtility.sendPostRequest(
@@ -194,7 +194,7 @@ if(dropAddress!=""&& booking_type=="BookNow"){
     }
   }
 
-  Future<void> sendRequestToDriver(String vehicleid) async {
+  Future<void> sendRequestToDriver(String vehicleid,String bookingType) async {
     print("vehicleID==${selectedVehicle}");
     // Request body
     Map<String, dynamic> requestBody = {
@@ -206,8 +206,10 @@ if(dropAddress!=""&& booking_type=="BookNow"){
       "user_id" : 15 ,
       "added_by_web" : "asatvindia.in" ,
       "pickup_address" : address ,
-      "drop_address": dropAddress
+      "drop_address": dropAddress,
+      "booking_type":bookingType
     };
+
     print("params====${requestBody}");
 
     try {
@@ -220,14 +222,11 @@ if(dropAddress!=""&& booking_type=="BookNow"){
          bookingReq = BookingRequest.fromJson(jsondata);
          notifyListeners();
 
-
       } else {
         print('Error: ${response.statusCode}, ${response.body}');
-        // Handle error response
       }
     } catch (e) {
       print('Error sending POST request: $e');
-      // Handle any exception
     }
   }
 

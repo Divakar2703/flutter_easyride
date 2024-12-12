@@ -96,29 +96,103 @@ class BannerSlider extends StatelessWidget {
             return Builder(
               builder: (BuildContext context) {
                 return Container(
+                  margin: EdgeInsets.all(5),
+                  padding:const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2), // Shadow color
-                        spreadRadius: 2, // How much the shadow will spread
-                        blurRadius: 6, // The blur radius of the shadow
-                        offset: const Offset(0, 3), // The position of the shadow
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const  Text(
+                            'Nearby Cabs',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                              fontSize: 14,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          const Text(
+                            'Schedule your ride in advance',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey,
+                              fontSize: 11,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                          const SizedBox(height: 10,),
+                          Container(
+                            padding:const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.blue.shade300,
+                                  Colors.blue.shade600
+                                ],
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                              ),
+                            ),
+                            child:  Text(
+                              banner.bannerName, // Use the dynamic banner URL or asset
+
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white, // Text color
+                                fontFamily: 'Poppins',
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          banner.appBannerImage, // Use the dynamic banner URL or asset
+                          height: 80,
+                          width: 80,
+                          fit: BoxFit.cover,
+                        ),
+                      )
                     ],
                   ),
-                  margin: const EdgeInsets.symmetric(horizontal: 8.0), // Adjust margin to create space between items
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16.0), // Match the container's border radius
-                    child: Image.network(
-                      banner.appBannerImage, // Use the dynamic banner URL or asset
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Center(child: Text("Image not available")); // Fallback for errors
-                      },
-                    ),
-                  ),
                 );
+
+
+
+                //   Container(
+                //   decoration: BoxDecoration(
+                //     borderRadius: BorderRadius.circular(16),
+                //     boxShadow: [
+                //       BoxShadow(
+                //         color: Colors.black.withOpacity(0.2), // Shadow color
+                //         spreadRadius: 2, // How much the shadow will spread
+                //         blurRadius: 6, // The blur radius of the shadow
+                //         offset: const Offset(0, 3), // The position of the shadow
+                //       ),
+                //     ],
+                //   ),
+                //   margin: const EdgeInsets.symmetric(horizontal: 8.0), // Adjust margin to create space between items
+                //   child: ClipRRect(
+                //     borderRadius: BorderRadius.circular(16.0), // Match the container's border radius
+                //     child: Image.network(
+                //       banner.appBannerImage, // Use the dynamic banner URL or asset
+                //       fit: BoxFit.cover,
+                //       errorBuilder: (context, error, stackTrace) {
+                //         return const Center(child: Text("Image not available")); // Fallback for errors
+                //       },
+                //     ),
+                //   ),
+                // );
               },
             );
           }).toList(),
