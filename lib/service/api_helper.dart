@@ -22,8 +22,6 @@ class ApiHelper{
   static String submitfeedback = baseurl+'User/submit_feedback';
   static String convCharge = baseurl+'User/conv_charge';
   static String rejectUserRequest = baseurl+'User/RejectUserRequest';
-  static String nearbyVehicles = baseurl+'User/getvehicle_on_location';
-
 
 //// pree booking
   static String confirmbooking =baseurl+'User/pre_booking_available';

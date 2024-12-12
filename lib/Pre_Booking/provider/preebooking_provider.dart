@@ -49,7 +49,6 @@ class PreebookingProvider with ChangeNotifier {
       throw 'Data is not found';
     }
   }
-
   Future<void> getprebookvehicle() async {
     Map<String, dynamic> requestbody = {
       "pickup_lat": 24.856874349764823,
@@ -57,7 +56,6 @@ class PreebookingProvider with ChangeNotifier {
       "drop_lat": 24.858874743013917,
       "drop_long": 74.61150946823327
     };
-
     try {
       final response = await NetworkUtility.sendPostRequest(ApiHelper.getPreebookvehicle, requestbody);
 
@@ -74,7 +72,6 @@ class PreebookingProvider with ChangeNotifier {
       throw 'Error please do code';
     }
   }
-
   Future<void> SendpreebookrequestDriver(
       double pickLat,
       double pikLong,
@@ -155,7 +152,6 @@ class PreebookingProvider with ChangeNotifier {
       }
     } catch (Error) {}
   }
-
   Future<void> Cancialpreebook(
       String BookID, String reason, int usenumber) async {
     Map<String, dynamic> requestbody = {
@@ -163,7 +159,6 @@ class PreebookingProvider with ChangeNotifier {
       "reason": reason,
       "user_phone": usenumber,
     };
-
     try {
       final response = await NetworkUtility.sendPostRequest(
           ApiHelper.cancelpreebooingvehicle, requestbody);

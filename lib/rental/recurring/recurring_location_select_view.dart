@@ -3,6 +3,7 @@ import 'package:flutter_easy_ride/Book_Now/screens/select_vehicle.dart';
 import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../common_widget/custombutton.dart';
 import '../../common_widget/pickup_drop_widget.dart';
 import '../../common_widget/rentale_recurring_location_add_widget.dart';
 import '../../view/map/map_screen.dart';
@@ -101,31 +102,35 @@ class _PickupScreenState extends State<RecurringLocationSelectView> {
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => SelectRecurringRentalView()));
             },
-            child: Container(
-              //  margin: EdgeInsets.symmetric(horizontal: 24,vertical: 16),
-              height: 44,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: Color(0xff1937d7),
-              ),
-              child:const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Continue",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Poppins', // Set Poppins as the default font
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
+            child:Customtbutton(
+              text: "Continue",
             ),
+            // child: Container(
+            //   //  margin: EdgeInsets.symmetric(horizontal: 24,vertical: 16),
+            //   height: 44,
+            //   width: double.infinity,
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(5),
+            //     color: Color(0xff1937d7),
+            //   ),
+            //   child:const Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [
+            //       Text(
+            //         "Continue",
+            //         textAlign: TextAlign.center,
+            //         style: TextStyle(
+            //           color: Colors.white,
+            //           fontFamily: 'Poppins', // Set Poppins as the default font
+            //           fontSize: 15.0,
+            //           fontWeight: FontWeight.w500,
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
           ),
+          SizedBox(height: 10,),
         ],
     );
   }

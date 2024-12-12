@@ -41,7 +41,6 @@ class TriphistryProvider with ChangeNotifier {
     try {
       final response = await NetworkUtility.sendPostRequest(
           ApiHelper.triphistrydetails, requestbody);
-
       if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
         triphistory = TripHistryModel.fromJson(jsonData);

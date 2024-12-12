@@ -24,7 +24,7 @@ class MapWidget extends StatelessWidget {
 
     return Stack(
       children: [
-        // Map with Animated Container for dynamic resizing
+      
         AnimatedContainer(
           width: width,
           duration: Duration(milliseconds: 300),
@@ -46,11 +46,11 @@ class MapWidget extends StatelessWidget {
               ),
             },
             myLocationEnabled: true,
-            zoomControlsEnabled: false, // Remove default zoom controls
+            zoomControlsEnabled: false, 
           ),
         ),
 
-        // Zoom and Expand Buttons
+       
         Positioned(
           top: 200,
           right: 10,

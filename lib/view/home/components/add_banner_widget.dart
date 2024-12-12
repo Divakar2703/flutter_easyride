@@ -10,17 +10,17 @@ class AddBannerWidget extends StatefulWidget {
 class _FirstState extends State<AddBannerWidget> {
   final List<Map<String, String>> items = [
     {
-      'image': 'assets/images/banner_add_one.png',
+      'image': 'assets/images/car1.jpg',
       'title': 'Go with Easy rides',
       'subtitle': 'Doorstep pick up, no bargaining'
     },
     {
-      'image': 'assets/images/banner_add_two.png',
+      'image': 'assets/images/car2.jpg',
       'title': 'Go with Easy rides',
       'subtitle': 'Doorstep pick up, no bargaining'
     },
     {
-      'image': 'assets/images/banner_add_one.png',
+      'image': 'assets/images/car3.jpg',
       'title': 'Go with Easy rides',
       'subtitle': 'Doorstep pick up, no bargaining'
     },
@@ -38,18 +38,22 @@ class _FirstState extends State<AddBannerWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  margin: const EdgeInsets.only(bottom: 4),
-                  padding: const EdgeInsets.only(left: 8, bottom: 8),
-                  height: 140,
-                  width: 230,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      image: AssetImage(item['image']!),
-                      fit: BoxFit.cover,
+                Stack(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 4),
+                      padding: const EdgeInsets.only(left: 8, bottom: 8),
+                      height: 140,
+                      width: 230,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                          image: AssetImage(item['image']!),
+                          // fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

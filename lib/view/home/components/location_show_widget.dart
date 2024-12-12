@@ -36,8 +36,7 @@ class LocationShowWidget extends StatelessWidget {
                 size: 18,
               ),
               SizedBox(width: 10,),
-              Container(width: MediaQuery.of(context).size.width*0.5
-                ,
+              Container(width: MediaQuery.of(context).size.width*0.5,
                 child: Text(
                   "${address},",
                   overflow: TextOverflow.ellipsis,

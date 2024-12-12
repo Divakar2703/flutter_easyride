@@ -4,6 +4,7 @@ import 'package:flutter_easy_ride/rental/components/rentalbooking_provider.dart'
 import 'package:provider/provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../common_widget/custombutton.dart';
 import '../get_rental_vehical_provider.dart';
 
 class SelectRentalPackegeView extends StatefulWidget {
@@ -303,20 +304,24 @@ class _SelectRentalPackegeViewState extends State<SelectRentalPackegeView> {
 
                   Spacer(),
                   Center(
-                    child: ElevatedButton(
-                      onPressed: _selectedDistance != null && _selectedDuration != null && _selectedCar != null
+                    child: GestureDetector(
+                      onTap: _selectedDistance != null && _selectedDuration != null && _selectedCar != null
                           ? () {
                         Navigator.of(context).push(_createRoute());
                       }
                           : null,
-                      child: Text(
-                        'Continue',
-                        style: TextStyle(fontSize: 14, color: Colors.white),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xff1937d7),
-                        padding: EdgeInsets.symmetric(horizontal: 72, vertical: 15),
-                      ),
+                      child: Customtbutton(
+                        text: "Continue",
+
+                      )
+                      // Text(
+                      //   'Continue',
+                      //   style: TextStyle(fontSize: 14, color: Colors.white),
+                      // ),
+                      // style: ElevatedButton.styleFrom(
+                      //   backgroundColor: Color(0xff1937d7),
+                      //   padding: EdgeInsets.symmetric(horizontal: 72, vertical: 15),
+                      // ),
                     ),
                   ),
                 ],

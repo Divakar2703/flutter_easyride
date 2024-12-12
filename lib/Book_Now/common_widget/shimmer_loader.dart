@@ -30,6 +30,6 @@ class ShimmerLoader extends StatelessWidget {
           ),
         ],
       ),
-    );;
+    );
   }
 }

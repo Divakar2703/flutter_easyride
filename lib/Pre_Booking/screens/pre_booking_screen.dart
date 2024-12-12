@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
 import 'package:flutter_easy_ride/Pre_Booking/screens/select_pickup_time.dart';
 import 'package:provider/provider.dart';
+import '../../common_widget/custombutton.dart';
 import '../../common_widget/pickup_drop_widget.dart';
+import '../../internate/networkconnection.dart';
 import '../../utils/routes.dart';
 import '../../view/map/map_screen.dart';
-
 
 class PreBookingScreen extends StatefulWidget {
   const PreBookingScreen({super.key});
@@ -62,15 +63,13 @@ class _PreBookingScreenState extends State<PreBookingScreen> {
       ),
       body: Column(
         children: [
+          ConnectivityChecker(),
           PickupDropWidget(
             pickupController: pickupController,
             dropController: dropController,
             onChange: (value) {
               dropController.text=value;
               cabProvider.placeAutoComplete(value, "Drop");
-              setState(() {
-
-              });
             },
           ),
 
@@ -108,8 +107,7 @@ class _PreBookingScreenState extends State<PreBookingScreen> {
                           color: Color(0xff1937d7),
                           fontFamily:
                               'Poppins', // Set Poppins as the default font
-
-                          fontSize: 14.0,
+                         fontSize: 14.0,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -171,30 +169,35 @@ class _PreBookingScreenState extends State<PreBookingScreen> {
               Navigator.push(context, MaterialPageRoute(builder: (context)=>SelectPickupTime()));
              // Navigator.pushNamed(context, Routes.selectpickuptimegin);
             },
-            child: Container(
-              margin: EdgeInsets.only(left: 10, right: 10),
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: Color(0xff1937d7),
-              ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Set Pickup time",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Poppins', // Set Poppins as the default font
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            child:
+            Customtbutton(
+              text: "Set Pickup time",
+
+              )
+            // Container(
+            //   margin: EdgeInsets.only(left: 10, right: 10),
+            //   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+            //   width: double.infinity,
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(5),
+            //     color: Color(0xff1937d7),
+            //   ),
+            //   child: const Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [
+            //       Text(
+            //         "Set Pickup time",
+            //         textAlign: TextAlign.center,
+            //         style: TextStyle(
+            //           color: Colors.white,
+            //           fontFamily: 'Poppins', // Set Poppins as the default font
+            //           fontSize: 15.0,
+            //           fontWeight: FontWeight.w500,
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
           ),
           SizedBox(height: 10),
         ],

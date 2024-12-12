@@ -3,6 +3,8 @@ import 'package:flutter_easy_ride/rental/recurring/components/select_hour.dart';
 import 'package:flutter_easy_ride/new/rental/week_schedule_view.dart';
 import 'package:flutter_easy_ride/rental/recurring/components/week_wallet_view.dart';
 
+import '../../../common_widget/custombutton.dart';
+
 class SelectRecurringRentalView extends StatefulWidget {
   const SelectRecurringRentalView({super.key});
 
@@ -30,7 +32,7 @@ class _SelectRecurringRentalViewState extends State<SelectRecurringRentalView> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-        ),
+        )
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -59,7 +61,6 @@ class _SelectRecurringRentalViewState extends State<SelectRecurringRentalView> {
              ],
            ),
          ),
-        
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16,vertical: 4),
               width: double.infinity,
@@ -111,9 +112,6 @@ class _SelectRecurringRentalViewState extends State<SelectRecurringRentalView> {
                     color: Color(0xff1937d7),
                     size: 16,
                   ),
-        
-        
-        
                 ],
               ),
             ),
@@ -145,31 +143,41 @@ class _SelectRecurringRentalViewState extends State<SelectRecurringRentalView> {
                     MaterialPageRoute(builder: (context) => WeekWalletView()));
 
               },
-              child: Container(
-                //  margin: EdgeInsets.symmetric(horizontal: 24,vertical: 16),
-                height: 44,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: Color(0xff1937d7),
-                ),
-                child:Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Continus",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Poppins', // Set Poppins as the default font
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.w500,
+              child: Customtbutton(
+                        text: "Continue",
+
                       ),
-                    ),
-                  ],
-                ),
-              ),
+              // child: Container(
+              //   //  margin: EdgeInsets.symmetric(horizontal: 24,vertical: 16),
+              //   height: 44,
+              //   width: double.infinity,
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(5),
+              //     color: Color(0xff1937d7),
+              //   ),
+              //   child:Row(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       Customtbutton(
+              //         text: "Continue",
+              //
+              //       )
+              //
+              //       // Text(
+              //       //   "Continus",
+              //       //   textAlign: TextAlign.center,
+              //       //   style: TextStyle(
+              //       //     color: Colors.white,
+              //       //     fontFamily: 'Poppins', // Set Poppins as the default font
+              //       //     fontSize: 15.0,
+              //       //     fontWeight: FontWeight.w500,
+              //       //   ),
+              //       // ),
+              //     ],
+              //   ),
+              // ),
             ),
+            SizedBox(height: 10,),
         
           ],
         ),
