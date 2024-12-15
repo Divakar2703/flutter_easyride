@@ -44,13 +44,11 @@ class ApiProvider with ChangeNotifier{
   Future<void> fetchAuth() async {
     loading=true;
     final String url = ApiHelper.authApi;
-
     try {
       final response = await http.get(
         Uri.parse(url),
       );
       print('Response body: ${response.body}');
-
       if (response.statusCode == 200) {
         loading=false;
         var jsondata=jsonDecode(response.body);
@@ -59,18 +57,27 @@ class ApiProvider with ChangeNotifier{
         var password=apiAuth[0]["password"];
         await LocalStorage.saveUsername(username);
         await LocalStorage.savePassword(password);
-
       } else {
         loading=false;
-
         print('Error: ${response.statusCode}, ${response.body}');
       }
     } catch (e) {
       loading=false;
-
       print('Error sending POST request: $e');
     }
   }
+
+
+
+
+
+
+
+
+
+
+
+
   Future<void> fetchTheme() async {
     loading=true;
 

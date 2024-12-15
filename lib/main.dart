@@ -74,7 +74,11 @@ class _MyAppState extends State<MyApp> {
           // ),
           home: ChangeNotifierProvider(
             create: (BuildContext context) => DashboardProvider(),
-            child: HomeView(),
+            child:
+            // BookingDetailsScreen()
+            HomeView(),
+            // child: Newdialogbox(),
+            // child: Checkdialob(),
           ),
         );
       },
