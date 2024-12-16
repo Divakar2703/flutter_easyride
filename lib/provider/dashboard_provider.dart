@@ -22,7 +22,6 @@ class DashboardProvider extends ChangeNotifier
   NearByVehicle? get vehicleData=>vehicleResponse;
 
 
-
   Future<void> fetchDashboard() async {
     loading=true;
     final String url = ApiHelper.dashboard;
@@ -114,7 +113,6 @@ class DashboardProvider extends ChangeNotifier
       print('Error sending POST request: $e');
     }
   }
-
 
 
 }

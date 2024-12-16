@@ -104,6 +104,7 @@ import '../../Book_Now/provider/cab_book_provider.dart';
 import '../../provider/api_provider.dart';
 import '../home/components/banner_slider.dart';
 import '../tracking/ride_tracking.dart';
+import '../tracking/tracking.dart';
 import 'dashboard/pre_booking_rental_book_now_card.dart';
 import 'dashboard/pre_booking_schedule_card.dart';
 import 'near_by_cab.dart';
@@ -199,7 +200,8 @@ import 'near_by_cab.dart';
                     var data=value.bookinglist[index];
                     return InkWell(
                       onTap:(){
-Navigator.push(context, MaterialPageRoute(builder: (context)=>RideTrackingScreen(bookingId: data.bookId,)));
+//Navigator.push(context, MaterialPageRoute(builder: (context)=>RideTrackingScreen(bookingId: data.bookId,drop_lat: data.drop_lat,drop_long: data.drop_long,)));
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>MapTrackingScreen(booking: data,)));
                       },
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 8),

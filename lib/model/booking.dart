@@ -11,11 +11,13 @@ class Booking {
   // final String? selectedTime;
   // final String? selectedDate;
   // final String paymentType;
-  // final String userName;
-  // final String userMobile;
-  // final String userEmail;
+  final String userName;
+  final String userMobile;
+  final String userEmail;
+  final String drop_lat;
+  final String drop_long;
   final String rideStatus;
-  // final String paymentStatus;
+   final String paymentStatus;
   // final String isCancel;
   // final String cancelDate;
   // final String cancelReason;
@@ -34,11 +36,13 @@ class Booking {
     // this.selectedTime,
     // this.selectedDate,
     // required this.paymentType,
-    // required this.userName,
-    // required this.userMobile,
-    // required this.userEmail,
+    required this.userName,
+    required this.userMobile,
+    required this.userEmail,
+    required this.drop_lat,
+    required this.drop_long,
     required this.rideStatus,
-    // required this.paymentStatus,
+    required this.paymentStatus,
     // required this.isCancel,
     // required this.cancelDate,
     // required this.cancelReason,
@@ -59,11 +63,13 @@ class Booking {
       // selectedTime: json['selectedtime'],
       // selectedDate: json['selecteddate'],
       // paymentType: json['paymenttype'],
-      // userName: json['user_name'],
-      // userMobile: json['user_mobile'],
-      // userEmail: json['user_email'],
+      userName: json['user_name'],
+      userMobile: json['user_mobile'],
+      userEmail: json['user_email'],
+      drop_lat: json['drop_lat'].toString(),
+      drop_long: json['drop_long'].toString(),
       rideStatus: json['ride_status'].toString(),
-      // paymentStatus: json['payment_status'],
+      paymentStatus: json['payment_status'],
       // isCancel: json['is_cancle'],
       // cancelDate: json['cancle_date'],
       // cancelReason: json['cancle_reason'],

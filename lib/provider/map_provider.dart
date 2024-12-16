@@ -12,9 +12,6 @@ class MapProvider with ChangeNotifier {
   bool isLoading = true;
 
   Set<Marker> get markers => _markers;
-
-
-
   double currentZoomLevel = 14.0;
   double mapHeightPercentage = 0.6;
   bool zooming = false;
