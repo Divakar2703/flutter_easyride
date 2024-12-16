@@ -76,6 +76,7 @@ class DashboardProvider extends ChangeNotifier
         notifyListeners();
       } else {
         loading=false;
+        bookinglist=[];
         print('Error: ${response.statusCode}, ${response.body}');
       }
     } catch (e) {
@@ -88,8 +89,8 @@ class DashboardProvider extends ChangeNotifier
     loading=true;
     final String url = ApiHelper.nearbyVehicles;
     var params={
-    "pickup_lat": 30.368341,
-    "pickup_long": 78.0516939
+    "pickup_lat": ALatitude,
+    "pickup_long": ALongitude
     };
     print("params==${params}");
 
@@ -106,6 +107,8 @@ class DashboardProvider extends ChangeNotifier
         notifyListeners();
       } else {
         loading=false;
+        vehicleResponse = null;
+
         print('Error: ${response.statusCode}, ${response.body}');
       }
     } catch (e) {

@@ -111,9 +111,9 @@ class _MapPageState extends State<DashboardMap> {
     final cabProvider = Provider.of<DashboardProvider>(context);
 
     // Update cab markers whenever cab data is updated
-    if (cabProvider.vehicleData!.vehicle.isNotEmpty) {
-      _addCabMarkers(cabProvider.vehicleData!.vehicle);
-    }
+    // if (cabProvider.vehicleData!.vehicle.isNotEmpty) {
+    //   _addCabMarkers(cabProvider.vehicleData!.vehicle);
+    // }
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(

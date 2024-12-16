@@ -32,14 +32,6 @@ class _BookNowScreenState extends State<BookNowScreen> {
     print("Alatitiue==${ALatitude}");
     _getCurrentLocation();
     Provider.of<CabBookProvider>(context, listen: false).getDropHistoryList();
-    // Provider.of<ApiProvider>(context,listen: false).getCurrentLocation() .then((_) {
-    //   // After fetching auth, call the next method
-    //   Provider.of<CabBookProvider>(context, listen: false).getDropHistoryList();
-    // })
-    //     .catchError((error) {
-    //   // Handle errors if needed
-    //   print("Error: $error");
-    // });
   }
 
 

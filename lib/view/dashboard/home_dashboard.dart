@@ -128,8 +128,6 @@ import 'near_by_cab.dart';
 
     }
 
-
-
     @override
     Widget build(BuildContext context) {
       return Container(
@@ -167,7 +165,7 @@ import 'near_by_cab.dart';
             const SizedBox(height: 15),
             Consumer<DashboardProvider>(
                 builder: (BuildContext context, DashboardProvider value, Widget? child) {
-                  return  NearByCab(vehicleResponse: value.vehicleResponse,);
+                  return value.vehicleResponse==null?Center(child: Text("No vehicles available"),): NearByCab(vehicleResponse: value.vehicleResponse,);
                 },
                 ),
             const SizedBox(height: 15),
@@ -191,7 +189,7 @@ import 'near_by_cab.dart';
              SizedBox(height: 20),
             Consumer<DashboardProvider>(
               builder: (BuildContext context, DashboardProvider value, Widget? child) {
-                return ListView.builder(
+                return value.bookinglist.isNotEmpty?ListView.builder(
                   padding: EdgeInsets.zero,
                   shrinkWrap: true,
                   physics:  NeverScrollableScrollPhysics(),
@@ -221,7 +219,7 @@ import 'near_by_cab.dart';
                       ),
                     );
                   },
-                );
+                ):Center(child: Text("No pending bookings"),);
 
               },
             ),

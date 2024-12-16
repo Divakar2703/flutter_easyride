@@ -33,7 +33,7 @@ class _PickupScreenState extends State<PickupScreen> {
   @override
   Widget build(BuildContext context) {
     final cabProvider = Provider.of<CabBookProvider>(context);
-    if (cabProvider.pickupLocation != null||cabProvider.dropLocation!=null) {
+    if (cabProvider.pickupLocation == null) {
       pickupController.text = cabProvider.pickupLocation!;
     }
     return Scaffold(
@@ -224,16 +224,45 @@ class _PickupScreenState extends State<PickupScreen> {
           //     ],
           //   ),
           // ),
+          // PickupDropWidget(
+          //   pickupController: pickupController,
+          //   dropController: dropController,
+          //   onChange: (value) {
+          //     dropController.text=value;
+          //   cabProvider.placeAutoComplete(value,"Drop");
+          //   setState(() {
+          //   });
+          //  // LocationUtils.searchPlaces(value);
+          // },
+          // ),
+
           PickupDropWidget(
+            onTap: (){
+              pickupController.clear();
+            },
             pickupController: pickupController,
             dropController: dropController,
-            onChange: (value) {
-              dropController.text=value;
-            cabProvider.placeAutoComplete(value,"Drop");
-            setState(() {
-            });
-           // LocationUtils.searchPlaces(value);
-          },
+
+            // onChange for Pickup
+            onPickupChange: (value) {
+              setState(() {
+                pickupController.text = value; // Update pickup text
+                cabProvider.placeAutoComplete(value,"Pickup");
+                print('Pickup location: $value');
+                // cabProvider.placeAutoComplete(value, "Pickup");
+              });
+            },
+
+            // onChange for Drop
+            onDropChange: (value) {
+              setState(() {
+                dropController.text = value; // Update drop text
+                // Call your autoComplete function for Drop
+                cabProvider.placeAutoComplete(value,"Drop");
+                print('Drop location: $value');
+                // cabProvider.placeAutoComplete(value, "Drop");
+              });
+            },
           ),
           GestureDetector(
             onTap: () {
