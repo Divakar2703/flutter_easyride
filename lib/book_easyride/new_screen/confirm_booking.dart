@@ -3,14 +3,18 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/Book_Now/common_widget/shimmer_loader.dart';
 import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../../model/driver_details.dart';
+import '../../payment/cab_payment_page.dart';
+import '../../payment/razorpay/PhonePeGatewayWebview.dart';
 import '../../service/socket/socket_helper.dart';
 import '../../utils/eve.dart';
 import 'time.dart';
 
 class ConfirmBooking extends StatefulWidget {
-  const ConfirmBooking({super.key});
+  int? requestID;
+   ConfirmBooking({super.key, this.requestID});
 
   @override
   State<ConfirmBooking> createState() => _ConfirmBookingState();
@@ -22,6 +26,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
   @override
   void initState() {
     socketHelper.connect();
+    socketHelper.findDriver(selectedVehicle, "15"); // Replace with actual IDs
 
     // Example: Call findDriver after connection
    // socketHelper.findDriver(selectedVehicle, "15"); // Replace with actual IDs
@@ -30,14 +35,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
     super.initState();
   }
 
-  String? selectedBank;
 
-  final List<Map<String, dynamic>> banks = [
-    {'name': 'GPay', 'image': 'assets/images/gpay.jpg'},
-    {'name': 'Paytm', 'image': 'assets/images/paytem.png'},
-    {'name': 'Online', 'image': 'assets/images/phonepay.png'},
-    {'name': 'RozaPay', 'image': 'assets/images/rojapay.png'},
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -52,11 +50,13 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: bookingID!=""? StreamBuilder<DriverDetails>(
+      body:
+      //bookingID!=""?
+      StreamBuilder<DriverDetails>(
         stream: socketHelper.driverDetailsStream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: ShimmerLoader());
           } else if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));
           } else if (!snapshot.hasData) {
@@ -89,7 +89,8 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
 
         }
         },
-      ):ShimmerLoader()
+      )
+          //:ShimmerLoader()
 
     );
   }
@@ -138,7 +139,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
           ClipRRect(
             borderRadius: BorderRadius.circular(8.0),
             child: Image.network(
-              image,
+              image=="https://asatvindia.in/cab/null"?"https://cdn-icons-png.flaticon.com/512/8583/8583437.png":image,
               width: 60,
               height: 60,
               fit: BoxFit.cover,
@@ -466,7 +467,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
               isExpanded: true,
               onChanged: (String? newValue) {
                 setState(() {
-                  selectedBank = newValue;
+                  selectedBank = newValue??"COD";
                 });
               },
               items: banks.map<DropdownMenuItem<String>>((bank) {
@@ -489,6 +490,40 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
               }).toList(),
             ),
           ),
+          selectedBank!="COD"?Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+            InkWell(
+              onTap: (){
+                if(selectedBank=="online"){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>CabPaymentPage(orderId: orderID,convCharge: convcharges.paytypes?.convCharge,)));
+                }
+                else if(selectedBank=="razorpay"){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>CabPaymentPage()));
+
+                }
+                else if(selectedBank=="phonepay"){
+                  if(transactionID==""){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>PhonePeGatewayWebView(orderId: orderID, txnAmount: 1,)));
+                  }
+                  else{
+                    Fluttertoast.showToast(msg: "Your payment is done using $selectedBank Methods");
+                  }
+                }
+                else {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>CabPaymentPage()));
+                }
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 10,horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: transactionID==""?Text("PAY",style: TextStyle(fontSize: 12,fontWeight: FontWeight.w500,color: Colors.white),):Text("PAID",style: TextStyle(fontSize: 12,fontWeight: FontWeight.w500,color: Colors.white),),
+              ),
+            )
+          ],):Container()
         ],
       ),
     );
@@ -496,9 +531,27 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
 
   Widget buildConfirmButton(int requestID,double fare,) {
     var cabBookProvider=Provider.of<CabBookProvider>(context);
+    final convcharges = Provider.of<CabBookProvider>(context);
+
     return InkWell(
       onTap:(){
-        cabBookProvider.bookCab(requestID, "COD", "", fare, 0);
+        if(selectedBank!="COD"){
+          if(transactionID!=""){
+
+            cabBookProvider.bookCab(requestID, selectedBank??"COD", transactionID, fare,double.parse(convcharges.paytype!.convCharge) );
+          }
+          else{
+            Fluttertoast.showToast(msg: "Please proceed to pay first on selected pay method $selectedBank");
+
+          }
+
+          //cabBookProvider.bookCab(requestID, selectedBank??"", "", fare, 0);
+
+        }
+        else{
+          cabBookProvider.bookCab(requestID, "COD", "", fare, 0);
+
+        }
 
       },
       child: Container(

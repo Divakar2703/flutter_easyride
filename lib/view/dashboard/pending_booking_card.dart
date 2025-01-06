@@ -15,9 +15,23 @@ class _PendingBookingCardState extends State<PendingBookingCard> {
     return  Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        CircleAvatar(
-          radius: 28,
-          backgroundImage: AssetImage('assets/images/map.png'),
+        // CircleAvatar(
+        //   radius: 28,
+        //   backgroundImage:AssetImage('assets/images/map.png'),
+        //
+        // ),
+        Container(
+          width: 56, // Diameter of the circle
+          height: 56, // Diameter of the circle
+          decoration: BoxDecoration(
+            color: Colors.blue, // Background color of the circle
+            shape: BoxShape.circle, // Makes the container circular
+          ),
+          child: Icon(
+            Icons.location_on, // Location icon
+            color: Colors.white, // Icon color
+            size: 28, // Icon size
+          ),
         ),
         SizedBox(width: 15),
         Column(

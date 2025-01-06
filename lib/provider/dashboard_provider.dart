@@ -12,6 +12,7 @@ import '../service/api_helper.dart';
 import 'package:http/http.dart'as http;
 
 class DashboardProvider extends ChangeNotifier
+
 {
 
   bool loading=false;
@@ -51,7 +52,7 @@ class DashboardProvider extends ChangeNotifier
     loading=true;
     final String url = ApiHelper.cab_request_on_user_id;
     var params={
-      "user_id":15
+      "user_id":userID
     };
 
     try {
@@ -117,5 +118,41 @@ class DashboardProvider extends ChangeNotifier
     }
   }
 
+  Future<void> sendNotification(String orderNo,String bookingID,double amount) async {
+    loading=true;
+    final String url = ApiHelper.payment_notification;
+    var params={
+        "user_id": userID,
+        "status": "success",
+        "order_no": orderNo,
+        "txn_amt": amount,
+        "booking_id": bookingID
+
+    };
+    print("params==${params}");
+
+    try {
+      final response = await NetworkUtility.sendPostRequest(
+          url,params
+      );
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        loading=false;
+        notifyListeners();
+
+      }
+      else
+      {
+        loading=false;
+        vehicleResponse = null;
+
+        print('Error: ${response.statusCode}, ${response.body}');
+      }
+    } catch (e) {
+      loading=false;
+      print('Error sending POST request: $e');
+    }
+  }
 
 }

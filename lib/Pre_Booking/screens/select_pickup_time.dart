@@ -128,7 +128,7 @@ class _SelectPickupTimeState extends State<SelectPickupTime> {
                                 margin: EdgeInsets.symmetric(horizontal: 8),
                                 decoration: BoxDecoration(
                                   color: _selectedDate == date
-                                      ? Color(0xff1937d7)
+                                      ? Colors.blue
                                       : Colors.grey[300],
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -185,7 +185,7 @@ class _SelectPickupTimeState extends State<SelectPickupTime> {
                                           EdgeInsets.symmetric(horizontal: 8),
                                       decoration: BoxDecoration(
                                         color: _selectedTime == time
-                                            ? Color(0xff1937d7)
+                                            ? Colors.blue
                                             : Colors.grey[300],
                                         borderRadius: BorderRadius.circular(10),
                                       ),

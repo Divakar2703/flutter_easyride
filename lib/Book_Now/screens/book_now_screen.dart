@@ -20,7 +20,7 @@ class BookNowScreen extends StatefulWidget {
 
 class _BookNowScreenState extends State<BookNowScreen> {
   GoogleMapController? _mapController;
-  LatLng _currentLocation=LatLng(30.365518638199323, 78.04342051246367); // Example coordinates
+  LatLng _currentLocation=LatLng(ALatitude, ALongitude); // Example coordinates
   LatLng? sourceLocation;
   String pickupAddress="";
   TextEditingController pickupController=TextEditingController();
@@ -84,7 +84,6 @@ class _BookNowScreenState extends State<BookNowScreen> {
                     zoom: 14.0,
                   ),
                   onMapCreated: (GoogleMapController controller) {},
-
                   markers: {
                     Marker(
                       markerId: MarkerId('currentLocation'),
@@ -324,7 +323,12 @@ class _BookNowScreenState extends State<BookNowScreen> {
             height: 60,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.grey[200],
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xffE3F2FD),
+                    Colors.blue.shade300,
+                  ],)
+             // color: Colors.grey[200],
             ),
             child: Center(
               child: Image.asset(assetPath, width: 40, height: 40), // Use SVG or image asset

@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-class AppColors{
+class AppColors {
   static const Color primaryBlue = Color(0xff87A2FF); // Blue color used in the app
   static const Color backgroundColor = Color(0xfff4f8ff);
 
@@ -26,6 +26,7 @@ class AppColors{
   static const Color buttonText = Color(0xFFFFFFFF); // White button text
   static const Color pickupMarker = Color(0xFF4CAF50); // Green for pickup
   static const Color dropoffMarker = Color(0xFFF44336);
+  static  Color dashboardBackground=Color(0xffC1CAE0);
 
   static const Color custombuttoncolor = Color(0xff1937d7);
 

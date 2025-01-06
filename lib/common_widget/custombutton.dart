@@ -9,15 +9,12 @@ class Customtbutton extends StatelessWidget {
   final int? FontSize;
   final color;
   final Border;
-  final double? width;
-  final double? height;
+
 
   final fontFamily;
   const Customtbutton(
       {super.key,
       this.text,
-      this.width = 300,
-      this.height = 40,
       this.Border,
       this.backgroundColor,
       this.textColor,
@@ -29,26 +26,26 @@ class Customtbutton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return
+      GestureDetector(
       onTap: onPressed,
-      child: Center(
-        child: Container(
-          width: width,
-          height: height,
+      child: Container(
+        padding: EdgeInsets.all(10),
+        width: MediaQuery.of(context).size.width,
+        height: 40,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color:Colors.blue, // Background color of the circle
 
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            color: Color(0xff1937d7),
-          ),
-          child: Center(
-            child: Text(
-              labletext ?? text ?? '',
-              style: TextStyle(
-                color: textColor ?? Colors.white,
-                fontSize: 15,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w500,
-              ),
+        ),
+        child: Center(
+          child: Text(
+            labletext ?? text ?? '',
+            style: TextStyle(
+              color: textColor ?? Colors.white,
+              fontSize: 15,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w500,
             ),
           ),
         ),

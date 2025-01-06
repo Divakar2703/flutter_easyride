@@ -6,9 +6,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../Book_Now/provider/cab_book_provider.dart';
 import '../../book_easyride/model/triphistry.dart';
+import '../../common_widget/custombutton.dart';
 import '../../common_widget/map_widget.dart';
 import '../../common_widget/vehicle_widget.dart';
 import '../../provider/map_provider.dart';
+import '../provider/preebooking_provider.dart';
 
 final Color kDarkBlueColor = const Color(0xff1937d7);
 
@@ -32,7 +34,7 @@ class _SelectPrebookingVehicleState extends State<SelectPrebookingVehicle> {
   void initState() {
     super.initState();
     Provider.of<CabBookProvider>(context, listen: false).getVehicleData();
-    // Provider.of<PreebookingProvider>(context, listen: false).getprebookvehicle();
+    //Provider.of<PreebookingProvider>(context, listen: false).getprebookvehicle();
 
     final mapProvider = Provider.of<MapProvider>(context, listen: false);
     mapProvider.loadMapData(
@@ -88,7 +90,7 @@ class _SelectPrebookingVehicleState extends State<SelectPrebookingVehicle> {
                                 null ||
                             cabProvider.vehicleResponse!.vehicle!.isEmpty) {
                           return Center(
-                              child: Text("No vehicles availablesss"));
+                              child: Text("No vehicles available"));
                         } else {
                           return ListView.builder(
                             shrinkWrap: true,
@@ -136,22 +138,15 @@ class _SelectPrebookingVehicleState extends State<SelectPrebookingVehicle> {
                       padding: const EdgeInsets.all(10.0),
                       child: SizedBox(
                         width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
+                        child: Customtbutton(
+                          text: "Confirm",
+                          onPressed: (){
                             Navigator.of(context).push(_createRoute());
-               
+
                           },
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.all(10),
-                            backgroundColor: Color(0xff1937d7), // Button color
-                          ),
-                          child: Text('Confirm',
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontFamily: "Poppins",
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w400)),
                         ),
+
+
                       ),
                     ),
                   ],

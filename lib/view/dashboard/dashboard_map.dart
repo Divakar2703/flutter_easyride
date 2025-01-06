@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
+import 'package:flutter_easy_ride/model/login_response.dart';
 import 'package:flutter_easy_ride/model/nearby_vehicle.dart';
+import 'package:flutter_easy_ride/view/authentication/provider/auth_provider.dart';
+import 'package:flutter_easy_ride/view/drawer/cab_drawer.dart';
+import 'package:flutter_easy_ride/view/notification/notification_screen.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -23,6 +27,7 @@ class _MapPageState extends State<DashboardMap> {
   String? address = '';
   Set<Circle> _circles = {}; // Define a set for the circle
   Set<Marker> _markers = {}; // Define a set for cab markers
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -44,7 +49,6 @@ class _MapPageState extends State<DashboardMap> {
       );
       setState(() {
         sourceLocation = LatLng(position.latitude, position.longitude);
-
         // Add a circle around the current location
         _circles.add(
           Circle(
@@ -105,7 +109,10 @@ class _MapPageState extends State<DashboardMap> {
     }
     setState(() {});
   }
-
+  Future<void> _refreshData() async {
+    await Future.delayed(Duration(seconds: 2)); // Simulate a network call
+  Navigator.push(context, MaterialPageRoute(builder: (context)=>DashboardMap()));
+  }
   @override
   Widget build(BuildContext context) {
     final cabProvider = Provider.of<DashboardProvider>(context);
@@ -114,104 +121,123 @@ class _MapPageState extends State<DashboardMap> {
     // if (cabProvider.vehicleData!.vehicle.isNotEmpty) {
     //   _addCabMarkers(cabProvider.vehicleData!.vehicle);
     // }
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          if (sourceLocation != null)
-            Container(
-              height: MediaQuery.of(context).size.height,
-              child: GoogleMap(
-                onTap: _handleMapTap,
-                initialCameraPosition: CameraPosition(
-                  target: sourceLocation!,
-                  zoom: 14,
-                ),
-                markers: _markers,
-                //_buildMarkers(),
-                circles: _circles, // Add circles to the Google Map
-                buildingsEnabled: false,
-                zoomControlsEnabled: false,
-                myLocationButtonEnabled: false,
-              ),
-            ),
+    return RefreshIndicator(
+      onRefresh: _refreshData,
 
-          Positioned(
-            top: MediaQuery.of(context).size.height * 0.06,
-            left: 1,
-            right: 0,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  Material(
-                    color: Colors.white,
-                    elevation: 3.0,
-                    shape: const CircleBorder(),
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(20),
-                      onTap: () {},
-                      child: Container(
-                        width: 36,
-                        height: 36,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.menu,
-                          color: Colors.black87,
-                          size: 20,
+      child: Scaffold(
+        key: _scaffoldKey, // Assign the GlobalKey to the Scaffold
+        backgroundColor: Colors.white,
+        drawer: Consumer<AuthProvider>(
+
+          builder: (BuildContext context, AuthProvider value, Widget? child) {
+            return CabDrawer(
+              userName: value.userData?.loginUserName??'madhuri',
+              userEmail: value.userData?.loginUserEmail??'madhuri@gmail.com',);
+          },
+
+        ),
+        body: Stack(
+          children: [
+            if (sourceLocation != null)
+              Container(
+                height: MediaQuery.of(context).size.height,
+                child: GoogleMap(
+                  onTap: _handleMapTap,
+                  initialCameraPosition: CameraPosition(
+                    target: sourceLocation!,
+                    zoom: 14,
+                  ),
+                  markers: _markers,
+                  //_buildMarkers(),
+                  circles: _circles, // Add circles to the Google Map
+                  buildingsEnabled: false,
+                  zoomControlsEnabled: false,
+                  myLocationButtonEnabled: false,
+                ),
+              ),
+
+            Positioned(
+              top: MediaQuery.of(context).size.height * 0.06,
+              left: 1,
+              right: 0,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: [
+                    Material(
+                      color: Colors.white,
+                      elevation: 3.0,
+                      shape: const CircleBorder(),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(20),
+                        onTap: () {
+                          _scaffoldKey.currentState?.openDrawer();
+
+                        },
+                        child: Container(
+                          width: 36,
+                          height: 36,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.menu,
+                            color: Colors.black87,
+                            size: 20,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const Spacer(),
-                  Material(
-                    color: Colors.white,
-                    elevation: 3.0,
-                    shape: const CircleBorder(),
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(20),
-                      onTap: () {},
-                      child: Container(
-                        width: 36,
-                        height: 36,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.notifications_none_rounded,
-                          color: Colors.black87,
-                          size: 20,
+                    const Spacer(),
+                    Material(
+                      color: Colors.white,
+                      elevation: 3.0,
+                      shape: const CircleBorder(),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(20),
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>NotificationScreen()));
+                        },
+                        child: Container(
+                          width: 36,
+                          height: 36,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.notifications_none_rounded,
+                            color: Colors.black87,
+                            size: 20,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
 
-          DraggableScrollableSheet(
-            initialChildSize: 0.2,
-            minChildSize: 0.2,
-            maxChildSize: 0.85,
-            builder: (context, scrollController) {
-              return Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
+            DraggableScrollableSheet(
+              initialChildSize: 0.2,
+              minChildSize: 0.2,
+              maxChildSize: 0.85,
+              builder: (context, scrollController) {
+                return Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
                   ),
-                ),
-                child: HomeDashboard(scrollController: scrollController),
-              );
-            },
-          ),
-        ],
+                  child: HomeDashboard(scrollController: scrollController),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

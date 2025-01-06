@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/Book_Now/common_widget/shimmer_loader.dart';
+import 'package:flutter_easy_ride/common_widget/custombutton.dart';
 import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -32,8 +33,7 @@ class _SelectVehicleState extends State<SelectVehicle> {
   final SocketHelper socketHelper = SocketHelper();
 
 
-  Set<int> selectedRows =
-      Set<int>(); // Use a Set to keep track of selected indices
+  Set<int> selectedRows = Set<int>(); // Use a Set to keep track of selected indices
 
   @override
   void initState() {
@@ -122,6 +122,8 @@ class _SelectVehicleState extends State<SelectVehicle> {
 
                                         setState(() {
                                           selectedVehicle=vehicle.id;
+                                          socketHelper.connect();
+                                          socketHelper.findDriver(selectedVehicle, "15");
                                           setState(() {
                                           });
                                           // Toggle the selection state
@@ -187,7 +189,7 @@ class _SelectVehicleState extends State<SelectVehicle> {
                                                 SizedBox(
                                                   width: 5,
                                                 ),
-                                                Text("$selectedPaymentMethod"),
+                                                Text("$selectedBank"),
                                               ],
                                             ),
 
@@ -245,41 +247,47 @@ class _SelectVehicleState extends State<SelectVehicle> {
                                   builder: (BuildContext context, provider, Widget? child) {
                                     return GestureDetector(
                                       onTap: () {
+                                        print("selectedPaymentMethod==$selectedBank");
                                         if(selectedVehicle!=""){
-                                          socketHelper.connect();
-                                          socketHelper.findDriver(selectedVehicle, "15"); // Replace with actual IDs
+                                        //  socketHelper.connect();
+                                         // socketHelper.findDriver(selectedVehicle, "15"); // Replace with actual IDs
                                           // Provider.of<CabBookProvider>(context, listen: false).sendRequestToDriver();
-                                          Provider.of<CabBookProvider>(context, listen: false).paynow(provider.bookingReq!.reqId,"COD",0);
-                                          Navigator.push(context, MaterialPageRoute(builder: (context)=>ConfirmBooking()));
+                                          if(selectedBank=="COD"){
+                                             socketHelper.findDriver(selectedVehicle, "15"); // Replace with actual IDs
+
+                                            Provider.of<CabBookProvider>(context, listen: false).paynow(provider.bookingReq!.reqId,"COD",0);
+                                            if(requestStatus){
+                                              Navigator.push(context, MaterialPageRoute(builder: (context)=>ConfirmBooking(requestID:provider.bookingReq!.reqId,)));
+                                            }
+                                            else{
+                                              Fluttertoast.showToast(msg: "Finding the best driver for your ride... Please wait.");
+                                            }
+                                          }
+                                          else {
+                                             socketHelper.findDriver(selectedVehicle, "15"); // Replace with actual IDs
+
+                                            Provider.of<CabBookProvider>(context, listen: false).paynow(provider.bookingReq!.reqId,selectedBank,double.parse(cabProvder.paytype!.convCharge));
+                                           if(requestStatus){
+                                             Navigator.push(context, MaterialPageRoute(builder: (context)=>ConfirmBooking(requestID:provider.bookingReq!.reqId,)));
+                                           }
+                                           else{
+                                             Fluttertoast.showToast(msg: "Finding the best driver for your ride... Please wait.");
+                                           }
+                                          }
                                         }
                                         else{
                                           Fluttertoast.showToast(msg: "Please Select the vehicle");
+                                          Fluttertoast.showToast(msg: "Please select the payment method");
+
                                         }
 
 
                                         // Add your confirm action here
                                        // Navigator.push(context, MaterialPageRoute(builder: (context) => FindDriverScreen()));
                                       },
-                                      child: Container(
-                                        width: MediaQuery.of(context).size.width,
-                                        height: 44,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10),
-                                          color: Color(
-                                              0xff1937d7), // Your confirm button color
-                                        ),
-                                        child: const Center(
-                                          child: Text(
-                                            "Confirm",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontFamily: 'Poppins',
-                                              fontSize: 18.0,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                                      child: Customtbutton(text: "Confirm",)
+
+
                                     );
                                   },
 
@@ -313,10 +321,9 @@ class _SelectVehicleState extends State<SelectVehicle> {
 
     if (result != null) {
       setState(() {
-        selectedPaymentMethod = result;
+        selectedBank = result;
       });
     }
   }
-
 
 }

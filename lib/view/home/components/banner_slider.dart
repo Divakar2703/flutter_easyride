@@ -100,7 +100,11 @@ class BannerSlider extends StatelessWidget {
                   padding:const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(15),
+                    image: DecorationImage(
+                      opacity: 0.6,
+                      image: NetworkImage(banner.appBannerImage)
+                    )
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -108,61 +112,62 @@ class BannerSlider extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const  Text(
-                            'Nearby Cabs',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black87,
-                              fontSize: 14,
-                              fontFamily: 'Poppins',
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          const Text(
-                            'Schedule your ride in advance',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey,
-                              fontSize: 11,
-                              fontFamily: 'Poppins',
-                            ),
-                          ),
-                          const SizedBox(height: 10,),
+                          // const  Text(
+                          //   'Nearby Cabs',
+                          //   style: TextStyle(
+                          //     fontWeight: FontWeight.w600,
+                          //     color: Colors.black87,
+                          //     fontSize: 14,
+                          //     fontFamily: 'Poppins',
+                          //   ),
+                          // ),
+                         // const SizedBox(height: 5),
+                         //  const Text(
+                         //    'Schedule your ride in advance',
+                         //    style: TextStyle(
+                         //      fontWeight: FontWeight.w500,
+                         //      color: Colors.grey,
+                         //      fontSize: 11,
+                         //      fontFamily: 'Poppins',
+                         //    ),
+                         //  ),
+                         //  const SizedBox(height: 10,),
                           Container(
+                            alignment: Alignment.bottomRight,
                             padding:const EdgeInsets.symmetric(horizontal: 12,vertical: 8),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(50),
-                              gradient: LinearGradient(
-                                colors: [
-                                  Colors.blue.shade300,
-                                  Colors.blue.shade600
-                                ],
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                              ),
+                              // gradient: LinearGradient(
+                              //   colors: [
+                              //     Colors.blue.shade300,
+                              //     Colors.blue.shade600
+                              //   ],
+                              //   begin: Alignment.centerLeft,
+                              //   end: Alignment.centerRight,
+                              // ),
                             ),
                             child:  Text(
                               banner.bannerName, // Use the dynamic banner URL or asset
 
                               style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white, // Text color
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black, // Text color
                                 fontFamily: 'Poppins',
                               ),
                             ),
                           ),
                         ],
                       ),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.network(
-                          banner.appBannerImage, // Use the dynamic banner URL or asset
-                          height: 80,
-                          width: 80,
-                          fit: BoxFit.cover,
-                        ),
-                      )
+                      // ClipRRect(
+                      //   borderRadius: BorderRadius.circular(10),
+                      //   child: Image.network(
+                      //     banner.appBannerImage, // Use the dynamic banner URL or asset
+                      //     height: 80,
+                      //     width: 80,
+                      //     fit: BoxFit.cover,
+                      //   ),
+                      // )
                     ],
                   ),
                 );

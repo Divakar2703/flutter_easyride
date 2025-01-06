@@ -35,18 +35,23 @@ class PreBookingRentalBookNowCard extends StatelessWidget {
           padding: const EdgeInsets.only(left: 8, right: 12, top: 8, bottom: 8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30),
-            color: Colors.white,
+            // color: Colors.white,
+    gradient: LinearGradient(
+    colors: [
+    Colors.blue.shade300,
+    Colors.blue.shade600
+    ],)
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 18, color: Colors.black54),
+              Icon(icon, size: 18, color: Colors.white),
               const SizedBox(width: 4),
               Text(
                 title,
                 style: const TextStyle(
                   fontWeight: FontWeight.w600,
-                  color: Colors.black54,
+                  color: Colors.white,
                   fontSize: 12,
                   fontFamily: 'Poppins',
                 ),

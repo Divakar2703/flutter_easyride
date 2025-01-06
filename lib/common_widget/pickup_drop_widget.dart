@@ -136,27 +136,31 @@ import 'package:flutter/material.dart';
 class PickupDropWidget extends StatelessWidget {
   final TextEditingController pickupController;
   final TextEditingController dropController;
-  final Function(String) onPickupChange; // Separate onChange for pickup location
-  final Function(String) onDropChange; // Separate onChange for drop location
-  final Function()? onTap; // Separate onChange for drop location
+  final Function(String) onPickupChange;
+  final Function(String) onDropChange;
+  final Function()? onPickupTap;
+  final Function()? onDropTap;
 
   PickupDropWidget({
     required this.pickupController,
     required this.dropController,
-    required this.onPickupChange, // New parameter
-    required this.onDropChange, // New parameter
-    this.onTap
+    required this.onPickupChange,
+    required this.onDropChange,
+    this.onPickupTap,
+    this.onDropTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      // Enable scrolling for overflowing content
       child: Container(
         padding: const EdgeInsets.all(12.0),
         decoration: BoxDecoration(
-          color: Color(0xff1937d7), // Light background color for the container
-          borderRadius: BorderRadius.only(
+          gradient: LinearGradient(
+            colors: [
+              Colors.white,
+              Colors.white70
+            ],),          borderRadius: const BorderRadius.only(
             bottomRight: Radius.circular(20),
             bottomLeft: Radius.circular(20),
           ),
@@ -165,7 +169,7 @@ class PickupDropWidget extends StatelessWidget {
               color: Colors.grey.withOpacity(0.2),
               spreadRadius: 5,
               blurRadius: 10,
-              offset: Offset(0, 3), // changes the position of the shadow
+              offset: const Offset(0, 3),
             ),
           ],
         ),
@@ -178,7 +182,8 @@ class PickupDropWidget extends StatelessWidget {
               icon: Icons.location_on_rounded,
               iconColor: Colors.green,
               hint: 'Pickup location',
-              onChange: onPickupChange, // Call onPickupChange here
+              onChange: onPickupChange,
+              onTap: onPickupTap,
             ),
 
             // Tracker Icon with vertical line
@@ -190,7 +195,8 @@ class PickupDropWidget extends StatelessWidget {
               icon: Icons.location_on_rounded,
               iconColor: Colors.red,
               hint: 'Drop location',
-              onChange: onDropChange, // Call onDropChange here
+              onChange: onDropChange,
+              onTap: onDropTap,
             ),
           ],
         ),
@@ -203,7 +209,8 @@ class PickupDropWidget extends StatelessWidget {
     required IconData icon,
     required Color iconColor,
     required String hint,
-    required Function(String) onChange, // Accept onChange for this field
+    required Function(String) onChange,
+    Function()? onTap,
   }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -213,29 +220,34 @@ class PickupDropWidget extends StatelessWidget {
         Expanded(
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.3), // Background color of the text field
+              color: Colors.blue,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: Colors.white12, width: 1.5),
             ),
             child: TextFormField(
               onTap: onTap,
               cursorColor: Colors.white,
-              onChanged: (value) => onChange(value), // Trigger the onChange function
+              onChanged: (value) => onChange(value),
               controller: controller,
               style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: "Poppins",
-                  fontSize: 14),
+                color: Colors.white,
+                fontWeight: FontWeight.w400,
+                fontFamily: "Poppins",
+                fontSize: 14,
+              ),
               decoration: InputDecoration(
                 hintText: hint,
                 hintStyle: const TextStyle(
-                    color: Colors.white60,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: "Poppins",
-                    fontSize: 14),
+                  color: Colors.white60,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: "Poppins",
+                  fontSize: 14,
+                ),
                 border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 1),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: 1,
+                ),
               ),
             ),
           ),
@@ -249,12 +261,12 @@ class PickupDropWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: [
-          Container(
+          SizedBox(
             height: 40,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.more_vert, color: Colors.white, size: 24.0),
+                Icon(Icons.more_vert, color: Colors.blue, size: 24.0),
               ],
             ),
           ),
@@ -267,3 +279,4 @@ class PickupDropWidget extends StatelessWidget {
     );
   }
 }
+

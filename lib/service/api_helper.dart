@@ -57,4 +57,16 @@ class ApiHelper{
   static String cab_request_on_user_id = baseurl + "User/cab_request_on_user_id";
 
 
+  //notification
+  static String payment_notification = baseurl + "User/online_payment_notification";
+  static String notification_history = baseurl + "User/notification_history";
+
+
+
+  //User Authentication
+  static String registerUser ="https://www.bits.teamtest.co.in/Api/Login/GetUserDataForService";
+
+  static String sendOtp ="https://www.bits.teamtest.co.in/Api/Login/sendotp";
+  static String verifyOtp ="https://www.bits.teamtest.co.in/Api/Login/Verifyotp";
+
 }

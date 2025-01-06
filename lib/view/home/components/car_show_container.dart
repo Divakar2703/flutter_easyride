@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/utils/eve.dart';
 import '../../../Book_Now/screens/book_now_screen.dart';
 import '../../../Pre_Booking/screens/pre_booking_screen.dart';
 import '../../../rental/rental_hourly_and_recurring_view.dart';
@@ -58,10 +59,13 @@ class _CarShowContainerState extends State<CarShowContainer> with TickerProvider
     Widget destination;
 
     if (label == "PreBooking") {
+      BookingType="pre_booking";
       destination = PreBookingScreen();
     } else if (label == "Rental") {
+      BookingType="rental";
       destination = RentalHourlyAndRecurringView();
     } else {
+      BookingType="book_now";
       destination = BookNowScreen();
     }
 

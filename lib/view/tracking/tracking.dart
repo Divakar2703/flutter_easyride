@@ -1,12 +1,23 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import '../../common_widget/driver_details_widget.dart';
+import '../../common_widget/ride_details_card.dart';
 import '../../model/booking.dart';
 import '../../provider/map_provider.dart';
 import '../../utils/eve.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+
+import '../dashboard/dashboard_map.dart';
+
 
 class MapTrackingScreen extends StatefulWidget {
   Booking booking;
@@ -18,6 +29,7 @@ class MapTrackingScreen extends StatefulWidget {
 
 class _MapTrackingScreenState extends State<MapTrackingScreen> {
   late GoogleMapController _mapController;
+  late IO.Socket socket;
 
   // Booking Details
   final Map<String, dynamic> rideData = {
@@ -44,68 +56,159 @@ class _MapTrackingScreenState extends State<MapTrackingScreen> {
   };
   Set<Polyline> _polylines = {};
   Set<Marker> _markers = {};
+  PolylinePoints polylinePoints = PolylinePoints();
+  List<LatLng> polylineCoordinates = [];
+   LatLng _pickupLocation = LatLng(ALatitude, ALongitude);
+
 
   @override
   void initState() {
     super.initState();
-    _addMarkers();
-    _createPolyline();
+    connectToSocket();
     final mapProvider = Provider.of<MapProvider>(context, listen: false);
 
     mapProvider.getPolyPoints(ALatitude, ALongitude, dropLat, dropLong);
 
   }
+  @override
+  void dispose() {
+    socket.disconnect();
+    socket.close();
+    super.dispose();
+  }
+  void connectToSocket() {
+    socket = IO.io('https://asatvindia.in:5001', <String, dynamic>{
+      'transports': ['websocket'],
+      'autoConnect': true,
+    });
+    print("socket starting");
+    socket.onConnect((_) {
+      debugPrint('Connected to socket');
+      sendConnection();
+      trackDriverLocation();
+    });
 
-  void _addMarkers() {
-    LatLng pickupLocation = LatLng(
-      double.parse(rideData['pickup_lat']),
-      double.parse(rideData['pickup_long']),
-    );
+    socket.onDisconnect((_) => debugPrint('Socket disconnected'));
+  }
+  void sendConnection() {
+    debugPrint('sendConnection');
 
-    LatLng dropLocation = LatLng(
-      double.parse(rideData['drop_lat']),
-      double.parse(rideData['drop_long']),
-    );
-
-    _markers.add(
-      Marker(
-        markerId: MarkerId('pickup'),
-        position: pickupLocation,
-        infoWindow: InfoWindow(title: 'Pickup Location'),
-      ),
-    );
-
-    _markers.add(
-      Marker(
-        markerId: MarkerId('drop'),
-        position: dropLocation,
-        infoWindow: InfoWindow(title: 'Drop Location'),
-      ),
-    );
+    final jsonData = {'booking_id': widget.booking.id};
+    print("jsondata======${jsonData}");
+    socket.emit("joinBookingTracking", jsonEncode(jsonData));
   }
 
-  void _createPolyline() {
-    LatLng pickupLocation = LatLng(
-      double.parse(rideData['pickup_lat']),
-      double.parse(rideData['pickup_long']),
+  void trackDriverLocation() {
+
+    debugPrint('trackDriverLocation');
+
+    socket.on("GetUpdatedLocation", (data) {
+      print("data===${data}");
+      try {
+        //  final messageJson = jsonDecode(data);
+        final messageJson = data is String ? json.decode(data) : data;
+        final double latitude = double.parse(messageJson['latitude']);
+        final double longitude = double.parse(messageJson['longitude']);
+        final String isArrive = messageJson['is_arrive'].toString();
+        final String isComplete = messageJson['is_complete'].toString();
+        final String isStart = messageJson['is_start'].toString();
+
+        print("driver lat==${latitude},log=${longitude}, Arrive==${isArrive}");
+
+        final LatLng deliveryBoyLocation = LatLng(latitude,longitude);
+        if (!mounted) return;
+        setState(() {
+          if (isArrive == "0") {
+            Fluttertoast.showToast(msg: "Driver about to reach");
+          //  _pickupLocation = LatLng(double.parse(widget.booking.pickup_lat), double.parse(widget.booking.pickup_lat));
+
+            updateCurrentLocationMarkers(deliveryBoyLocation,LatLng(double.parse(widget.booking.pickup_lat), double.parse(widget.booking.pickup_long)));
+            fetchDirectionsAndDrawPolyline(latitude,longitude,double.parse(widget.booking.pickup_lat), double.parse(widget.booking.pickup_long),isArrive);
+          setState(() {
+
+          });
+          }
+
+
+          if (isStart=="1"&&isComplete == "1" || isComplete == "0") {
+            Future.delayed(const Duration(milliseconds: 100), () {
+              if (mounted) {
+                Fluttertoast.showToast(msg: "Ride is completed");
+                updateCurrentLocationMarkers(deliveryBoyLocation,LatLng(double.parse(widget.booking.drop_lat), double.parse(widget.booking.drop_long)));
+                fetchDirectionsAndDrawPolyline(latitude,longitude,double.parse(widget.booking.drop_lat), double.parse(widget.booking.drop_long),isArrive);
+              //  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>DashboardMap()));
+                // Navigator.pushReplacementNamed(context, '/rideDetails', arguments: widget.bookingId);
+              }
+            });
+          }
+
+          //  updateCurrentLocationMarkers(userLocation,deliveryBoyLocation);
+          // fetchDirectionsAndDrawPolyline(deliveryBoyLocation,userLocation,isArrive);
+        });
+      } catch (e) {
+        debugPrint("Error processing message: $e");
+      }
+    });
+  }
+  void updateCurrentLocationMarkers(LatLng driverLocation, LatLng targetLocation) {
+    final driverMarker = Marker(
+      markerId: const MarkerId('driver_marker'),
+      position: driverLocation,
+      infoWindow: const InfoWindow(title: 'Driver Location'),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
     );
 
-    LatLng dropLocation = LatLng(
-      double.parse(rideData['drop_lat']),
-      double.parse(rideData['drop_long']),
-    );
-
-    Polyline polyline = Polyline(
-      polylineId: PolylineId('route'),
-      points: [pickupLocation, dropLocation],
-      color: Colors.blue,
-      width: 5,
+    final targetMarker = Marker(
+      markerId: const MarkerId('target_marker'),
+      position: targetLocation,
+      infoWindow: const InfoWindow(title: 'Target Location'),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
     );
 
     setState(() {
-      _polylines.add(polyline);
+      _markers.clear();
+      _markers.add(driverMarker);
+      _markers.add(targetMarker);
     });
   }
+
+  void fetchDirectionsAndDrawPolyline(double driverLat,double driverLong,  double userLat,double userLong ,String isArrive) async {
+    try {
+      print("lat==${driverLat} $driverLong,user==$userLat, $userLong");
+      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+          googleApiKey: "AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y",
+          request: PolylineRequest(
+              origin: PointLatLng(driverLat, driverLong),
+              destination: PointLatLng(userLat, userLong),
+              mode: TravelMode.driving));
+      if (result.points.isNotEmpty) {
+        polylineCoordinates = result.points
+            .map((point) => LatLng(point.latitude, point.longitude))
+            .toList();
+        print("polycordingnates==${polylineCoordinates}");
+setState(() {
+
+});      }
+      // if (result.points.isNotEmpty) {
+      //   setState(() {
+      //     _polylines.clear();
+      //     _polylines.add(
+      //       Polyline(
+      //         polylineId: const PolylineId('route_polyline'),
+      //         points: result.points
+      //             .map((point) => LatLng(point.latitude, point.longitude))
+      //             .toList(),
+      //         color: Colors.blue,
+      //         width: 5,
+      //       ),
+      //     );
+      //   });
+      // }
+    } catch (error) {
+      debugPrint("Error fetching polyline: $error");
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -117,30 +220,30 @@ class _MapTrackingScreenState extends State<MapTrackingScreen> {
           // Google Map
           GoogleMap(
             initialCameraPosition: CameraPosition(
-              target: LatLng(
-                double.parse(rideData['pickup_lat']),
-                double.parse(rideData['pickup_long']),
-              ),
+              target:LatLng(double.parse(widget.booking.pickup_lat), double.parse(widget.booking.pickup_long)),
               zoom: 14.0,
             ),
             onMapCreated: (controller) {
               _mapController = controller;
             },
             markers: _markers,
-            polylines: {
+            polylines:{
               Polyline(
                 polylineId: PolylineId('route'),
-                points: mapProvider.polylineCoordinates,
+                points:
+                [LatLng(30.368346, 78.0516573), LatLng(30.352049105084, 78.03386259824)],
+               // polylineCoordinates,
                 width: 3,
                 color: Color(0xff1937d7),
               ),
-            },            myLocationEnabled: true,
+            },
+            myLocationEnabled: true,
             myLocationButtonEnabled: true,
           ),
           // Bottom Sheet for Booking Details
           DraggableScrollableSheet(
             initialChildSize: 0.3, // Initial height
-            minChildSize: 0.3, // Minimum height
+            minChildSize: 0.1, // Minimum height
             maxChildSize: 0.6, // Maximum height
             builder: (BuildContext context, ScrollController scrollController) {
               return Container(
@@ -153,89 +256,35 @@ class _MapTrackingScreenState extends State<MapTrackingScreen> {
                 ),
                 child: SingleChildScrollView(
                   controller: scrollController,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Center(
-                          child: Container(
-                            height: 5,
-                            width: 50,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[400],
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          'Booking Details',
-                          style: GoogleFonts.poppins(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        _buildDetailRow('Booking ID', widget.booking.bookId),
-                        _buildDetailRow('Pickup Address',widget.booking.pickupAddress),
-                        _buildDetailRow('Drop Address', widget.booking.dropAddress),
-                        _buildDetailRow('Distance', widget.booking.userJourneyDistance),
-                        _buildDetailRow('Total Fare', widget.booking.totalFare),
-                        _buildDetailRow('Grand Total', widget.booking.grandTotal),
-                        _buildDetailRow('Payment Type', widget.booking.paymentStatus),
-                        _buildDetailRow('Ride Status',widget.booking.rideStatus ),
-                        SizedBox(height: 20),
-                        Text(
-                          'Passenger Details',
-                          style: GoogleFonts.poppins(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        _buildDetailRow('Name', widget.booking.userName),
-                        _buildDetailRow('Mobile', widget.booking.userMobile),
-                        _buildDetailRow('Email', widget.booking.userEmail),
-                        SizedBox(height: 20),
-                      ],
-                    ),
-                  ),
+                  child:RideDetailsCard(
+                    pickupLocation: widget.booking.pickupAddress,
+                    dropLocation: widget.booking.dropAddress,
+                    distance: widget.booking.userJourneyDistance,
+                    totalFare: widget.booking.totalFare,
+                    grandTotal: widget.booking.grandTotal,
+                    rideStatus: widget.booking.rideStatus,
+                    paymentType: widget.booking.paymentStatus,
+                    isPaymentPending: widget.booking.paymentStatus=="Pending"?true:false,)
                 ),
               );
             },
-          ),        ],
-      ),
-    );
-  }
-
-  Widget _buildDetailRow(String title, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              color: Colors.grey[700],
-            ),
           ),
-          Container(
-            width: MediaQuery.of(context).size.width*0.5,
-            child: Text(
-              value,
-              maxLines: 1,
-              style: GoogleFonts.poppins(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+          Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: StylishDriverDetailsCard(
+                driverEmail: widget.booking.driverEmail,
+                driverMobileNo: widget.booking.driverMobileNo,
+                driverGender: widget.booking.driverGender,
+                 driverProfilePic: widget.booking.driverProfilePic,
+                 driverRating: widget.booking.driverRating,
+                drivername: widget.booking.driverName,
+              ))
         ],
       ),
     );
   }
+
 
 }

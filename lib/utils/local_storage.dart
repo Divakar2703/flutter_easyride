@@ -52,6 +52,16 @@ class LocalStorage
     return prefs.containsKey(key);
   }
 
+  static Future<void> saveUserID(String userID) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userID', userID);
+  }
+
+  static Future<String> getUserID() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('userID')??'';
+  }
+
 }
 
 

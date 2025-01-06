@@ -6,9 +6,12 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'dart:io';
 
+import '../../utils/eve.dart';
+import '../dialog/payment_success_dialog.dart';
+
 class PhonePeGatewayWebView extends StatefulWidget {
   final String orderId;
-  final int txnAmount;
+  final double txnAmount;
 
   const PhonePeGatewayWebView({super.key, required this.orderId, required this.txnAmount});
 
@@ -20,7 +23,7 @@ class _PhonePeGatewayWebViewState extends State<PhonePeGatewayWebView> {
   late final WebViewController _controller;
   String postData = '';
   String transId = '';
-  String custId = "259";
+  String custId = "15";
 
   @override
   void initState() {
@@ -149,6 +152,9 @@ class _PhonePeGatewayWebViewState extends State<PhonePeGatewayWebView> {
         'message': message,
         'code': code,
       };
+      print("payment result====${paymentResult}");
+      transactionID=transactionId;
+      showPaymentSuccessDialog(context,response);
 
       // Pop the current page and pass the result back
       Navigator.pop(context, paymentResult);
@@ -157,7 +163,15 @@ class _PhonePeGatewayWebViewState extends State<PhonePeGatewayWebView> {
       print('Failed to parse payment info: $e');
     }
   }
-
+  void showPaymentSuccessDialog(BuildContext context,  final Map<String, dynamic> req
+      ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return PaymentSuccessDialog(req: req,);
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

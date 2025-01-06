@@ -42,7 +42,7 @@ class MapWidget extends StatelessWidget {
                 polylineId: PolylineId('route'),
                 points: polylineCoordinates,
                 width: 3,
-                color: Color(0xff1937d7),
+                color: Colors.blue,
               ),
             },
             myLocationEnabled: true,
