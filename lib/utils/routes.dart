@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+
 import '../Pre_Booking/screens/select_pickup_time.dart';
 import '../view/home/home_view.dart';
-
 
 class Routes {
   static const String homeview = '/homeview';
@@ -11,7 +11,7 @@ class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case homeview:
-        return MaterialPageRoute(builder: (_) => HomeView());
+        return MaterialPageRoute(builder: (_) => HomeScreen());
 
       case selectpickuptimegin:
         return MaterialPageRoute(builder: (_) => SelectPickupTime());

@@ -1,9 +1,8 @@
 import 'dart:ui';
 
-class AppColors{
+class AppColors {
   static const Color primaryBlue = Color(0xff87A2FF); // Blue color used in the app
   static const Color backgroundColor = Color(0xfff4f8ff);
-
 
   static const Color gradientEnd = Color(0xfff4f8ff);
 
@@ -12,7 +11,8 @@ class AppColors{
 
   static const Color black = Color(0xFF000000);
   static const Color red = Color(0xFF841818);
+  static const Color yellow = Color(0xFFFFCC00);
   static const Color gold = Color(0xFFE0BB20);
   static const Color white = Color(0xFFFAFAFA);
-
+  static const Color borderColor = Color(0xFF202020);
 }

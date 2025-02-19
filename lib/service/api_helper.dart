@@ -1,50 +1,43 @@
-class ApiHelper{
-  static String baseurl="https://asatvindia.in/cab/Api/";
-  static String authApi="${baseurl}Api_auth/fetch_api_auth";
-  static String getVehicle=baseurl+'User/getvehicle';
-  static String getTheme=baseurl+'User/get_theme';
-  static String sendRequestDriver=baseurl+'User/sendReqForfindDriver';
-  static String findDriver=baseurl+'User/findDriver';
-  static String bookCab=baseurl+'User/Bookcab';
-  static String cancelBookCab=baseurl+'User/CancleBookedCab';
-  static String payNow=baseurl+'User/paynow';
-  static String paymentVerify=baseurl+'User/payment_verify';
-  static String afterPayNowOnline=baseurl+'User/afterpaynow_online';
-  static String afterPayNowWallet=baseurl+'User/afterpaynow_wallet';
-  static String afterOnlinePaymentVerify=baseurl+'User/after_onlinepayment_verify';
-  static String dropLocationHistory=baseurl+'User/drop_location_history';
-  static String triphistry = baseurl+'User/trip_history';
-  static String triphistrydetails = baseurl+'User/trip_history_details';
-  static String deleteDropLocation=baseurl+'User/delete_droploc_history';
-  static String getOffers=baseurl+'User/get_offers';
-  static String applyCoupon=baseurl+'User/apply_coupon';
-  static String imageUrl="https://asatvindia.in/cab/";
-  static String submitfeedback = baseurl+'User/submit_feedback';
-  static String convCharge = baseurl+'User/conv_charge';
-  static String rejectUserRequest = baseurl+'User/RejectUserRequest';
+class ApiHelper {
+  ApiHelper._();
+
+  static const String baseUrl = "https://asatvindia.in/cab/Api/";
+  static String authApi = "${baseUrl}Api_auth/fetch_api_auth";
+  static String getVehicle = baseUrl + 'User/getvehicle';
+  static String getTheme = baseUrl + 'User/get_theme';
+  static String sendRequestDriver = baseUrl + 'User/sendReqForfindDriver';
+  static String findDriver = baseUrl + 'User/findDriver';
+  static String bookCab = baseUrl + 'User/Bookcab';
+  static String cancelBookCab = baseUrl + 'User/CancleBookedCab';
+  static String payNow = baseUrl + 'User/paynow';
+  static String paymentVerify = baseUrl + 'User/payment_verify';
+  static String afterPayNowOnline = baseUrl + 'User/afterpaynow_online';
+  static String afterPayNowWallet = baseUrl + 'User/afterpaynow_wallet';
+  static String afterOnlinePaymentVerify = baseUrl + 'User/after_onlinepayment_verify';
+  static String dropLocationHistory = baseUrl + 'User/drop_location_history';
+  static String triphistry = baseUrl + 'User/trip_history';
+  static String triphistrydetails = baseUrl + 'User/trip_history_details';
+  static String deleteDropLocation = baseUrl + 'User/delete_droploc_history';
+  static String getOffers = baseUrl + 'User/get_offers';
+  static String applyCoupon = baseUrl + 'User/apply_coupon';
+  static String imageUrl = "https://asatvindia.in/cab/";
+  static String submitfeedback = baseUrl + 'User/submit_feedback';
+  static String convCharge = baseUrl + 'User/conv_charge';
+  static String rejectUserRequest = baseUrl + 'User/RejectUserRequest';
 
 //// pree booking
-  static String confirmbooking =baseurl+'User/pre_booking_available';
-
+  static String confirmbooking = baseUrl + 'User/pre_booking_available';
 
   // Payment
-  static String getWallet ='https://www.bits.teamtest.co.in/Api/Wallet/getWallet';
+  static String getWallet = 'https://www.bits.teamtest.co.in/Api/Wallet/getWallet';
 
-
-
-
-  static String  getnotes = baseurl + 'User/getnotes';
-  static String  payment = baseurl + 'User/conv_charge';
-
-
+  static String getnotes = baseUrl + 'User/getnotes';
+  static String payment = baseUrl + 'User/conv_charge';
 
 //===============Pree booking=========================================================
-  static String getPreebookvehicle = baseurl + 'User/getvehicle';
-  static String sendRequestDriverpreebook =
-      baseurl + 'User/sendReqForfindDriver';
-  static String finddriverpreebook = baseurl + 'User/findDriver';
-  static String preebookCab = baseurl + 'User/Bookcab';
-  static String cancelpreebooingvehicle = baseurl + 'User/CancleBookedCab';
-
-
+  static String getPreebookvehicle = baseUrl + 'User/getvehicle';
+  static String sendRequestDriverpreebook = baseUrl + 'User/sendReqForfindDriver';
+  static String finddriverpreebook = baseUrl + 'User/findDriver';
+  static String preebookCab = baseUrl + 'User/Bookcab';
+  static String cancelpreebooingvehicle = baseUrl + 'User/CancleBookedCab';
 }
