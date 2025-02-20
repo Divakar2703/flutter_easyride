@@ -233,15 +233,15 @@ class _NewHomeViewState extends State<HomeView> {
 }*/
 
 import 'package:flutter/material.dart';
-import 'package:flutter_easy_ride/Pre_Booking/screens/pre_booking_screen.dart';
-import 'package:flutter_easy_ride/rental/rental_location_select_view.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
-import 'package:flutter_easy_ride/view/book_now/ui/book_now_screen.dart';
+import 'package:flutter_easy_ride/view/booking/provider/common_provider.dart';
+import 'package:flutter_easy_ride/view/booking/ui/booking_screen.dart';
 import 'package:flutter_easy_ride/view/components/common_textfield.dart';
 import 'package:flutter_easy_ride/view/components/image_text_widget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -356,8 +356,9 @@ class HomeScreen extends StatelessWidget {
                           Expanded(
                             child: ImageTextWidget(
                                 onTap: () {
+                                  context.read<CommonProvider>().changeBooking(0);
                                   Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => BookNowScreen(),
+                                    builder: (context) => BookingScreen(),
                                   ));
                                 },
                                 image: AppImage.bookNow,
@@ -367,9 +368,12 @@ class HomeScreen extends StatelessWidget {
                           SizedBox(width: 5),
                           Expanded(
                             child: ImageTextWidget(
-                                onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => PreBookingScreen(),
-                                    )),
+                                onTap: () {
+                                  context.read<CommonProvider>().changeBooking(1);
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => BookingScreen(),
+                                  ));
+                                },
                                 image: AppImage.preBooking,
                                 subImage: AppImage.preBookingIcon,
                                 title: "Per-Booking"),
@@ -377,9 +381,12 @@ class HomeScreen extends StatelessWidget {
                           SizedBox(width: 5),
                           Expanded(
                             child: ImageTextWidget(
-                                onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => RentalLocationSelectView(),
-                                    )),
+                                onTap: () {
+                                  context.read<CommonProvider>().changeBooking(2);
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => BookingScreen(),
+                                  ));
+                                },
                                 image: AppImage.rental,
                                 subImage: AppImage.rentalIcon,
                                 title: "Rental"),

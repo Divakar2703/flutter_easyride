@@ -7,6 +7,8 @@ class ImageTextWidget extends StatelessWidget {
   final String? title;
   final void Function()? onTap;
   final MainAxisSize? mainAxisSize;
+  final bool? isBorderView;
+  final bool? isSelected;
   const ImageTextWidget({
     super.key,
     required this.image,
@@ -14,6 +16,8 @@ class ImageTextWidget extends StatelessWidget {
     this.title,
     this.onTap,
     this.mainAxisSize,
+    this.isBorderView,
+    this.isSelected,
   });
 
   @override
@@ -25,6 +29,9 @@ class ImageTextWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
+          border: isBorderView ?? false
+              ? Border.all(color: isSelected ?? false ? AppColors.yellowDark : Colors.transparent)
+              : null,
           boxShadow: [
             BoxShadow(
               color: AppColors.black.withOpacity(0.2),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
-import 'package:flutter_easy_ride/view/book_now/models/common_model.dart';
+import 'package:flutter_easy_ride/view/booking/models/common_model.dart';
 
 class BookNowProvider with ChangeNotifier {
   final addList = [

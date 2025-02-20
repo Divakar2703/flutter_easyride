@@ -71,6 +71,7 @@ dependencies:
   fluttertoast: ^8.2.8
   web_socket_client: ^0.1.5
   socket_io_client: ^3.0.1
+  slidable_button: ^3.0.0+1
 
 
 dev_dependencies:

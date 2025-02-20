@@ -6,7 +6,11 @@ import 'package:flutter_easy_ride/book_easyride/provider/triphistry_provider.dar
 import 'package:flutter_easy_ride/provider/api_provider.dart';
 import 'package:flutter_easy_ride/provider/map_provider.dart';
 import 'package:flutter_easy_ride/utils/converter_function.dart';
-import 'package:flutter_easy_ride/view/book_now/provider/book_now_provider.dart';
+import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
+import 'package:flutter_easy_ride/view/booking/provider/common_provider.dart';
+import 'package:flutter_easy_ride/view/booking/provider/rental_provider.dart';
+import 'package:flutter_easy_ride/view/car_selection/provider/car_selection_provider.dart';
+import 'package:flutter_easy_ride/view/driver_details/provider/driver_details_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'Book_Now/provider/drive_looking_provider.dart';
@@ -31,7 +35,11 @@ void main() {
         ChangeNotifierProvider(create: (_) => ProgressBarState()),
         ChangeNotifierProvider(create: (_) => TriphistryProvider()),
         ChangeNotifierProvider(create: (_) => PreebookingProvider()),
-        ChangeNotifierProvider(create: (_) => BookNowProvider())
+        ChangeNotifierProvider(create: (_) => BookNowProvider()),
+        ChangeNotifierProvider(create: (_) => RentalProvider()),
+        ChangeNotifierProvider(create: (_) => CommonProvider()),
+        ChangeNotifierProvider(create: (_) => CarSelectionProvider()),
+        ChangeNotifierProvider(create: (_) => DriverDetailsProvider())
       ],
       child:
           // DevicePreview(
