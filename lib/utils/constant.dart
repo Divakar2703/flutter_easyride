@@ -1,3 +1,11 @@
+class Endpoints {
+  Endpoints._();
+  static const int connectionTimeout = 15000;
+  static const int receiveTimeout = 15000;
+  static const String baseUrl = "https://asatvindia.in/cab/Api/";
+  static String authApi = "${baseUrl}Api_auth/fetch_api_aut";
+}
+
 class AppImage {
   static const String assetPng = "assets/images/";
   static const String assetSvg = "assets/images/svg/";
@@ -22,6 +30,14 @@ class AppImage {
   static const String primeCar = '${assetPng}prime_car.png';
   static const String auto = '${assetPng}auto.png';
   static const String bicycle = '${assetPng}bicycle.png';
+  static const String upi = '${assetPng}upi.png';
+  static const String a24 = '${assetPng}a24.png';
+  static const String razorPay = '${assetPng}razor_pay.png';
+  static const String phonePay = '${assetPng}phone_pay.png';
+  static const String visa = '${assetPng}visa.png';
+  static const String ruPay = '${assetPng}rupay.png';
+  static const String mastercard = '${assetPng}mastercard.png';
+  static const String paypal = '${assetPng}paypal.png';
 
   ///SVG
   static const String search = '${assetSvg}search.svg';
@@ -36,4 +52,14 @@ class AppImage {
   static const String wallet = '${assetSvg}wallet.svg';
   static const String close = '${assetSvg}close.svg';
   static const String star = '${assetSvg}star.svg';
+  static const String notification = '${assetSvg}notification.svg';
+  static const String homeSvg = '${assetSvg}home.svg';
+  static const String selectedHome = '${assetSvg}selected_home.svg';
+  static const String profile = '${assetSvg}profile.svg';
+  static const String cards = '${assetSvg}cards.svg';
+  static const String netBanking = '${assetSvg}net_banking.svg';
+  static const String selectedWallet = '${assetSvg}selected_wallet.svg';
+  static const String selectedNotification = '${assetSvg}selected_notification.svg';
+  static const String selectedProfile = '${assetSvg}selected_profile.svg';
+  static const String box = '${assetSvg}box.svg';
 }

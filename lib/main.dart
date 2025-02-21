@@ -2,20 +2,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
+import 'package:flutter_easy_ride/api/service_locator.dart';
 import 'package:flutter_easy_ride/book_easyride/provider/triphistry_provider.dart';
 import 'package:flutter_easy_ride/provider/api_provider.dart';
 import 'package:flutter_easy_ride/provider/map_provider.dart';
-import 'package:flutter_easy_ride/utils/converter_function.dart';
+import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_easy_ride/view/booking/provider/common_provider.dart';
 import 'package:flutter_easy_ride/view/booking/provider/rental_provider.dart';
 import 'package:flutter_easy_ride/view/car_selection/provider/car_selection_provider.dart';
 import 'package:flutter_easy_ride/view/driver_details/provider/driver_details_provider.dart';
+import 'package:flutter_easy_ride/view/home/bottom_bar_screen.dart';
+import 'package:flutter_easy_ride/view/home/provider/bottom_bar_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'Book_Now/provider/drive_looking_provider.dart';
 import 'Pre_Booking/provider/preebooking_provider.dart';
-import 'view/home/home_view.dart';
 
 var navigatorKey = GlobalKey<NavigatorState>();
 void main() {
@@ -26,6 +28,7 @@ void main() {
       statusBarColor: Colors.transparent,
     ),
   );
+  setUp();
   runApp(
     MultiProvider(
       providers: [
@@ -39,7 +42,8 @@ void main() {
         ChangeNotifierProvider(create: (_) => RentalProvider()),
         ChangeNotifierProvider(create: (_) => CommonProvider()),
         ChangeNotifierProvider(create: (_) => CarSelectionProvider()),
-        ChangeNotifierProvider(create: (_) => DriverDetailsProvider())
+        ChangeNotifierProvider(create: (_) => DriverDetailsProvider()),
+        ChangeNotifierProvider(create: (_) => BottomBarProvider())
       ],
       child:
           // DevicePreview(
@@ -75,11 +79,13 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
           theme: ThemeData(
-            primaryColor: ConverterFunction.parseColor(value.themeConfigg?.lightTheme.primaryColor ?? "FFD700"),
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
+            bottomNavigationBarTheme: BottomNavigationBarThemeData(backgroundColor: AppColors.white),
+            scaffoldBackgroundColor: AppColors.white,
+            //   // primaryColor: ConverterFunction.parseColor(value.themeConfigg?.lightTheme.primaryColor ?? "FFD700"),
+            //   // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            //   // useMaterial3: true,
           ),
-          home: HomeScreen(),
+          home: BottomBarScreen(),
         ),
       );
 }

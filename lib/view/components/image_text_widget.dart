@@ -22,7 +22,7 @@ class ImageTextWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(10),
@@ -46,7 +46,6 @@ class ImageTextWidget extends StatelessWidget {
             Image.asset(height: 53, width: 80, image),
             SizedBox(height: 5),
             Row(
-              // mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 subImage != null ? Image.asset(height: 18, width: 18, subImage ?? "") : SizedBox(),
