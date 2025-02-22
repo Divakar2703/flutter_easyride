@@ -8,16 +8,22 @@ double dropLong=74.61747914326327;
 String dropAddress="MadhubanChittorgarh, Rajasthan";
 String cabType="";
 String selectedVehicle="";
-String? selectedBank;
 String bookingID="";
 String orderID="";
-String selectedPaymentMethod="COD";
+String selectedBank="COD";
 Vehicle? vehicleDetails;
+String BookingType="book_now";
+double selectedFare=0.0;
+String transactionID="";
+bool requestStatus=false;
+String fToken="";
+String userID="";
 
 
 final List<Map<String, dynamic>> banks = [
-  {'name': 'GPay', 'image': 'assets/images/gpay.jpg'},
-  {'name': 'Paytm', 'image': 'assets/images/paytem.png'},
-  {'name': 'Online', 'image': 'assets/images/phonepay.png'},
-  {'name': 'RozaPay', 'image': 'assets/images/rojapay.png'},
+  {'name': 'online', 'image': 'assets/images/gpay.jpg'},
+  {'name': 'COD', 'image': 'assets/images/paytem.png'},
+  {'name': 'phonepay', 'image': 'assets/images/phonepay.png'},
+  {'name': 'razorpay', 'image': 'assets/images/rojapay.png'},
 ];
+

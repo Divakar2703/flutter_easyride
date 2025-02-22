@@ -10,6 +10,7 @@ import '../../common_widget/custombutton.dart';
 import '../../common_widget/map_widget.dart';
 import '../../common_widget/vehicle_widget.dart';
 import '../../provider/map_provider.dart';
+import '../provider/preebooking_provider.dart';
 
 final Color kDarkBlueColor = const Color(0xff1937d7);
 
@@ -33,11 +34,13 @@ class _SelectPrebookingVehicleState extends State<SelectPrebookingVehicle> {
   void initState() {
     super.initState();
     Provider.of<CabBookProvider>(context, listen: false).getVehicleData();
-    // Provider.of<PreebookingProvider>(context, listen: false).getprebookvehicle();
+    //Provider.of<PreebookingProvider>(context, listen: false).getprebookvehicle();
 
     final mapProvider = Provider.of<MapProvider>(context, listen: false);
-    mapProvider.loadMapData(ALatitude, ALongitude, dropLat, dropLong);
-    mapProvider.getPolyPoints(ALatitude, ALongitude, dropLat, dropLong);
+    mapProvider.loadMapData(
+        ALatitude, ALongitude, dropLat,dropLong);
+    mapProvider.getPolyPoints(
+        ALatitude, ALongitude, dropLat, dropLong);
   }
 
   @override
@@ -87,7 +90,7 @@ class _SelectPrebookingVehicleState extends State<SelectPrebookingVehicle> {
                                 null ||
                             cabProvider.vehicleResponse!.vehicle!.isEmpty) {
                           return Center(
-                              child: Text("No vehicles availablesss"));
+                              child: Text("No vehicles available"));
                         } else {
                           return ListView.builder(
                             shrinkWrap: true,
@@ -104,78 +107,52 @@ class _SelectPrebookingVehicleState extends State<SelectPrebookingVehicle> {
                                 assetPath: vehicle.image,
                                 isSelected: selectedRows.contains(index),
                                 onTap: () {
+
+
                                   setState(() {
-                                    selectedVehicle = vehicle.id;
-                                    vehicleDetails = cabProvider
-                                        .vehicleResponse?.vehicle[index];
-                                    setState(() {});
+                                    selectedVehicle=vehicle.id;
+                                    selectedFare=vehicle.fare;
+                                    vehicleDetails=cabProvider.vehicleResponse?.vehicle[index];
+                                    setState(() {
+                                    });
                                     // Toggle the selection state
                                     if (selectedRows.contains(index)) {
-                                      selectedRows.remove(
-                                          index); // Deselect if already selected
+                                      selectedRows.remove(index); // Deselect if already selected
                                     } else {
-                                      cabProvider
-                                          .getOffers(int.parse(vehicle.id));
-                                      selectedRows
-                                          .add(index); // Select if not selected
-                                      cabProvider
-                                          .sendRequestToDriver(vehicle.id);
+                                      cabProvider.getOffers(
+                                          int.parse(vehicle.id));
+                                      selectedRows.add(
+                                          index); // Select if not selected
+                                      cabProvider.sendRequestToDriver(vehicle.id,"pre_booking");
                                     }
-                                  });
-                                },
+                                  });                                },
                               );
                             },
                           );
 
-                          // return ListView.builder(
-                          //   shrinkWrap: true,
-                          //   itemCount:
-                          //       cabProvider.vehicleResponse?.vehicle.length,
-                          //   itemBuilder: (BuildContext context, int index) {
-                          //     var vehicle =
-                          //         cabProvider.vehicleResponse?.vehicle[index];
-                          //     return VehicleListItem(
-                          //       title: vehicle!.name,
-                          //       subtitle: vehicle.description,
-                          //       price: vehicle.fare.toString(),
-                          //       time: "2 min",
-                          //       assetPath: vehicle.image,
-                          //       isSelected: selectedRows.contains(
-                          //           index), // Check if the current index is in the selected rows
-                          //       onTap: () {
-                          //         setState(() {
-                          //           // Toggle the selection state
-                          //           if (selectedRows.contains(index)) {
-                          //             selectedRows.remove(
-                          //                 index); // Deselect if already selected
-                          //           } else {
-                          //             cabProvider.getOffers(int.parse(vehicle.id));
-                          //             selectedRow.add(index);
-                          //                 // Select if not selected
-                          //           }
-                          //         });
-                          //       },
-                          //     );
-                          //   },
-                          // );
                         }
                       }),
                     ),
                     // Confirm Button
-                    GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(_createRoute());
-                        },
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: SizedBox(
+                        width: double.infinity,
                         child: Customtbutton(
                           text: "Confirm",
-                        )),
+                          onPressed: (){
+                            Navigator.of(context).push(_createRoute());
+
+                          },
+                        ),
+
+
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
-          ),
-          SizedBox(
-            height: 10,
           ),
         ],
       ),

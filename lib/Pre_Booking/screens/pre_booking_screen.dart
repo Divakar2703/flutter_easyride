@@ -64,14 +64,44 @@ class _PreBookingScreenState extends State<PreBookingScreen> {
       body: Column(
         children: [
           ConnectivityChecker(),
-          PickupDropWidget(
-            pickupController: pickupController,
-            dropController: dropController,
-            onChange: (value) {
-              dropController.text=value;
-              cabProvider.placeAutoComplete(value, "Drop");
-            },
+          // PickupDropWidget(
+          //   pickupController: pickupController,
+          //   dropController: dropController,
+          //   onChange: (value) {
+          //     dropController.text=value;
+          //     cabProvider.placeAutoComplete(value, "Drop");
+          //   },
+          // ),
+
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: PickupDropWidget(
+              pickupController: pickupController,
+              dropController: dropController,
+
+              // onChange for Pickup
+              onPickupChange: (value) {
+                setState(() {
+                  pickupController.text = value; // Update pickup text
+                  cabProvider.placeAutoComplete(value,"Pickup");
+                  print('Pickup location: $value');
+                  // cabProvider.placeAutoComplete(value, "Pickup");
+                });
+              },
+
+              // onChange for Drop
+              onDropChange: (value) {
+                setState(() {
+                  dropController.text = value; // Update drop text
+                  // Call your autoComplete function for Drop
+                  cabProvider.placeAutoComplete(value,"Drop");
+                  print('Drop location: $value');
+                  // cabProvider.placeAutoComplete(value, "Drop");
+                });
+              },
+            ),
           ),
+
 
           GestureDetector(
             onTap: () {

@@ -26,6 +26,8 @@ class CabBookProvider with ChangeNotifier {
   bool isLoading = true;
   List<AutocompletePrediction> placePredictions = [];
   List<AutocompletePrediction> pickPlacePredictions = [];
+  TextEditingController pickupController = TextEditingController();
+  TextEditingController dropController = TextEditingController();
   List<Suggestion> suggetions=[];
   final List<Vehicle> vehicle=[];
   CouponData? couponData;
@@ -81,7 +83,6 @@ final String apiKey='AIzaSyDzwtZHoEVgjThw18yh2qLCkO-hvPE6i94';
 print("selctud==$id");
     selectedVehicle=id;
     notifyListeners();
-
   }
 
   // notes
@@ -136,8 +137,14 @@ if(dropAddress!=""&& booking_type=="BookNow"){
     notifyListeners();
   }
 
-  void getPickupLocation(String location){
+
+  Future<void> getPickupLocation(String location,String placeID,String booking_type) async {
     _pickupLocation=location;
+    Map<String,dynamic> data= await  LocationUtils.getPlaceDetails(placeID);
+    address=data["formattedAddress"];
+    ALatitude=data["location"]["latitude"];
+    ALongitude=data["location"]["longitude"];
+
     notifyListeners();
   }
 
@@ -148,6 +155,7 @@ if(dropAddress!=""&& booking_type=="BookNow"){
       "drop_lat": dropLat,
       "drop_long": dropLong
     };
+    print("params===${requestBody}");
 
     try {
       final response = await NetworkUtility.sendPostRequest(
@@ -193,7 +201,7 @@ if(dropAddress!=""&& booking_type=="BookNow"){
     }
   }
 
-  Future<void> sendRequestToDriver(String vehicleid) async {
+  Future<void> sendRequestToDriver(String vehicleid,String bookingType) async {
     print("vehicleID==${selectedVehicle}");
     // Request body
     Map<String, dynamic> requestBody = {
@@ -202,11 +210,13 @@ if(dropAddress!=""&& booking_type=="BookNow"){
       "drop_lat" : dropLat,
       "drop_long" : dropLong,
       "vehicle_type_id" : vehicleid,
-      "user_id" : 15 ,
+      "user_id" : userID ,
       "added_by_web" : "asatvindia.in" ,
       "pickup_address" : address ,
-      "drop_address": dropAddress
+      "drop_address": dropAddress,
+      "booking_type":bookingType
     };
+
     print("params====${requestBody}");
 
     try {
@@ -219,14 +229,11 @@ if(dropAddress!=""&& booking_type=="BookNow"){
          bookingReq = BookingRequest.fromJson(jsondata);
          notifyListeners();
 
-
       } else {
         print('Error: ${response.statusCode}, ${response.body}');
-        // Handle error response
       }
     } catch (e) {
       print('Error sending POST request: $e');
-      // Handle any exception
     }
   }
 
@@ -234,7 +241,7 @@ if(dropAddress!=""&& booking_type=="BookNow"){
     // Request body
     Map<String, dynamic> requestBody = {
       "vehicle_type_id":vehicleID,
-      "user_id":259
+      "user_id":userID
     };
     print("requestbody==${requestBody}");
 
@@ -263,7 +270,7 @@ if(dropAddress!=""&& booking_type=="BookNow"){
     // Request body
     Map<String, dynamic> requestBody = {
       "send_request_id":requestID,
-      "user_id":15,
+      "user_id":userID,
       "added_by_web":"www.bits.teamtest.co.in",
       "booking_id":bookingID,
       "paymenttype":paymentType,
@@ -272,7 +279,7 @@ if(dropAddress!=""&& booking_type=="BookNow"){
       "TXN_AMOUNT":amount,
       "conv_charge":conCharge,
       "user_phone":"7505145405",
-      "booking_type":"book_now"
+      "booking_type":BookingType
     };
 
     print("params==${requestBody}");
@@ -282,16 +289,19 @@ if(dropAddress!=""&& booking_type=="BookNow"){
       print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
+        transactionID="";
         var jsondata=jsonDecode(response.body);
         var status=jsondata["status"];
         if(status=="success"){
           bookingStatus=status;
-
+          requestStatus=false;
           Navigator.push(navigatorKey.currentContext!, MaterialPageRoute(builder: (context)=>BookingSuccessScreen()));
 notifyListeners();
+
         }
 
       } else {
+        transactionID="";
         print('Error: ${response.statusCode}, ${response.body}');
         // Handle error response
       }
@@ -304,7 +314,7 @@ notifyListeners();
   Future<void> CancelCab(int requestID,String bookID,String paymentType,String orderID,String transID,double amount,double conCharge,) async {
     // Request body
     Map<String, dynamic> requestBody = {
-      "booking_id":"Book-00075307",
+      "booking_id":bookingID,
       "reason":"plan changed",
       "user_phone":"8238375356"
     };
@@ -331,7 +341,7 @@ notifyListeners();
     Map<String, dynamic> requestBody = {
       "send_request_id":requestID,
       "added_by_web":"www.bits.teamtest.co.in",
-      "user_id":15,
+      "user_id":userID,
       "paymenttype":paymentType, //online,codd,wallet
       "conv_charge":conCharge
     };
@@ -348,6 +358,7 @@ notifyListeners();
         orderID=orderid;
         var bookingid=jsondata["booking_id"];
         bookingID=bookingid;
+        print("bookingid==$bookingID");
         notifyListeners();
 
       } else {
@@ -365,7 +376,7 @@ notifyListeners();
   Future<void> paymentVerify(int requestID,String paymentType,double conCharge,) async {
     // Request body
     Map<String, dynamic> requestBody = {
-      "user_id":259,
+      "user_id":userID,
       "pageno":1,
       "daterange":"2024/10/28 - 2024/10/29"
     };

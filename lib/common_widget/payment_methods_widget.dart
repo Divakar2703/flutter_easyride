@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../utils/eve.dart';
+
 class PaymentMethodBottomSheet extends StatelessWidget {
   final Function(String) onPaymentSelected;
 
    PaymentMethodBottomSheet({Key? key, required this.onPaymentSelected}) : super(key: key);
 
-  final List<Map<String, dynamic>> banks = [
-    {'name': 'Online', 'image': 'assets/images/gpay.jpg'},
-    {'name': 'Razorpay', 'image': 'assets/images/paytem.png'},
-    {'name': 'PhonePay', 'image': 'assets/images/phonepay.png'},
-    {'name': 'COD', 'image': 'assets/images/rojapay.png'},
-  ];
+
 
   @override
   Widget build(BuildContext context) {

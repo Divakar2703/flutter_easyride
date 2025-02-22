@@ -7,7 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../common_widget/custombutton.dart';
+import '../../Book_Now/Components/promocode.dart';
 import '../../common_widget/map_widget.dart';
 import '../../provider/map_provider.dart';
 import 'confirm_booking_screen.dart';
@@ -145,6 +145,8 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
   Widget _buildContent() {
     final mapProvider = Provider.of<MapProvider>(context);
     final convcharges = Provider.of<CabBookProvider>(context);
+   
+
     return Stack(
       children: [
         MapWidget(
@@ -170,7 +172,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Row(
+                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -182,7 +184,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                           SizedBox(
                             width: 10,
                           ),
-                          Text("₹120",
+                          Text("₹$selectedFare",
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -209,6 +211,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                       ),
                     ],
                   ),
+               
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -240,39 +243,33 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                           _onPromoTap, "$promoCode"),
                     ],
                   ),
-
                   SizedBox(height: 20),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: SizedBox(
                       width: double.infinity,
-                      child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        BookingSuccessScreen()));
-                            // Provider.of<CabBookProvider>(context, listen: false).bookCab(requestID, 259, "paymentType"," orderID", "transID", "amount" as double, "conCharge" as double);
-                            Provider.of<CabBookProvider>(context, listen: false)
-                                .convcharge();
-                          },
-                          // style: ElevatedButton.styleFrom(
-                          //   padding: EdgeInsets.all(10),
-                          //   backgroundColor: Color(0xff1937d7), // Button color
-                          // ),
-                          child:
-                              // Text('Confirm Booking',
-                              //
-                              //     style: TextStyle(
-                              //         fontSize: 14,
-                              //         fontFamily: "Poppins",
-                              //         color: Colors.white,
-                              //         fontWeight: FontWeight.w400)),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      BookingSuccessScreen()));
+                          // Provider.of<CabBookProvider>(context, listen: false).bookCab(requestID, 259, "paymentType"," orderID", "transID", "amount" as double, "conCharge" as double);
+                          Provider.of<CabBookProvider>(context, listen: false).convcharge();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.all(10),
+                          backgroundColor: Color(0xff1937d7), // Button color
+                        ),
+                        child: Text('Confirm Booking',
 
-                              Customtbutton(
-                            text: "Confirm Booking",
-                          )),
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontFamily: "Poppins",
+                                color: Colors.white,
+                                fontWeight: FontWeight.w400)),
+                      ),
                     ),
                   ),
                 ],
@@ -335,6 +332,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
 
   void _onWalletTap() {
     _showPaymentBottomSheet(context);
+    
   }
 
   void _onAddNotesTap() {
@@ -342,12 +340,14 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
   }
 
   void _onPromoTap() {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return _buildPromoCodeBottomSheet(context);
-      },
-    );
+     openPromocodeBottomSheet(context);
+
+    // showModalBottomSheet(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return _buildPromoCodeBottomSheet(context);
+    //   },
+    // );
   }
 
   Widget _buildPromoCodeBottomSheet(BuildContext context) {
@@ -377,35 +377,31 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
               ),
               SizedBox(height: 16),
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  SizedBox(width: 30,),
-                  GestureDetector(
-                      // style: ElevatedButton.styleFrom(
-                      //     backgroundColor: Color(0xff1937d7)),
-
-                      onTap: () {
-                        // Apply promo code logic
-                        setState(() {
-                          if (_promoController.text.isNotEmpty) {
-                            promoCode = _promoController.text;
-                            isPromoApplied = true;
-                          } else {
-                            isPromoApplied = false;
-                          }
-                        });
-                        Navigator.pop(context); // Close the bottom sheet
-                      },
-                      child:
-                          // Text(
-                          //   "Apply",
-                          //   style: TextStyle(
-                          //       color: Colors.white,
-                          //       fontFamily: "Poppins",
-                          //       fontWeight: FontWeight.w400),
-                          // ),
-                          Customtbutton(
-                        text: "Apply",
-                      )),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xff1937d7)),
+                    onPressed: () {
+                      // Apply promo code logic
+                      setState(() {
+                        if (_promoController.text.isNotEmpty) {
+                          promoCode = _promoController.text;
+                          isPromoApplied = true;
+                        } else {
+                          isPromoApplied = false;
+                        }
+                      });
+                      Navigator.pop(context); // Close the bottom sheet
+                    },
+                    child: Text(
+                      "Apply",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: "Poppins",
+                          fontWeight: FontWeight.w400),
+                    ),
+                  ),
                 ],
               )
             ],
@@ -483,30 +479,25 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
           SizedBox(height: 16),
           Align(
             alignment: Alignment.bottomRight,
-            child: GestureDetector(
-                // style:
-                //     ElevatedButton.styleFrom(backgroundColor: Color(0xff1937d7)
-                //
-                //     ),
-                onTap: () {
-                  // Update selected date and time
-                  setState(() {
-                    selectedDate = dateOptions[selectedDateIndex];
-                    selectedTime = timeOptions[selectedTimeIndex];
-                  });
-                  Navigator.pop(context); // Close the bottom sheet
-                },
-                child:
-                    // Text(
-                    //   "Done",
-                    //   style: TextStyle(
-                    //     color: Colors.white,
-                    //     fontFamily: "poppins",
-                    //   ),
-                    // ),
-                    Customtbutton(
-                  text: "Done",
-                )),
+            child: ElevatedButton(
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: Color(0xff1937d7)),
+              onPressed: () {
+                // Update selected date and time
+                setState(() {
+                  selectedDate = dateOptions[selectedDateIndex];
+                  selectedTime = timeOptions[selectedTimeIndex];
+                });
+                Navigator.pop(context); // Close the bottom sheet
+              },
+              child: Text(
+                "Done",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: "poppins",
+                ),
+              ),
+            ),
           )
         ],
       ),
@@ -859,7 +850,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
             child: Consumer<CabBookProvider>(
               builder: (context, provider, child) {
                 if (provider.notes == null ||
-                    provider.notes!.deliveryNotes == null) {
+                    provider.notes!.deliveryNotes== null) {
                   return Center(child: CircularProgressIndicator());
                 }
 
@@ -944,7 +935,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                                       ),
                                     ],
                                   );
-                                }).toList(),
+                                }).toList(),                                
                                 SizedBox(height: mQuery.size.height * 0.032),
                                 if (additionalInstructions.isNotEmpty) ...[
                                   Container(
@@ -1056,28 +1047,27 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                                   ),
                                 ),
                                 SizedBox(height: 20),
-                                GestureDetector(
-                                    onTap: () {
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    onPressed: () {
                                       Provider.of<CabBookProvider>(context,
                                               listen: false)
                                           .GetNotes();
                                       String notes = _notesController.text;
                                       Navigator.pop(context);
                                     },
-                                    // style: ElevatedButton.styleFrom(
-                                    //   padding: EdgeInsets.all(12),
-                                    //   backgroundColor: Color(0xff1937d7),
-                                    // ),
-                                    child:
-
-                                        // Text(
-                                        //   'Save Notes',
-                                        //   style: TextStyle(
-                                        //       fontSize: 16, color: Colors.white),
-                                        // ),
-                                        Customtbutton(
-                                      text: "Save Note",
-                                    )),
+                                    style: ElevatedButton.styleFrom(
+                                      padding: EdgeInsets.all(12),
+                                      backgroundColor: Color(0xff1937d7),
+                                    ),
+                                    child: Text(
+                                      'Save Notes',
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.white),
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -1150,26 +1140,24 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                         icon: Icons.account_balance_wallet,
                         value: 'Pay via Wallet',
                       ),
+                      
+
                       SizedBox(height: 20),
                       SizedBox(
                         width: double.infinity,
-                        child: GestureDetector(
-                          onTap: () {
+                        child: ElevatedButton(
+                          onPressed: () {
                             // Handle payment confirmation here
                             Navigator.pop(context); // Close the bottom sheet
                           },
-                          // style: ElevatedButton.styleFrom(
-                          //   padding: EdgeInsets.all(12),
-                          //   backgroundColor: Color(0xff1937d7),
-                          // ),
-                          child:
-                          // Text(
-                          //   'Confirm Payment',
-                          //   style: TextStyle(fontSize: 16, color: Colors.white),
-                          // ),
-                          Customtbutton(
-                            text: "Confirm Payment",
-                          )
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.all(12),
+                            backgroundColor: Color(0xff1937d7),
+                          ),
+                          child: Text(
+                            'Confirm Payment',
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
                         ),
                       ),
                     ],

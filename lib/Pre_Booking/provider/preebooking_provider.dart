@@ -85,11 +85,12 @@ class PreebookingProvider with ChangeNotifier {
       "drop_lat": dropLong,
       "drop_long": 83.891678676009,
       "vehicle_type_id": vehicleID,
-      "user_id": 6,
+      "user_id": userID,
       "added_by_web": "asatvindia.in",
       "pickup_address": pickupaddress,
       "drop_address": dropAddress,
     };
+    print("params==${requestBody}");
 
     try {
       final response = await NetworkUtility.sendPostRequest(
@@ -98,7 +99,7 @@ class PreebookingProvider with ChangeNotifier {
       if (response.statusCode == 200) {
         var jsondataa = jsonDecode(response.body);
         driverRequest = DriverRequest.fromJson(jsondataa);
-        print(response.body);
+        print("response====${response.body}");
       } else {
         print('Please check  you code it is so error');
       }

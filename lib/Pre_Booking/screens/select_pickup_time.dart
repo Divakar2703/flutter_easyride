@@ -38,9 +38,9 @@ class _SelectPickupTimeState extends State<SelectPickupTime> {
 
     final mapProvider = Provider.of<MapProvider>(context, listen: false);
     mapProvider.loadMapData(
-        ALatitude, ALongitude, 30.32455712895656, 78.00607616176579);
+        ALatitude, ALongitude, dropLat, dropLong);
     mapProvider.getPolyPoints(
-        ALatitude, ALongitude, 30.32455712895656, 78.00607616176579);
+        ALatitude, ALongitude,dropLat, dropLong);
     _generateRandomAvailability(); // Generate random available dates and times
   }
 
@@ -128,7 +128,7 @@ class _SelectPickupTimeState extends State<SelectPickupTime> {
                                 margin: EdgeInsets.symmetric(horizontal: 8),
                                 decoration: BoxDecoration(
                                   color: _selectedDate == date
-                                      ? Color(0xff1937d7)
+                                      ? Colors.blue
                                       : Colors.grey[300],
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -185,7 +185,7 @@ class _SelectPickupTimeState extends State<SelectPickupTime> {
                                           EdgeInsets.symmetric(horizontal: 8),
                                       decoration: BoxDecoration(
                                         color: _selectedTime == time
-                                            ? Color(0xff1937d7)
+                                            ? Colors.blue
                                             : Colors.grey[300],
                                         borderRadius: BorderRadius.circular(10),
                                       ),

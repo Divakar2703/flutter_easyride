@@ -4,6 +4,7 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 class RazorpayGatewayCommon {
   late Razorpay razorpay;
 
+
   void openRazorpay({
     required int amount,
     required String orderId,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/Pre_Booking/screens/image_slider.dart';
+import 'package:flutter_easy_ride/view/dashboard/dashboard_map.dart';
 import 'package:lottie/lottie.dart';
 class BookingSuccessScreen extends StatefulWidget {
   const BookingSuccessScreen({super.key});
@@ -134,7 +135,7 @@ class _BookingSuccessScreenState extends State<BookingSuccessScreen>
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>DashboardMap()));
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,

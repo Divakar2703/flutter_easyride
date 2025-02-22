@@ -12,9 +12,6 @@ class MapProvider with ChangeNotifier {
   bool isLoading = true;
 
   Set<Marker> get markers => _markers;
-
-
-
   double currentZoomLevel = 14.0;
   double mapHeightPercentage = 0.6;
   bool zooming = false;
@@ -80,19 +77,18 @@ class MapProvider with ChangeNotifier {
   void loadMapData(double originLat, double originLng, double destLat, double destLng) async {
     // Simulate a delay to fetch map data
     await Future.delayed(Duration(seconds: 2));
-    // _markers.add(
-    //   Marker(
-    //     markerId: MarkerId("pickup"),
-    //     position: LatLng(originLat, originLng), // Pickup Location
-    //     icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-    //   ),
-    // );
+    _markers.add(
+      Marker(
+        markerId: MarkerId("pickup"),
+        position: LatLng(originLat, originLng), // Pickup Location
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+      ),
+    );
     _markers.add(
       Marker(
         markerId: MarkerId("dropoff"),
         position: LatLng(dropLat, dropLong), // Drop Location
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
-      ),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),),
     );
     isLoading = false;
     notifyListeners();

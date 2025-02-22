@@ -4,6 +4,8 @@ import '../../model/driver_details.dart';
 import 'dart:async';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../../utils/eve.dart';
+
 class SocketHelper {
   static final SocketHelper _instance = SocketHelper._internal();
   late IO.Socket _socket;
@@ -116,6 +118,8 @@ class SocketHelper {
 
     _socket.on('findDriverResult', (data) {
       print("Received data: $data");
+      requestStatus=true;
+      print("requestStatus==$requestStatus");
       try {
         // Decode data only if it's a String; if it's already a Map, use it directly
         final decodedData = data is Map<String, dynamic> ? data : json.decode(data);
