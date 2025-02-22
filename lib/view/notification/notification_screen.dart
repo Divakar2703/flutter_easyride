@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
+
 import '../../model/notification_response.dart';
 import 'notification_service.dart';
-import 'package:flutter_easy_ride/utils/colors.dart';
-import 'package:flutter_easy_ride/utils/constant.dart';
-import 'package:flutter_easy_ride/view/home/provider/bottom_bar_provider.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -53,8 +49,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
     }
   }
 
-
-
   @override
   void dispose() {
     _scrollController.dispose();
@@ -70,21 +64,19 @@ class _NotificationScreenState extends State<NotificationScreen> {
       body: _notifications.isEmpty && !_isLoading
           ? Center(child: Text('No Notifications'))
           : ListView.builder(
-        controller: _scrollController,
-        itemCount: _notifications.length + 1,
-        itemBuilder: (context, index) {
-          if (index == _notifications.length) {
-            return _isLoading
-                ? Center(child: CircularProgressIndicator())
-                : SizedBox.shrink();
-          }
-          final notification = _notifications[index];
-          return ListTile(
-            title: Text(notification.rideStatus),
-            subtitle: Text(notification.bookingType),
-          );
-        },
-      ),
+              controller: _scrollController,
+              itemCount: _notifications.length + 1,
+              itemBuilder: (context, index) {
+                if (index == _notifications.length) {
+                  return _isLoading ? Center(child: CircularProgressIndicator()) : SizedBox.shrink();
+                }
+                final notification = _notifications[index];
+                return ListTile(
+                  title: Text(notification.rideStatus),
+                  subtitle: Text(notification.bookingType),
+                );
+              },
+            ),
     );
   }
 }

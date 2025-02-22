@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/Book_Now/common_widget/shimmer_loader.dart';
+import 'package:flutter_easy_ride/common_widget/custombutton.dart';
 import 'package:flutter_easy_ride/utils/eve.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../book_easyride/new_screen/confirm_booking.dart';
-import '../../common_widget/custombutton.dart';
 import '../../common_widget/map_widget.dart';
 import '../../common_widget/payment_methods_widget.dart';
 import '../../common_widget/vehicle_widget.dart';
@@ -12,7 +14,7 @@ import '../../provider/map_provider.dart';
 import '../../service/socket/socket_helper.dart';
 import '../Components/promocode.dart';
 import '../provider/cab_book_provider.dart';
-
+import 'drive_finding_screen.dart';
 
 final Color kDarkBlueColor = const Color(0xff1937d7);
 
@@ -30,13 +32,13 @@ class _SelectVehicleState extends State<SelectVehicle> {
   int selectedRow = -1;
   final SocketHelper socketHelper = SocketHelper();
 
-  Set<int> selectedRows =
-      Set<int>(); // Use a Set to keep track of selected indices
+
+  Set<int> selectedRows = Set<int>(); // Use a Set to keep track of selected indices
 
   @override
   void initState() {
     super.initState();
-    Provider.of<CabBookProvider>(context, listen: false).convcharge();
+    Provider.of<CabBookProvider>(context,listen: false).convcharge();
     Provider.of<CabBookProvider>(context, listen: false).getVehicleData();
     final mapProvider = Provider.of<MapProvider>(context, listen: false);
     mapProvider.loadMapData(ALatitude, ALongitude, dropLat, dropLong);
@@ -46,7 +48,7 @@ class _SelectVehicleState extends State<SelectVehicle> {
   @override
   Widget build(BuildContext context) {
     final mapProvider = Provider.of<MapProvider>(context);
-    final cabProvder = Provider.of<CabBookProvider>(context);
+    final cabProvder=Provider.of<CabBookProvider>(context);
 
     return Scaffold(
       body: mapProvider.isLoading
@@ -91,19 +93,13 @@ class _SelectVehicleState extends State<SelectVehicle> {
                                 builder: (context, cabProvider, child) {
                               if (cabProvider.vehicleResponse == null) {
                                 return Center(
-                                    child: Text(
-                                  "No vehicles available",
-                                  style: TextStyle(fontFamily: 'Poppins'),
-                                ));
+                                    child: Text("No vehicles available"));
                               } else if (cabProvider.vehicleResponse!.vehicle ==
                                       null ||
                                   cabProvider
                                       .vehicleResponse!.vehicle!.isEmpty) {
                                 return Center(
-                                    child: Text(
-                                  "No vehicles available",
-                                  style: TextStyle(fontFamily: "Poppins"),
-                                ));
+                                    child: Text("No vehicles available"));
                               } else {
                                 return ListView.builder(
                                   shrinkWrap: true,
@@ -123,9 +119,13 @@ class _SelectVehicleState extends State<SelectVehicle> {
                                       isSelected: selectedRows.contains(
                                           index), // Check if the current index is in the selected rows
                                       onTap: () {
+
                                         setState(() {
-                                          selectedVehicle = vehicle.id;
-                                          setState(() {});
+                                          selectedVehicle=vehicle.id;
+                                          socketHelper.connect();
+                                          socketHelper.findDriver(selectedVehicle, "15");
+                                          setState(() {
+                                          });
                                           // Toggle the selection state
                                           if (selectedRows.contains(index)) {
                                             selectedRows.remove(
@@ -135,8 +135,7 @@ class _SelectVehicleState extends State<SelectVehicle> {
                                                 int.parse(vehicle.id));
                                             selectedRows.add(
                                                 index); // Select if not selected
-                                            cabProvider.sendRequestToDriver(
-                                                vehicle.id);
+                                            cabProvider.sendRequestToDriver(vehicle.id,"book_now");
                                           }
                                         });
                                       },
@@ -173,13 +172,10 @@ class _SelectVehicleState extends State<SelectVehicle> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     InkWell(
-                                      onTap: () =>
-                                          _showPaymentMethodBottomSheet(
-                                              context),
+                                      onTap: () => _showPaymentMethodBottomSheet(context),
                                       child: Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.4,
+                                        width: MediaQuery.of(context).size.width *
+                                            0.4,
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -193,9 +189,10 @@ class _SelectVehicleState extends State<SelectVehicle> {
                                                 SizedBox(
                                                   width: 5,
                                                 ),
-                                                Text("$selectedPaymentMethod"),
+                                                Text("$selectedBank"),
                                               ],
                                             ),
+
                                             Icon(
                                               Icons.arrow_forward_ios_rounded,
                                               color: Colors.black,
@@ -211,12 +208,11 @@ class _SelectVehicleState extends State<SelectVehicle> {
                                       color: Colors.grey.shade200,
                                     ),
                                     InkWell(
-                                      onTap: () =>
-                                          openPromocodeBottomSheet(context),
-                                      child: Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.4,
+                                      onTap: ()=> openPromocodeBottomSheet(context),
+
+                                        child: Container(
+                                        width: MediaQuery.of(context).size.width *
+                                            0.4,
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -248,70 +244,53 @@ class _SelectVehicleState extends State<SelectVehicle> {
                                   height: 10,
                                 ),
                                 Consumer<CabBookProvider>(
-                                  builder: (BuildContext context, provider,
-                                      Widget? child) {
+                                  builder: (BuildContext context, provider, Widget? child) {
                                     return GestureDetector(
                                       onTap: () {
-                                        // if (selectedVehicle != "") {
-                                        //   socketHelper.connect();
-                                        //   /*socketHelper.findDriver(
-                                        //       selectedVehicle,
-                                        //       "15");*/ // Replace with actual IDs
-                                        //   // Provider.of<CabBookProvider>(context, listen: false).sendRequestToDriver();
-                                        //   // Provider.of<CabBookProvider>(context,
-                                        //   //         listen: false)
-                                        //   //     .paynow(
-                                        //   //         provider.bookingReq!.reqId,
-                                        //   //         "COD",
-                                        //   //         0);
-                                        //   Navigator.push(
-                                        //       context,
-                                        //       MaterialPageRoute(
-                                        //           builder: (context) =>
-                                        //               ConfirmBooking()));
-                                        // } else {
-                                        //   Fluttertoast.showToast(
-                                        //       msg: "Please Select the vehicle",);
-                                        // }
+                                        print("selectedPaymentMethod==$selectedBank");
+                                        if(selectedVehicle!=""){
+                                        //  socketHelper.connect();
+                                         // socketHelper.findDriver(selectedVehicle, "15"); // Replace with actual IDs
+                                          // Provider.of<CabBookProvider>(context, listen: false).sendRequestToDriver();
+                                          if(selectedBank=="COD"){
+                                             socketHelper.findDriver(selectedVehicle, "15"); // Replace with actual IDs
 
-                                        Navigator.push(context, MaterialPageRoute(builder: (context)=>ConfirmBooking()));
+                                            Provider.of<CabBookProvider>(context, listen: false).paynow(provider.bookingReq!.reqId,"COD",0);
+                                            if(requestStatus){
+                                              Navigator.push(context, MaterialPageRoute(builder: (context)=>ConfirmBooking(requestID:provider.bookingReq!.reqId,)));
+                                            }
+                                            else{
+                                              Fluttertoast.showToast(msg: "Finding the best driver for your ride... Please wait.");
+                                            }
+                                          }
+                                          else {
+                                             socketHelper.findDriver(selectedVehicle, "15"); // Replace with actual IDs
 
+                                            Provider.of<CabBookProvider>(context, listen: false).paynow(provider.bookingReq!.reqId,selectedBank,double.parse(cabProvder.paytype!.convCharge));
+                                           if(requestStatus){
+                                             Navigator.push(context, MaterialPageRoute(builder: (context)=>ConfirmBooking(requestID:provider.bookingReq!.reqId,)));
+                                           }
+                                           else{
+                                             Fluttertoast.showToast(msg: "Finding the best driver for your ride... Please wait.");
+                                           }
+                                          }
+                                        }
+                                        else{
+                                          Fluttertoast.showToast(msg: "Please Select the vehicle");
+                                          Fluttertoast.showToast(msg: "Please select the payment method");
+
+                                        }
 
 
                                         // Add your confirm action here
-                                        // Navigator.push(context, MaterialPageRoute(builder: (context) => FindDriverScreen()));
+                                       // Navigator.push(context, MaterialPageRoute(builder: (context) => FindDriverScreen()));
                                       },
-                                      // child: Container(
-                                      //   width: MediaQuery.of(context).size.width,
-                                      //   height: 44,
-                                      //   decoration: BoxDecoration(
-                                      //     borderRadius: BorderRadius.circular(10),
-                                      //     color: Color(
-                                      //         0xff1937d7), // Your confirm button color
-                                      //   ),
-                                      //   child: const Center(
-                                      //     child: Text(
-                                      //       "Confirm",
-                                      //       style: TextStyle(
-                                      //         color: Colors.white,
-                                      //         fontFamily: 'Poppins',
-                                      //         fontSize: 18.0,
-                                      //         fontWeight: FontWeight.w500,
-                                      //       ),
-                                      //     ),
-                                      //     // child:Customtbutton(
-                                      //     //   text: "Confirm",
-                                      //     //
-                                      //     //
-                                      //     // ),
-                                      //   ),
-                                      // ),
+                                      child: Customtbutton(text: "Confirm",)
 
-                                      child: Customtbutton(
-                                        text: "Confirm",
-                                      ),
+
                                     );
                                   },
+
                                 ),
                               ],
                             ),
@@ -324,6 +303,7 @@ class _SelectVehicleState extends State<SelectVehicle> {
               ],
             ),
     );
+
   }
 
   void _showPaymentMethodBottomSheet(BuildContext context) async {
@@ -341,8 +321,9 @@ class _SelectVehicleState extends State<SelectVehicle> {
 
     if (result != null) {
       setState(() {
-        selectedPaymentMethod = result;
+        selectedBank = result;
       });
     }
   }
+
 }

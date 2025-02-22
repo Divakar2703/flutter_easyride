@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'checkdialob.dart';
 import 'custombutton.dart';
 
@@ -32,26 +33,18 @@ class SweetDialog extends StatelessWidget {
           SizedBox(height: 16),
           Text(
             'Great, all set!',
-            style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                fontFamily: "Poppins"),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black, fontFamily: "Poppins"),
           ),
           SizedBox(height: 8),
           Text(
             'Your changes were successfully saved.',
             textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: 14, color: Colors.black, fontFamily: "Poppins"),
+            style: TextStyle(fontSize: 14, color: Colors.black, fontFamily: "Poppins"),
           ),
           SizedBox(height: 16),
           GestureDetector(
-            onTap: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => Checkdialob())),
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => Checkdialob())),
             child: Customtbutton(
-              width: 100,
-              height: 30,
               text: "Continue",
             ),
           ),
@@ -94,18 +87,14 @@ class AlertDialobbox extends StatelessWidget {
           Text(
             'Your changes were successfully saved.',
             textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: 14, color: Colors.black, fontFamily: "Poppins"),
+            style: TextStyle(fontSize: 14, color: Colors.black, fontFamily: "Poppins"),
           ),
           SizedBox(height: 16),
           GestureDetector(
-              onTap: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Checkdialob())),
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => Checkdialob())),
               child: Container(
                 child: Customtbutton(
                   backgroundColor: Colors.red,
-                  width: 100,
-                  height: 30,
                   text: "Try again",
                 ),
               )),
