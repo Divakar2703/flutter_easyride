@@ -16,7 +16,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
-
   @override
   void dispose() {
     super.dispose();

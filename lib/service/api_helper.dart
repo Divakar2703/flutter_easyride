@@ -62,7 +62,6 @@ class ApiHelper{
   static String notification_history = baseurl + "User/notification_history";
 
 
-
   //User Authentication
   static String registerUser ="https://www.bits.teamtest.co.in/Api/Login/GetUserDataForService";
 
