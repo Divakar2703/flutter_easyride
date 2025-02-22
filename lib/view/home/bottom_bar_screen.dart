@@ -14,7 +14,7 @@ class BottomBarScreen extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          context.read<BottomBarProvider>().pages[context.watch<BottomBarProvider>().selectedIndex],
+          // context.read<BottomBarProvider>().pages[context.watch<BottomBarProvider>().selectedIndex],
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(

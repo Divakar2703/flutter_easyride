@@ -25,7 +25,7 @@ void openPromocodeBottomSheet(BuildContext context) {
               child: Scaffold(
                 body: Consumer<CabBookProvider>(
                   builder: (BuildContext context, CabBookProvider value, Widget? child) {
-                    return SingleChildScrollView(
+                    return value.couponData!.coupon.isNotEmpty?SingleChildScrollView(
                       controller: scrollController,
                       padding: EdgeInsets.all(16),
                       child: Column(
@@ -70,7 +70,7 @@ void openPromocodeBottomSheet(BuildContext context) {
                             ),
                         ],
                       ),
-                    );
+                    ):Center(child: Text("No coupon available for this vehicle"));
                   },
                 ),
               ),

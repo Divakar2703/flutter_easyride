@@ -5,26 +5,22 @@ import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
 import 'package:flutter_easy_ride/api/service_locator.dart';
 import 'package:flutter_easy_ride/book_easyride/provider/triphistry_provider.dart';
 import 'package:flutter_easy_ride/provider/api_provider.dart';
-import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
 import 'package:flutter_easy_ride/provider/dashboard_provider.dart';
 import 'package:flutter_easy_ride/provider/map_provider.dart';
 import 'package:flutter_easy_ride/rental/components/rentalbooking_provider.dart';
 import 'package:flutter_easy_ride/rental/get_rental_vehical_provider.dart';
 import 'package:flutter_easy_ride/rental/recurring/recurringbooking_provider.dart';
-import 'package:flutter_easy_ride/view/home/home_view.dart';
-import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_easy_ride/view/booking/provider/common_provider.dart';
 import 'package:flutter_easy_ride/view/booking/provider/rental_provider.dart';
 import 'package:flutter_easy_ride/view/car_selection/provider/car_selection_provider.dart';
 import 'package:flutter_easy_ride/view/driver_details/provider/driver_details_provider.dart';
-import 'package:flutter_easy_ride/view/home/bottom_bar_screen.dart';
+import 'package:flutter_easy_ride/view/home/home_view.dart';
 import 'package:flutter_easy_ride/view/home/provider/bottom_bar_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'Book_Now/provider/drive_looking_provider.dart';
 import 'Pre_Booking/provider/preebooking_provider.dart';
-import 'book_easyride/provider/triphistry_provider.dart';
 
 var navigatorKey = GlobalKey<NavigatorState>();
 void main() {
@@ -97,13 +93,11 @@ class _MyAppState extends State<MyApp> {
           home: ChangeNotifierProvider(
             create: (BuildContext context) => DashboardProvider(),
             child:
-            // BookingDetailsScreen()
-            HomeView(),
+                // BookingDetailsScreen()
+                HomeView(),
             // child: Newdialogbox(),
             // child: Checkdialob(),
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
 }
