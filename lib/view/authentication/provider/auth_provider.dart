@@ -1,119 +1,80 @@
-
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/main.dart';
 import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:flutter_easy_ride/utils/local_storage.dart';
-import 'package:flutter_easy_ride/view/authentication/login.dart';
-import 'package:flutter_easy_ride/view/authentication/verify.dart';
+import 'package:flutter_easy_ride/view/authentication/ui/login_screen.dart';
+import 'package:flutter_easy_ride/view/authentication/services/auth_service.dart';
 import 'package:flutter_easy_ride/view/dashboard/dashboard_map.dart';
 
-import '../../../model/login_response.dart';
-import '../../../service/api_helper.dart';
-import '../../../service/network_utility.dart';
-
-
-
-class AuthProvider with ChangeNotifier{
+class AuthProvider with ChangeNotifier {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController referralController = TextEditingController();
+
+  final authService = AuthService();
   String? _mobileNumber;
   String? _otp;
-  LoginResponse ?loginResponse;
   String? get mobileNumber => _mobileNumber;
-  LoginResponse? get userData=> loginResponse;
   String? get otp => _otp;
-  bool loading=false;
-  Future<void> registerCabUser() async  {
-    loading=true;
-    final String url = ApiHelper.registerUser;
-    var params={
-      "email": emailController.text,
-      "name": nameController.text,
-      "phone": phoneController.text,
-      "type": "cab",
-      "f_token_app": fToken,
-      "referId": referralController.text
-    };
-    print("params==${params}");
+  bool loading = false;
 
+  /// User Registration
+  Future<void> registerCabUser() async {
+    loading = true;
     try {
-      final response = await NetworkUtility.sendPostRequest(url,params);
-      print('Response body: ${response.body}');
+      final resp = await authService.registerCabUser(
+          email: emailController.text,
+          name: nameController.text,
+          phone: phoneController.text,
+          fToken: fToken,
+          referralId: referralController.text);
 
-      if (response.statusCode == 200) {
-        loading=false;
-        Navigator.push(navigatorKey.currentContext!, MaterialPageRoute(builder: (context)=>LoginScreen()));
+      if (resp == 200) {
+        loading = false;
+        Navigator.push(navigatorKey.currentContext!, MaterialPageRoute(builder: (context) => LoginScreen()));
         notifyListeners();
-      }
-      else
-      {
-        loading=false;
-
-        print('Error: ${response.statusCode}, ${response.body}');
+      } else {
+        loading = false;
       }
     } catch (e) {
-      loading=false;
-      print('Error sending POST request: $e');
+      loading = false;
     }
   }
 
-
-  // Set mobile number
+  /// Set Mobile Number
   void setMobileNumber(String mobileNumber) {
     _mobileNumber = mobileNumber;
     notifyListeners();
   }
 
-  // Send OTP API call
+  /// Send Otp Api
   Future<bool> sendOtp(String mobileNumber) async {
-     String apiUrl = ApiHelper.sendOtp;
-     var params={
-       "phone": mobileNumber,
-     };
-     print("params==${params}");
-     final response = await NetworkUtility.sendPostRequest(apiUrl,params);
-     print('Response body: ${response.body}');
-    if (response.statusCode == 200) {
-      _mobileNumber = mobileNumber;
-     // Navigator.push(navigatorKey.currentContext!, MaterialPageRoute(builder: (context)=>VerifyScreen()));
-
-      notifyListeners();
-      return true;
-    }
-    return false;
-  }
-
-  // Verify OTP API call
-  Future<bool> verifyOtp(String otp) async {
-     String apiUrl = ApiHelper.verifyOtp;
-     var params={
-       "phone": mobileNumber,
-       "otp":otp
-     };
-     final response = await NetworkUtility.sendPostRequest(apiUrl,params);
-
-    if (response.statusCode == 200) {
-
-      _otp = otp;
-      var jsondata=jsonDecode(response.body);
-      if(jsondata["status"]=="success"){
-         loginResponse = LoginResponse.fromJson(jsondata);
-        userID=loginResponse!.loginUserId;
-        await LocalStorage.saveUserID(loginResponse!.loginUserId);
-
-        Navigator.push(navigatorKey.currentContext!, MaterialPageRoute(builder: (context)=>DashboardMap()));
+    try {
+      final resp = await authService.sendOtp(phone: mobileNumber);
+      if (resp == 200) {
+        _mobileNumber = mobileNumber;
         notifyListeners();
         return true;
       }
-      else{
-        return false;
-      }
-
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
+  /// Verify Otp Api
+  Future<void> verifyOtp(String otp) async {
+    try {
+      final resp = await authService.verifyOtp(phone: mobileNumber, otp: otp);
+
+      if (resp != null && resp.status == "success") {
+        _otp = otp;
+        userID = resp.data?.userId ?? "";
+        await LocalStorage.saveUserID(resp.data?.userId ?? "");
+        notifyListeners();
+        Navigator.push(navigatorKey.currentContext!, MaterialPageRoute(builder: (context) => DashboardMap()));
+      }
+    } catch (e) {}
+  }
 }

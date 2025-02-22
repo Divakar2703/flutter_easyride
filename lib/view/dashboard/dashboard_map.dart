@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
-import 'package:flutter_easy_ride/model/login_response.dart';
 import 'package:flutter_easy_ride/model/nearby_vehicle.dart';
 import 'package:flutter_easy_ride/view/authentication/provider/auth_provider.dart';
 import 'package:flutter_easy_ride/view/drawer/cab_drawer.dart';
-import 'package:flutter_easy_ride/view/notification/notification_screen.dart';
+import 'package:flutter_easy_ride/view/notification/ui/notification_screen.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import '../../Book_Now/screens/select_vehicle.dart';
+
 import '../../provider/api_provider.dart';
 import '../../provider/dashboard_provider.dart';
 import '../../utils/eve.dart';
 import 'home_dashboard.dart';
+
 class DashboardMap extends StatefulWidget {
   const DashboardMap({Key? key}) : super(key: key);
 
@@ -33,13 +32,11 @@ class _MapPageState extends State<DashboardMap> {
   void initState() {
     super.initState();
     _getCurrentLocation();
-    Provider.of<ApiProvider>(context, listen: false)
-        .getCurrentLocation();
+    Provider.of<ApiProvider>(context, listen: false).getCurrentLocation();
     Provider.of<ApiProvider>(context, listen: false).fetchAuth();
     Provider.of<DashboardProvider>(context, listen: false).fetchDashboard();
     Provider.of<DashboardProvider>(context, listen: false).getLocationVehicles();
     Provider.of<DashboardProvider>(context, listen: false).pendingBooking();
-
   }
 
   void _getCurrentLocation() async {
@@ -77,7 +74,7 @@ class _MapPageState extends State<DashboardMap> {
         dropLat = position.latitude;
         dropLong = position.longitude;
         dropAddress =
-        '${placemarks[0].thoroughfare}, ${placemarks[0].subLocality}, ${placemarks[0].locality}, ${placemarks[0].administrativeArea}, ${placemarks[0].postalCode}';
+            '${placemarks[0].thoroughfare}, ${placemarks[0].subLocality}, ${placemarks[0].locality}, ${placemarks[0].administrativeArea}, ${placemarks[0].postalCode}';
       });
     } catch (e) {
       print('Error: $e');
@@ -100,7 +97,7 @@ class _MapPageState extends State<DashboardMap> {
             markerId: MarkerId(vehicle.id),
             position: LatLng(lat, lng),
             infoWindow: InfoWindow(title: vehicle.name),
-            icon: customIcon??BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
+            icon: customIcon ?? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
           ),
         );
       } catch (e) {
@@ -109,10 +106,12 @@ class _MapPageState extends State<DashboardMap> {
     }
     setState(() {});
   }
+
   Future<void> _refreshData() async {
     await Future.delayed(Duration(seconds: 2)); // Simulate a network call
-  Navigator.push(context, MaterialPageRoute(builder: (context)=>DashboardMap()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardMap()));
   }
+
   @override
   Widget build(BuildContext context) {
     final cabProvider = Provider.of<DashboardProvider>(context);
@@ -123,18 +122,16 @@ class _MapPageState extends State<DashboardMap> {
     // }
     return RefreshIndicator(
       onRefresh: _refreshData,
-
       child: Scaffold(
         key: _scaffoldKey, // Assign the GlobalKey to the Scaffold
         backgroundColor: Colors.white,
         drawer: Consumer<AuthProvider>(
-
           builder: (BuildContext context, AuthProvider value, Widget? child) {
             return CabDrawer(
-              userName: value.userData?.loginUserName??'madhuri',
-              userEmail: value.userData?.loginUserEmail??'madhuri@gmail.com',);
+              userName: /*value.userData?.loginUserName ??*/ 'madhuri',
+              userEmail: /*value.userData?.loginUserEmail ??*/ 'madhuri@gmail.com',
+            );
           },
-
         ),
         body: Stack(
           children: [
@@ -155,7 +152,6 @@ class _MapPageState extends State<DashboardMap> {
                   myLocationButtonEnabled: false,
                 ),
               ),
-
             Positioned(
               top: MediaQuery.of(context).size.height * 0.06,
               left: 1,
@@ -172,7 +168,6 @@ class _MapPageState extends State<DashboardMap> {
                         borderRadius: BorderRadius.circular(20),
                         onTap: () {
                           _scaffoldKey.currentState?.openDrawer();
-
                         },
                         child: Container(
                           width: 36,
@@ -197,7 +192,7 @@ class _MapPageState extends State<DashboardMap> {
                       child: InkWell(
                         borderRadius: BorderRadius.circular(20),
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>NotificationScreen()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationScreen()));
                         },
                         child: Container(
                           width: 36,
@@ -218,7 +213,6 @@ class _MapPageState extends State<DashboardMap> {
                 ),
               ),
             ),
-
             DraggableScrollableSheet(
               initialChildSize: 0.2,
               minChildSize: 0.2,
@@ -269,19 +263,16 @@ class _MapPageState extends State<DashboardMap> {
     });
 
     try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-          tappedPoint.latitude, tappedPoint.longitude);
+      List<Placemark> placemarks = await placemarkFromCoordinates(tappedPoint.latitude, tappedPoint.longitude);
       dropLat = tappedPoint.latitude;
       dropLong = tappedPoint.longitude;
 
       setState(() {
         dropAddress =
-        '${placemarks[0].thoroughfare}, ${placemarks[0].subLocality}, ${placemarks[0].locality}, ${placemarks[0].administrativeArea}, ${placemarks[0].postalCode}';
+            '${placemarks[0].thoroughfare}, ${placemarks[0].subLocality}, ${placemarks[0].locality}, ${placemarks[0].administrativeArea}, ${placemarks[0].postalCode}';
       });
     } catch (e) {
       print('Error: $e');
     }
   }
 }
-
-

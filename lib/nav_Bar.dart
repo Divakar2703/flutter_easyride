@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easy_ride/view/notification/notification_screen.dart';
+import 'package:flutter_easy_ride/view/notification/ui/notification_screen.dart';
 import 'package:flutter_easy_ride/view/profile/profile_screen.dart';
 
 import 'book_easyride/new_screen/triphistry.dart';
@@ -12,7 +12,6 @@ class NavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-
       child: ListView(
         padding: EdgeInsets.zero,
         children: [

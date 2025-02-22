@@ -42,7 +42,7 @@ class CommonButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
+      width: width ?? double.infinity,
       height: height ?? 52,
       child: ElevatedButton(
         onPressed: onPressed,

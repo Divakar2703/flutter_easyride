@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easy_ride/provider/api_provider.dart';
-import 'package:flutter_easy_ride/view/authentication/login.dart';
+import 'package:flutter_easy_ride/view/authentication/ui/login_screen.dart';
 import 'package:flutter_easy_ride/view/authentication/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
-
-import '../../provider/dashboard_provider.dart';
-import '../dashboard/dashboard_map.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -76,7 +72,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               const SizedBox(height: 30),
               Consumer<AuthProvider>(
-
                 builder: (BuildContext context, authProvider, Widget? child) {
                   return Form(
                     key: _formKey,
@@ -161,23 +156,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         authProvider.loading
                             ? Center(child: CircularProgressIndicator())
                             : ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 15,horizontal: 40),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            backgroundColor: Colors.blue,
-                          ),
-                          onPressed: _signUp,
-                          child: Text(
-                            'Sign Up',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
+                                style: ElevatedButton.styleFrom(
+                                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 40),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  backgroundColor: Colors.blue,
+                                ),
+                                onPressed: _signUp,
+                                child: Text(
+                                  'Sign Up',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
                         const SizedBox(height: 20),
                         // Already have an account
                         Row(
@@ -189,7 +184,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
                               },
                               child: Text(
                                 'Login',
@@ -204,7 +199,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ],
                     ),
                   );
-
                 },
               ),
             ],

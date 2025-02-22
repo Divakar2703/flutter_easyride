@@ -1,8 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LocalStorage
-{
-
+class LocalStorage {
   static Future<void> saveUsername(String username) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('username', username);
@@ -10,7 +8,7 @@ class LocalStorage
 
   static Future<String> getUsername() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('username')??'';
+    return prefs.getString('username') ?? '';
   }
 
   static Future<void> savePassword(String password) async {
@@ -20,7 +18,7 @@ class LocalStorage
 
   static Future<String> getPassword() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('password')??'';
+    return prefs.getString('password') ?? '';
   }
 
   // Save a string value to SharedPreferences
@@ -59,9 +57,6 @@ class LocalStorage
 
   static Future<String> getUserID() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('userID')??'';
+    return prefs.getString('userID') ?? "";
   }
-
 }
-
-

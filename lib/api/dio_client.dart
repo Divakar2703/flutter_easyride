@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
+import 'package:flutter_easy_ride/utils/local_storage.dart';
 import 'package:logger/logger.dart';
 
 class DioClient {
@@ -36,10 +39,13 @@ class DioClient {
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
+      final String username = await LocalStorage.getUsername();
+      final String password = await LocalStorage.getPassword();
+      String basicAuth = 'Basic ${base64Encode(utf8.encode('$username:$password'))}';
       final Response response = await _dio.get(
         url,
         queryParameters: queryParameters,
-        options: options,
+        options: options ?? Options(headers: {"Authorization": basicAuth, "Content-Type": "application/json"}),
         cancelToken: cancelToken,
         onReceiveProgress: onReceiveProgress,
       );
@@ -60,11 +66,15 @@ class DioClient {
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
+      final String username = await LocalStorage.getUsername();
+      final String password = await LocalStorage.getPassword();
+      String basicAuth = 'Basic ${base64Encode(utf8.encode('$username:$password'))}';
+
       final Response response = await _dio.post(
         url,
         data: data,
         queryParameters: queryParameters,
-        options: options,
+        options: options ?? Options(headers: {"Authorization": basicAuth, "Content-Type": "application/json"}),
         cancelToken: cancelToken,
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,

@@ -2,8 +2,13 @@ class Endpoints {
   Endpoints._();
   static const int connectionTimeout = 15000;
   static const int receiveTimeout = 15000;
-  static const String baseUrl = "https://asatvindia.in/cab/Api/";
+  static const String baseUrl = "https://asatvindia.in/cab/api/";
   static String authApi = "${baseUrl}Api_auth/fetch_api_aut";
+
+  /// Authentication
+  static String registerUser = "https://www.bits.teamtest.co.in/Api/Login/GetUserDataForService";
+  static String sendOtp = "${baseUrl}send-otp";
+  static String verifyOtp = "${baseUrl}verify-otp";
 }
 
 class AppImage {

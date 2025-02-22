@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/Book_Now/screens/book_now_screen.dart';
 import 'package:flutter_easy_ride/Pre_Booking/screens/pre_booking_screen.dart';
-import 'package:flutter_easy_ride/view/authentication/login.dart';
+import 'package:flutter_easy_ride/view/authentication/ui/login_screen.dart';
 import 'package:flutter_easy_ride/view/dashboard/dashboard_map.dart';
 
 import '../../rental/rental_hourly_and_recurring_view.dart';
@@ -24,31 +24,31 @@ class CabDrawer extends StatelessWidget {
       child: Column(
         children: [
           UserAccountsDrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.blue
+            decoration: BoxDecoration(color: Colors.blue),
+            accountName: Text(userName, style: TextStyle(fontSize: 18, color: Colors.white)),
+            accountEmail: Text(
+              userEmail,
+              style: TextStyle(color: Colors.white),
             ),
-            accountName: Text(userName, style: TextStyle(fontSize: 18,color: Colors.white)),
-            accountEmail: Text(userEmail,style: TextStyle(color: Colors.white),),
             // currentAccountPicture: CircleAvatar(
             //   child: Icon(Icons.person, size: 40),
             // ),
-            otherAccountsPictures: userNumber != null
-                ? [Text(userNumber!, style: TextStyle(color: Colors.white))]
-                : null,
+            otherAccountsPictures:
+                userNumber != null ? [Text(userNumber!, style: TextStyle(color: Colors.white))] : null,
           ),
           ListTile(
             leading: Icon(Icons.dashboard),
             title: Text('Dashboard'),
             onTap: () {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>DashboardMap()));
-            //  Navigator.pushNamed(context, '/dashboard');
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardMap()));
+              //  Navigator.pushNamed(context, '/dashboard');
             },
           ),
           ListTile(
             leading: Icon(Icons.local_taxi),
             title: Text('Book Now'),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>BookNowScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => BookNowScreen()));
 
               // Navigator.pushNamed(context, '/book_now');
             },
@@ -57,7 +57,7 @@ class CabDrawer extends StatelessWidget {
             leading: Icon(Icons.calendar_today),
             title: Text('Pre Booking'),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>PreBookingScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => PreBookingScreen()));
 
               // Navigator.pushNamed(context, '/pre_booking');
             },
@@ -66,7 +66,7 @@ class CabDrawer extends StatelessWidget {
             leading: Icon(Icons.directions_car),
             title: Text('Rental'),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>RentalHourlyAndRecurringView()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => RentalHourlyAndRecurringView()));
 
               //Navigator.pushNamed(context, '/rental');
             },
@@ -82,7 +82,8 @@ class CabDrawer extends StatelessWidget {
             leading: Icon(Icons.history),
             title: Text('Recent Booking'),
             onTap: () {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>RentalHourlyAndRecurringView()));
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => RentalHourlyAndRecurringView()));
 
               //Navigator.pushNamed(context, '/recent_booking');
             },
@@ -118,7 +119,7 @@ class CabDrawer extends StatelessWidget {
                 // Perform logout action
                 Navigator.of(context).pop();
                 await LocalStorage.saveUserID("");
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
               },
               child: Text('Logout'),
             ),
