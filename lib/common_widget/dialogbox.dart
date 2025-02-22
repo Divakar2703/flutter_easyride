@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CustomDialog extends StatelessWidget {
-  final String title;
-  final String content;
-  final String confirmText;
+  final String? title;
+  final String ?content;
+  final String ?confirmText;
   final String? cancelText;
   final double? width;
   final double? height;
@@ -52,7 +52,7 @@ class CustomDialog extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  title!,
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
@@ -68,7 +68,7 @@ class CustomDialog extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    content,
+                    content!,
                     style: TextStyle(
                         fontSize: 17,
                         fontFamily: 'Poppins',
@@ -94,7 +94,7 @@ class CustomDialog extends StatelessWidget {
                 TextButton(
                   onPressed: onConfirm ?? () => Navigator.of(context).pop(),
                   child: Text(
-                    confirmText,
+                    confirmText!,
                     style:
                         TextStyle(fontFamily: 'Poppins', color: Colors.black),
                   ),

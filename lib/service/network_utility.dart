@@ -2,8 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
 import '../utils/local_storage.dart';
+
+
 
 class NetworkUtility {
 
@@ -21,12 +22,9 @@ class NetworkUtility {
     } catch (e) {
       debugPrint('Error making request: $e');
     }
-
     // Return null for any error or failure
     return null;
   }
-
-
   static  Future<http.Response> sendPostRequest(
       String baseUrl,
       Map<String, dynamic> params,
@@ -42,7 +40,6 @@ class NetworkUtility {
     'Authorization': basicAuth,
   };
    print("headers===${headers}");
-
     try {
       var response = await http.post(
         url,
@@ -117,6 +114,8 @@ class NetworkUtility {
       throw Exception(e);
     }
   }
-
-
 }
+
+
+
+
