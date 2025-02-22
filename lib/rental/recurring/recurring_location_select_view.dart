@@ -3,6 +3,7 @@ import 'package:flutter_easy_ride/Book_Now/screens/select_vehicle.dart';
 import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../common_widget/custombutton.dart';
 import '../../common_widget/pickup_drop_widget.dart';
 import '../../common_widget/rentale_recurring_location_add_widget.dart';
 import '../../view/map/map_screen.dart';
@@ -70,15 +71,15 @@ class _PickupScreenState extends State<RecurringLocationSelectView> {
             color: Colors.grey.shade300,
           ),
 
-          if(cabProvider.placePredictions.isNotEmpty)
+          if(cabProvider.suggetions.isNotEmpty)
             Container(
                 height: 100,
                 child: ListView.builder(
-                  itemCount: cabProvider.placePredictions.length,
+                  itemCount: cabProvider.suggetions.length,
                   itemBuilder: (context, index) =>
                       InkWell(
                         onTap: (){
-                          cabProvider.getDropLocation(cabProvider.placePredictions[index].description??"");
+                          cabProvider.getDropLocation(cabProvider.suggetions[index].placePrediction.text.text??"",cabProvider.suggetions[index].placePrediction.placeId??"","Recuring");
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
@@ -89,14 +90,19 @@ class _PickupScreenState extends State<RecurringLocationSelectView> {
                                   Icon(Icons.watch_later_outlined,
                                     color: Colors.grey.shade800,size: 20,),
                                   SizedBox(width: 10,),
-                                  Text(
-                                    cabProvider.placePredictions[index].description??"dehradun",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey.shade800,
-                                      fontFamily: 'Poppins', // Set Poppins as the default font
+                                  Container(
+                                    width: MediaQuery.of(context).size.width*0.8,
+                                    child: Text(
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis, // Show ellipsis if text exceeds the limit
+                                      cabProvider.suggetions[index].placePrediction.text.text??"dehradun",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey.shade800,
+                                        fontFamily: 'Poppins', // Set Poppins as the default font
 
-                                      fontWeight: FontWeight.w400,
+                                        fontWeight: FontWeight.w400,
+                                      ),
                                     ),
                                   )
                                 ],
@@ -107,38 +113,7 @@ class _PickupScreenState extends State<RecurringLocationSelectView> {
                         ),
                       ),
                 )),
-          if(cabProvider.pickPlacePredictions.isNotEmpty)
-            Container(
-                height: 100,
-                child: ListView.builder(
-                  itemCount: cabProvider.pickPlacePredictions.length,
-                  itemBuilder: (context, index) =>
-                      InkWell(
-                        onTap: (){
-                          cabProvider.getDropLocation(cabProvider.pickPlacePredictions[index].description??"");
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              Icon(Icons.location_on_outlined,
-                                color: Colors.grey.shade800,size: 20,),
-                              SizedBox(width: 5,),
-                              Text(
-                                cabProvider.pickPlacePredictions[index].description??"dehradun",
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.grey.shade800,
-                                  fontFamily: 'Poppins', // Set Poppins as the default font
 
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                )),
 
 
           Spacer(),
@@ -146,31 +121,35 @@ class _PickupScreenState extends State<RecurringLocationSelectView> {
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => SelectRecurringRentalView()));
             },
-            child: Container(
-              //  margin: EdgeInsets.symmetric(horizontal: 24,vertical: 16),
-              height: 44,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: Color(0xff1937d7),
-              ),
-              child:const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Continue",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Poppins', // Set Poppins as the default font
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
+            child:Customtbutton(
+              text: "Continue",
             ),
+            // child: Container(
+            //   //  margin: EdgeInsets.symmetric(horizontal: 24,vertical: 16),
+            //   height: 44,
+            //   width: double.infinity,
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(5),
+            //     color: Color(0xff1937d7),
+            //   ),
+            //   child:const Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [
+            //       Text(
+            //         "Continue",
+            //         textAlign: TextAlign.center,
+            //         style: TextStyle(
+            //           color: Colors.white,
+            //           fontFamily: 'Poppins', // Set Poppins as the default font
+            //           fontSize: 15.0,
+            //           fontWeight: FontWeight.w500,
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
           ),
+          SizedBox(height: 10,),
         ],
       ),
     );

@@ -1,17 +1,19 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/Book_Now/screens/select_vehicle.dart';
 import 'package:flutter_easy_ride/Pre_Booking/screens/confirm_booking_screen.dart';
 import 'package:flutter_easy_ride/main.dart';
 import 'package:flutter_easy_ride/model/booking_request.dart';
 import 'package:flutter_easy_ride/model/driver_details.dart';
 import 'package:flutter_easy_ride/model/drop_location_history.dart';
 import 'package:flutter_easy_ride/model/vehicle_data.dart';
+import 'package:flutter_easy_ride/service/LocationApiUtils.dart';
 import '../../Pre_Booking/model/notes.dart';
 import '../../Pre_Booking/model/payment.dart';
 import '../../model/autocomplate_prediction.dart';
 import '../../model/coupon_data.dart';
-import '../../model/place_auto_complate_response.dart';
+import '../../model/location_suggetions.dart';
 import '../../service/api_helper.dart';
 import '../../service/network_utility.dart';
 import '../../utils/eve.dart';
@@ -24,6 +26,7 @@ class CabBookProvider with ChangeNotifier {
   bool isLoading = true;
   List<AutocompletePrediction> placePredictions = [];
   List<AutocompletePrediction> pickPlacePredictions = [];
+  List<Suggestion> suggetions=[];
   final List<Vehicle> vehicle=[];
   CouponData? couponData;
   Notes? notes;
@@ -47,7 +50,7 @@ final String apiKey='AIzaSyDzwtZHoEVgjThw18yh2qLCkO-hvPE6i94';
   BookingRequest? get bookingRequest =>  bookingReq;
   String ? get confirmBookingStatus=>bookingStatus;
 
-
+ // SuggestionsResponse ? get suggestions=>suggestionsResponse;
 
   void getCurrentLocation(){
     _pickupLocation=address;
@@ -88,67 +91,55 @@ print("selctud==$id");
   }
 
   void placeAutoComplete(String query,String location) async {
-    Uri uri =
-    Uri.https("maps.googleapis.com", 'maps/api/place/autocomplete/json', {
-      "input": query,
-      "key": apiKey,
-    });
-    String? response = await NetworkUtility.fetchGetUrl(uri);
-    print(response);
-    if (response != null) {
-      PlaceAutocompleteResponse result =
-      PlaceAutocompleteResponse.parseAutocompleteResult(response);
-      if (result.predictions != null) {
-        if(location=="Pickup"){
-          pickPlacePredictions=result.predictions!;
-          notifyListeners();
-        }
-        else{
-          placePredictions = result.predictions!;
-          print("places===${placePredictions.length}");
-          notifyListeners();
+    // Uri uri =
+    // Uri.https("maps.googleapis.com", 'maps/api/place/autocomplete/json', {
+    //   "input": query,
+    //   "key": apiKey,
+    // });
+    // String? response = await NetworkUtility.fetchGetUrl(uri);
+    // print(response);
+    // if (response != null) {
+    //   PlaceAutocompleteResponse result =
+    //   PlaceAutocompleteResponse.parseAutocompleteResult(response);
+    //   if (result.predictions != null) {
+    //     if(location=="Pickup"){
+    //       pickPlacePredictions=result.predictions!;
+    //       notifyListeners();
+    //     }
+    //     else{
+    //       placePredictions = result.predictions!;
+    //       print("places===${placePredictions.length}");
+    //       notifyListeners();
+    //
+    //     }
+    //
+    //   }
+    // }
 
-        }
+  _dropLocation=query;
+    var jsondata=await LocationUtils.searchPlaces(query);
+    SuggestionsResponse suggestionsResponse=SuggestionsResponse.fromJson(jsondata);
+    suggetions=suggestionsResponse.suggestions;
+    notifyListeners();
 
-      }
-    }
   }
-  void getDropLocation(String location){
+
+  Future<void> getDropLocation(String location,String placeID,String booking_type) async {
     _dropLocation=location;
+    Map<String,dynamic> data= await  LocationUtils.getPlaceDetails(placeID);
+    dropAddress=data["formattedAddress"];
+    dropLat=data["location"]["latitude"];
+    dropLong=data["location"]["longitude"];
+if(dropAddress!=""&& booking_type=="BookNow"){
+  Navigator.push(navigatorKey.currentContext!, MaterialPageRoute(builder: (context)=>SelectVehicle()));
+}
     notifyListeners();
   }
+
   void getPickupLocation(String location){
     _pickupLocation=location;
     notifyListeners();
   }
-  // Future<void> getVehicleData() async {
-  //
-  //   Map<String, dynamic> requestBody = {
-  //     "pickup_lat": ALatitude,
-  //     "pickup_long": ALongitude,
-  //     "drop_lat": dropLat,
-  //     "drop_long": dropLong
-  //   };
-  //
-  //   try {
-  //     final response = await NetworkUtility.sendPostRequest(
-  //       ApiHelper.getVehicle,
-  //        requestBody,
-  //     );
-  //     print('Response body: ${response.body}');
-  //     Map<String,dynamic> jsondataa=jsonDecode(response.body);
-  //
-  //     if (response.statusCode == 200) {
-  //       VehicleResponse response=VehicleResponse.fromJson(jsondataa);
-  //       vehicleResponse=response;
-  //       notifyListeners();
-  //     } else {
-  //       print('Error: ${response.statusCode}, ${response.body}');
-  //     }
-  //   } catch (e) {
-  //     print('Error sending POST request: $e');
-  //     // Handle any exception
-  //   }
 
   Future<void> getVehicleData() async {
     Map<String, dynamic> requestBody = {
@@ -238,6 +229,7 @@ print("selctud==$id");
       // Handle any exception
     }
   }
+
   Future<void> findDriver(int vehicleID) async {
     // Request body
     Map<String, dynamic> requestBody = {
@@ -266,6 +258,7 @@ print("selctud==$id");
       // Handle any exception
     }
   }
+
   Future<void> bookCab(int requestID,String paymentType,String transID,double amount,double conCharge,) async {
     // Request body
     Map<String, dynamic> requestBody = {
@@ -307,6 +300,7 @@ notifyListeners();
       // Handle any exception
     }
   }
+
   Future<void> CancelCab(int requestID,String bookID,String paymentType,String orderID,String transID,double amount,double conCharge,) async {
     // Request body
     Map<String, dynamic> requestBody = {
@@ -330,8 +324,10 @@ notifyListeners();
       // Handle any exception
     }
   }
+
   Future<void> paynow(int requestID,String paymentType,double conCharge,) async {
     // Request body
+    isLoading=true;
     Map<String, dynamic> requestBody = {
       "send_request_id":requestID,
       "added_by_web":"www.bits.teamtest.co.in",
@@ -346,6 +342,7 @@ notifyListeners();
       print('Paynow Response body: ${response.body}');
 
       if (response.statusCode == 200) {
+        isLoading=false;
         var jsondata=jsonDecode(response.body);
         var orderid=jsondata["order_id"];
         orderID=orderid;
@@ -354,14 +351,17 @@ notifyListeners();
         notifyListeners();
 
       } else {
+        isLoading=false;
         print('Error: ${response.statusCode}, ${response.body}');
         // Handle error response
       }
     } catch (e) {
+      isLoading=false;
       print('Error sending POST request: $e');
       // Handle any exception
     }
   }
+
   Future<void> paymentVerify(int requestID,String paymentType,double conCharge,) async {
     // Request body
     Map<String, dynamic> requestBody = {
@@ -385,6 +385,7 @@ notifyListeners();
       // Handle any exception
     }
   }
+
   Future<void> getDropHistoryList() async {
     try {
       final response = await NetworkUtility.sendGetRequest(ApiHelper.dropLocationHistory,);
@@ -406,6 +407,7 @@ notifyListeners();
       // Handle any exception
     }
   }
+
   Future<void> addDropLocation(String dropLat,String dropLong,String dropAddress,String bookingType) async {
     Map<String, dynamic> requestBody = {
       "drop_lat": dropLat,
@@ -431,6 +433,7 @@ notifyListeners();
       // Handle any exception
     }
   }
+
   Future<void> deleteDropLocation(String dropID) async {
 
     Map<String, dynamic> requestBody = {
@@ -455,6 +458,7 @@ notifyListeners();
       // Handle any exception
     }
   }
+
   Future<void> getOffers(int vehicleID) async {
 
     Map<String, dynamic> requestBody = {
@@ -471,9 +475,16 @@ notifyListeners();
       if (response.statusCode == 200) {
         isLoading=false;
         var jsondata=jsonDecode(response.body);
-         couponData=CouponData.fromJson(jsondata);
-        getDropHistoryList();
-        notifyListeners();
+        if(jsondata["status"]=="error"){
+          notifyListeners();
+
+        }
+        else{
+          couponData=CouponData.fromJson(jsondata);
+          getDropHistoryList();
+          notifyListeners();
+        }
+
         // Handle success response
       } else {
         print('Error: ${response.statusCode}, ${response.body}');
@@ -484,6 +495,7 @@ notifyListeners();
       // Handle any exception
     }
   }
+
   Future<void> GetNotes() async {
     try {
       final response = await NetworkUtility.sendGetRequest(ApiHelper.getnotes);
@@ -498,6 +510,7 @@ notifyListeners();
       }
     } catch (Error) {}
   }
+
   Future<void> convcharge() async {
     Map<String, dynamic> requestbody = {};
     try {
@@ -514,5 +527,6 @@ notifyListeners();
       throw 'Error Data is not found';
     }
   }
+
 
 }

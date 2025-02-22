@@ -39,7 +39,6 @@ class _SelectPickopState extends State<SelectPickop> {
       });
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,12 +61,6 @@ class _SelectPickopState extends State<SelectPickop> {
         padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
         child: Column(
           children: [
-          
-          
-
-
-          
-
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Text(
@@ -81,7 +74,6 @@ class _SelectPickopState extends State<SelectPickop> {
                 textAlign: TextAlign.center,
               ),
             ),
-
             SizedBox(height: 40),
             GestureDetector(
               onTap: () => _selectDate(context),
@@ -113,7 +105,6 @@ class _SelectPickopState extends State<SelectPickop> {
                 ),
               ),
             ),
-
             SizedBox(height: 25),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8),
@@ -193,7 +184,6 @@ class _SelectPickopState extends State<SelectPickop> {
                 ],
               ),
             ),
-
             SizedBox(height: 25),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8),
@@ -212,7 +202,6 @@ class _SelectPickopState extends State<SelectPickop> {
                 ],
               ),
             ),
-
             Spacer(),
             GestureDetector(
               onTap: () {
@@ -270,7 +259,3 @@ class _SelectPickopState extends State<SelectPickop> {
     );
   }
 }
-
-
-
-

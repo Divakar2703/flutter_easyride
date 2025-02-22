@@ -6,20 +6,21 @@ import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:provider/provider.dart';
 
 import '../Book_Now/provider/cab_book_provider.dart';
+import '../common_widget/custombutton.dart';
 import '../view/map/map_screen.dart';
 import 'components/select_rental_packege_view.dart';
 
 class RentalLocationSelectView extends StatefulWidget {
   const RentalLocationSelectView({super.key});
 
-
   @override
-  State<RentalLocationSelectView> createState() => _RentalLocationSelectViewState();
+  State<RentalLocationSelectView> createState() =>
+      _RentalLocationSelectViewState();
 }
 
 class _RentalLocationSelectViewState extends State<RentalLocationSelectView> {
-
-  final _selectedSegment = ValueNotifier('inventory'); // 'inventory' is selected initially
+  final _selectedSegment =
+      ValueNotifier('inventory'); // 'inventory' is selected initially
 
   TextEditingController _pickupController = TextEditingController();
 
@@ -35,7 +36,8 @@ class _RentalLocationSelectViewState extends State<RentalLocationSelectView> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => RecurringLocationSelectView(), // Replace with your RecurringLocationSelectView widget
+            builder: (context) =>
+                RecurringLocationSelectView(), // Replace with your RecurringLocationSelectView widget
           ),
         );
       }
@@ -58,51 +60,55 @@ class _RentalLocationSelectViewState extends State<RentalLocationSelectView> {
       backgroundColor: const Color(0xfff3fdf6),
       appBar: AppBar(
         backgroundColor: Color(0xff1937d7),
-        title: Text('Select Location',
+        title: Text(
+          'Select Location',
           style: TextStyle(
               fontWeight: FontWeight.w500,
               fontFamily: 'Poppins',
               fontSize: 17,
-              color: Colors.white
-          ),
+              color: Colors.white),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back,color: Colors.white,size: 21,),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+            size: 21,
+          ),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12,vertical: 0),
-        child: Column(
-          children: [
-
-        Container(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 0),
         child: Column(
           children: [
             Container(
-              height: 35,
-              width: double.maxFinite,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: AdvancedSegment(
-                segments: {
-                  'inventory': 'Hourly Rentals',
-                  'products': 'Recurring Rentals',
-                },
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
-                controller: _selectedSegment,
-                backgroundColor: AppColors.primaryBlue,
-                sliderColor: Colors.white,
+              padding: EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  Container(
+                    height: 35,
+                    width: double.maxFinite,
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: AdvancedSegment(
+                      segments: {
+                        'inventory': 'Hourly Rentals',
+                        'products': 'Recurring Rentals',
+                      },
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      controller: _selectedSegment,
+                      backgroundColor: AppColors.primaryBlue,
+                      sliderColor: Colors.white,
+                    ),
+                  ),
+                  // Rest of the UI remains the same...
+                ],
               ),
             ),
-            // Rest of the UI remains the same...
-          ],
-        ),
-      ),
-
-            SizedBox(height: 00,),
+            SizedBox(
+              height: 00,
+            ),
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
@@ -116,7 +122,8 @@ class _RentalLocationSelectViewState extends State<RentalLocationSelectView> {
                 children: [
                   TextFormField(
                     controller: _pickupController,
-                    style: const TextStyle(color: Colors.black),  // Text color inside the field
+                    style: const TextStyle(
+                        color: Colors.black), // Text color inside the field
                     decoration: InputDecoration(
                       hintText: 'Enter pickup location',
                       hintStyle: const TextStyle(
@@ -132,7 +139,7 @@ class _RentalLocationSelectViewState extends State<RentalLocationSelectView> {
                         padding: EdgeInsets.all(12.0),
                         child: Icon(
                           Icons.location_on_rounded,
-                          color:Color(0xff1937d7),
+                          color: Color(0xff1937d7),
                         ),
                       ),
                       // suffixIcon: const Padding(
@@ -152,20 +159,20 @@ class _RentalLocationSelectViewState extends State<RentalLocationSelectView> {
                     },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter a pickup location';  // Add form validation here
+                        return 'Please enter a pickup location'; // Add form validation here
                       }
                       return null;
                     },
-                  ),                      // const Divider(),
+                  ), // const Divider(),
                   // Drop Location Input
                 ],
               ),
             ),
-
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             GestureDetector(
               onTap: () {
-
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => MapPage()));
               },
@@ -178,24 +185,24 @@ class _RentalLocationSelectViewState extends State<RentalLocationSelectView> {
                     decoration: BoxDecoration(
                         color: Color(0xff1937d7).withOpacity(0.2),
                         borderRadius: BorderRadius.circular(40),
-                        border: Border.all(
-                            color: Colors.grey.shade300
-                        )
-                    ),
+                        border: Border.all(color: Colors.grey.shade300)),
                     child: const Row(
                       children: [
                         Icon(
                           Icons.location_on_outlined,
-                          size: 20,color: Colors.black54,),
-
-                        SizedBox(width: 6,),
+                          size: 20,
+                          color: Colors.black54,
+                        ),
+                        SizedBox(
+                          width: 6,
+                        ),
                         Text(
                           "Select on map",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.black87,
-                            fontFamily: 'Poppins', // Set Poppins as the default font
-
+                            fontFamily:
+                                'Poppins', // Set Poppins as the default font
                             fontSize: 14.0,
                             fontWeight: FontWeight.w400,
                           ),
@@ -210,102 +217,98 @@ class _RentalLocationSelectViewState extends State<RentalLocationSelectView> {
               thickness: 1.5,
               color: Colors.grey.shade300,
             ),
-
-            if(cabProvider.placePredictions.isNotEmpty)
+            if (cabProvider.suggetions.isNotEmpty)
               Container(
                   height: 100,
                   child: ListView.builder(
-                    itemCount: cabProvider.placePredictions.length,
-                    itemBuilder: (context, index) =>
-                        InkWell(
-                          onTap: (){
-                            cabProvider.getDropLocation(cabProvider.placePredictions[index].description??"");
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                Icon(Icons.location_on_outlined,
-                                  color: Colors.grey.shade800,size: 20,),
-                                SizedBox(width: 5,),
-                                Text(
-                                  cabProvider.placePredictions[index].description??"dehradun",
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: Colors.grey.shade800,
-                                    fontFamily: 'Poppins', // Set Poppins as the default font
-
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                )
-                              ],
+                    itemCount: cabProvider.suggetions.length,
+                    itemBuilder: (context, index) => InkWell(
+                      onTap: () {
+                        cabProvider.getDropLocation(
+                            cabProvider.suggetions[index].placePrediction.text
+                                    .text ??
+                                "",
+                            cabProvider.suggetions[index].placePrediction
+                                    .placeId ??
+                                "",
+                            "Rental");
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.location_on_outlined,
+                              color: Colors.grey.shade800,
+                              size: 20,
                             ),
-                          ),
-                        ),
-                  )),
-            if(cabProvider.pickPlacePredictions.isNotEmpty)
-              Container(
-                  height: 100,
-                  child: ListView.builder(
-                    itemCount: cabProvider.pickPlacePredictions.length,
-                    itemBuilder: (context, index) =>
-                        InkWell(
-                          onTap: (){
-                            cabProvider.getDropLocation(cabProvider.pickPlacePredictions[index].description??"");
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                Icon(Icons.location_on_outlined,
-                                  color: Colors.grey.shade800,size: 20,),
-                                SizedBox(width: 5,),
-                                Text(
-                                  cabProvider.pickPlacePredictions[index].description??"dehradun",
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: Colors.grey.shade800,
-                                    fontFamily: 'Poppins', // Set Poppins as the default font
-
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                )
-                              ],
+                            SizedBox(
+                              width: 5,
                             ),
-                          ),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              child: Text(
+                                maxLines: 2,
+                                overflow: TextOverflow
+                                    .ellipsis, // Show ellipsis if text exceeds the limit
+                                cabProvider.suggetions[index].placePrediction
+                                        .text.text ??
+                                    "dehradun",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey.shade800,
+                                  fontFamily:
+                                      'Poppins', // Set Poppins as the default font
+
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            )
+                          ],
                         ),
-                  )),
-
-            Spacer(),
-            GestureDetector(
-              onTap: (){
-                Navigator.of(context).push(_createRoute());
-
-              },
-              child: Container(
-                //  margin: EdgeInsets.symmetric(horizontal: 24,vertical: 16),
-                height: 44,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Color(0xff1937d7),
-                ),
-                child:Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Select rental packege",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Poppins', // Set Poppins as the default font
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                  ],
-                ),
+                  )),
+            Spacer(),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(_createRoute());
+              },
+              child: Customtbutton(
+                text: "Set Pickup time",
               ),
+
+              // Container(
+              //   //  margin: EdgeInsets.symmetric(horizontal: 24,vertical: 16),
+              //   height: 44,
+              //   width: double.infinity,
+              //   decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(5),
+              //       color: Color(0xff1937d7),
+              //   ),
+              //   child:Row(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //
+              //
+              //
+              //
+              //       Text(
+              //         "Select rental packege",
+              //         textAlign: TextAlign.center,
+              //         style: TextStyle(
+              //           color: Colors.white,
+              //           fontFamily: 'Poppins', // Set Poppins as the default font
+              //           fontSize: 15.0,
+              //           fontWeight: FontWeight.w500,
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+            ),
+            SizedBox(
+              height: 10,
             ),
           ],
         ),
@@ -315,13 +318,15 @@ class _RentalLocationSelectViewState extends State<RentalLocationSelectView> {
 
   Route _createRoute() {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => SelectRentalPackegeView(),
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          SelectRentalPackegeView(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(1.0, 0.0); // Start off the screen to the right
         const end = Offset.zero; // Slide to the center
         const curve = Curves.easeInOut;
 
-        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
         return SlideTransition(
           position: animation.drive(tween),

@@ -166,7 +166,7 @@ import '../provider/triphistry_provider.dart';
 //   }
 // }
 
-//  updated code in a list all history details
+// 1. updated code in a list all history details
 
 class TripHistory extends StatefulWidget {
   const TripHistory({super.key});
@@ -182,7 +182,6 @@ class _TripHistoryState extends State<TripHistory> {
   void initState() {
     historyProvider = Provider.of<TriphistryProvider>(context, listen: false);
     historyProvider.GetHistory();
-
     super.initState();
   }
 

@@ -16,11 +16,17 @@ class CabTextFormField extends StatelessWidget {
   final String? lableText;
   final onTab;
   final onChange;
+  final icons;
+  final suffixIcon;
+  final prefixIcon;
 
   const CabTextFormField({
     Key? key,
     this.controller,
+    this.prefixIcon,
     this.onChange,
+    this.suffixIcon,
+    this.icons,
     this.onTab,
     this.hintText,
     this.fillColor = Colors.transparent,
@@ -51,7 +57,8 @@ class CabTextFormField extends StatelessWidget {
           hintText: hintText,
           fillColor: fillColor,
           filled: true,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
           border: OutlineInputBorder(
             borderSide: BorderSide(color: borderColor!),
             borderRadius: BorderRadius.circular(8),

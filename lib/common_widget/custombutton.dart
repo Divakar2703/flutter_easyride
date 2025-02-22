@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
+
 class Customtbutton extends StatelessWidget {
   final String? text;
   final Color? backgroundColor;
   final textColor;
   final VoidCallback? onPressed;
   final String? labletext;
-  final font;
+  final int? FontSize;
   final color;
   final Border;
+  final double? width;
+  final double? height;
 
   final fontFamily;
   const Customtbutton(
       {super.key,
       this.text,
+      this.width = 300,
+      this.height = 40,
       this.Border,
       this.backgroundColor,
       this.textColor,
       this.onPressed,
       this.labletext,
       this.color,
-      this.font,
+      this.FontSize,
       this.fontFamily});
 
   @override
@@ -28,7 +33,8 @@ class Customtbutton extends StatelessWidget {
       onTap: onPressed,
       child: Center(
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 12, horizontal: 100),
+          width: width,
+          height: height,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
             color: Color(0xff1937d7),

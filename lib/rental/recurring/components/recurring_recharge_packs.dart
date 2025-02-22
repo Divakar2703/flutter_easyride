@@ -37,74 +37,86 @@ class _RecurringRechargePacksState extends State<RecurringRechargePacks> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 400,
-      child: ListView.builder(
-        itemCount: packs.length,
-        itemBuilder: (context, index) {
-          final pack = packs[index];
-          bool isSelected = selectedPackIndex == index;
+    return SingleChildScrollView(
+      child: Column(
+        children:[
 
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedPackIndex = index; // Mark this item as selected
-              });
-            },
-            child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-              decoration: BoxDecoration(
-                color: isSelected ? Color(0xffdbe0f8) : Colors.white,
-                border: Border.all(
-                    color: isSelected ?  Color(0xff1937d7) : Colors.black54),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text(
-                    pack['duration'],
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'Poppins',
-                      fontSize: 18.5,
-                      color: Colors.black,
+          SizedBox(
+         height:  MediaQuery.sizeOf(context).width,
+
+
+            child: Expanded(
+              child: ListView.builder(
+                itemCount: packs.length,
+                itemBuilder: (context, index) {
+                  final pack = packs[index];
+                  bool isSelected = selectedPackIndex == index;
+              
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedPackIndex = index; // Mark this item as selected
+                      });
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                      decoration: BoxDecoration(
+                        color: isSelected ? Color(0xffdbe0f8) : Colors.white,
+                        border: Border.all(
+                            color: isSelected ?  Color(0xff1937d7) : Colors.black54),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text(
+                            pack['duration'],
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Poppins',
+                              fontSize: 18.5,
+                              color: Colors.black,
+                            ),
+                          ),
+                          Container(
+                            height: 50,
+                            width: 1,
+                            color: Colors.black54,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                pack['cashback'],
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'Poppins',
+                                  fontSize: 18,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              Text(
+                                pack['topup'],
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'Poppins',
+                                  fontSize: 16,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Container(
-                    height: 50,
-                    width: 1,
-                    color: Colors.black54,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        pack['cashback'],
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'Poppins',
-                          fontSize: 18,
-                          color: Colors.black,
-                        ),
-                      ),
-                      Text(
-                        pack['topup'],
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'Poppins',
-                          fontSize: 16,
-                          color: Colors.black54,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                  );
+                },
               ),
             ),
-          );
-        },
+          ),
+      
+        ]
       ),
     );
   }

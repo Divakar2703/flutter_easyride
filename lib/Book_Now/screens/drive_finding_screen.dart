@@ -1,18 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
-import 'package:flutter_easy_ride/payment/payment_Screen.dart';
 import 'package:flutter_easy_ride/utils/eve.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
-import '../../book_easyride/new_screen/confirm_booking.dart';
-import '../../common_widget/map_widget.dart';
 import '../../model/driver_details.dart';
-import '../../provider/map_provider.dart';
 import '../../service/socket/socket_helper.dart';
-import '../../service/socket/web_socket_service.dart';
-import 'drive_looking_screen.dart';
-import 'trip_details_screen.dart'; 
+import 'trip_details_screen.dart';
 
 // class DriveFindingScreen extends StatefulWidget {
 //   const DriveFindingScreen({super.key});
@@ -399,11 +389,8 @@ class _FindDriverScreenState extends State<FindDriverScreen> {
   void initState() {
     super.initState();
     socketHelper.connect();
-
     // Example: Call findDriver after connection
     socketHelper.findDriver(selectedVehicle, "15"); // Replace with actual IDs
-
-
     // _webSocketService = WebSocketHelper();
     // _webSocketService.connect();
 
@@ -413,8 +400,6 @@ class _FindDriverScreenState extends State<FindDriverScreen> {
     // // Find driver with a sample vehicleTypeId and userId
     // _webSocketService.findDriver(10, 259); // Replace with actual IDs
   }
-
-
 
   @override
   Widget build(BuildContext context) {

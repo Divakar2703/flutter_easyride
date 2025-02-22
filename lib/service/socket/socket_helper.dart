@@ -1,15 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_easy_ride/utils/eve.dart';
-import 'package:web_socket_client/web_socket_client.dart';
 import '../../model/driver_details.dart';
-
-
-
 import 'dart:async';
-import 'dart:convert';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-import '../../model/driver_details.dart';
 
 class SocketHelper {
   static final SocketHelper _instance = SocketHelper._internal();

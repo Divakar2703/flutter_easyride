@@ -5,7 +5,13 @@ import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
 import 'package:flutter_easy_ride/api/service_locator.dart';
 import 'package:flutter_easy_ride/book_easyride/provider/triphistry_provider.dart';
 import 'package:flutter_easy_ride/provider/api_provider.dart';
+import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
+import 'package:flutter_easy_ride/provider/dashboard_provider.dart';
 import 'package:flutter_easy_ride/provider/map_provider.dart';
+import 'package:flutter_easy_ride/rental/components/rentalbooking_provider.dart';
+import 'package:flutter_easy_ride/rental/get_rental_vehical_provider.dart';
+import 'package:flutter_easy_ride/rental/recurring/recurringbooking_provider.dart';
+import 'package:flutter_easy_ride/view/home/home_view.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_easy_ride/view/booking/provider/common_provider.dart';
@@ -18,6 +24,7 @@ import 'package:provider/provider.dart';
 
 import 'Book_Now/provider/drive_looking_provider.dart';
 import 'Pre_Booking/provider/preebooking_provider.dart';
+import 'book_easyride/provider/triphistry_provider.dart';
 
 var navigatorKey = GlobalKey<NavigatorState>();
 void main() {
@@ -38,6 +45,10 @@ void main() {
         ChangeNotifierProvider(create: (_) => ProgressBarState()),
         ChangeNotifierProvider(create: (_) => TriphistryProvider()),
         ChangeNotifierProvider(create: (_) => PreebookingProvider()),
+        ChangeNotifierProvider(create: (_) => RentalbookingProvider()),
+        ChangeNotifierProvider(create: (_) => RecurringBookingProvider()),
+        ChangeNotifierProvider(create: (_) => GetRentalVehicleProvider()),
+        ChangeNotifierProvider(create: (_) => DashboardProvider()),
         ChangeNotifierProvider(create: (_) => BookNowProvider()),
         ChangeNotifierProvider(create: (_) => RentalProvider()),
         ChangeNotifierProvider(create: (_) => CommonProvider()),
@@ -57,7 +68,6 @@ void main() {
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
-
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -78,14 +88,22 @@ class _MyAppState extends State<MyApp> {
           navigatorKey: navigatorKey,
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
-          theme: ThemeData(
-            bottomNavigationBarTheme: BottomNavigationBarThemeData(backgroundColor: AppColors.white),
-            scaffoldBackgroundColor: AppColors.white,
-            //   // primaryColor: ConverterFunction.parseColor(value.themeConfigg?.lightTheme.primaryColor ?? "FFD700"),
-            //   // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            //   // useMaterial3: true,
+          // theme: ThemeData(
+          //   primaryColor: ConverterFunction.parseColor(
+          //       value.themeConfigg!.lightTheme.primaryColor),
+          //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          //   useMaterial3: true,
+          // ),
+          home: ChangeNotifierProvider(
+            create: (BuildContext context) => DashboardProvider(),
+            child:
+            // BookingDetailsScreen()
+            HomeView(),
+            // child: Newdialogbox(),
+            // child: Checkdialob(),
           ),
-          home: BottomBarScreen(),
-        ),
-      );
+        );
+      },
+    );
+  }
 }
