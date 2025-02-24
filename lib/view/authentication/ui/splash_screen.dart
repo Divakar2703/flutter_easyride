@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:flutter_easy_ride/view/authentication/ui/login_screen.dart';
-import 'package:flutter_easy_ride/view/home/bottom_bar_screen.dart';
+import 'package:flutter_easy_ride/view/home/ui/bottom_bar_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

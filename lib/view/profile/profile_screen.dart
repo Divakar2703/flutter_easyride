@@ -186,9 +186,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         color: Color(0xff1937d7),
                         size: 24,
                       ),
-                      SizedBox(
-                        width: 18,
-                      ),
+                      SizedBox(width: 18),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

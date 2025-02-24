@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
+import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/utils/indicator.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../models/notification_response.dart';
 import '../services/notification_service.dart';
@@ -93,17 +95,30 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     child: ListView.builder(
                       shrinkWrap: true,
                       controller: _scrollController,
+                      padding: EdgeInsets.all(15),
                       itemCount: _notifications.length + 1,
-                      itemBuilder: (context, index) {
-                        if (index == _notifications.length) {
-                          return SizedBox.shrink();
-                        }
-                        final notification = _notifications[index];
-                        return ListTile(
-                          title: Text(notification.rideStatus),
-                          subtitle: Text(notification.bookingType),
-                        );
-                      },
+                      itemBuilder: (context, index) => ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                                color: AppColors.white,
+                                shape: BoxShape.circle,
+                                border: Border.all(color: AppColors.borderColor)),
+                            child: SvgPicture.asset(AppImage.box)),
+                        title: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Flexible(flex: 2, child: Text(_notifications[index].rideStatus)),
+                            SizedBox(width: 8),
+                            Expanded(child: Text("•Just Now")),
+                          ],
+                        ),
+                        subtitle: Text(
+                          _notifications[index].bookingType,
+                          style: TextStyle(fontSize: 12, color: AppColors.borderColor.withOpacity(0.8)),
+                        ),
+                      ),
                     ),
                   ),
       ],

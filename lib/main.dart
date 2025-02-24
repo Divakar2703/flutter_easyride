@@ -62,7 +62,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => CommonProvider()),
         ChangeNotifierProvider(create: (_) => CarSelectionProvider()),
         ChangeNotifierProvider(create: (_) => DriverDetailsProvider()),
-        ChangeNotifierProvider(create: (_) => BottomBarProvider())
+        ChangeNotifierProvider(create: (_) => BottomBarProvider()),
       ],
       child: MyApp(),
     ),
