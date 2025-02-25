@@ -1,31 +1,66 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/provider/api_provider.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
+import 'package:flutter_easy_ride/utils/indicator.dart';
+import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_easy_ride/view/booking/provider/common_provider.dart';
 import 'package:flutter_easy_ride/view/booking/ui/booking_screen.dart';
 import 'package:flutter_easy_ride/view/components/common_textfield.dart';
 import 'package:flutter_easy_ride/view/components/image_text_widget.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_easy_ride/view/home/provider/dashboard_provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  GoogleMapController? _mapController;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => Provider.of<BookNowProvider>(context, listen: false).fetchCurrentLocation());
+    Provider.of<ApiProvider>(context, listen: false).fetchAuth();
+    Provider.of<DashboardProvider>(context, listen: false).fetchDashboard();
+    Provider.of<DashboardProvider>(context, listen: false).getLocationVehicles();
+    Provider.of<DashboardProvider>(context, listen: false).pendingBooking();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        Container(
-          height: MediaQuery.of(context).size.height - 250,
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(color: AppColors.white),
-          child: GoogleMap(
-            zoomControlsEnabled: false,
-            initialCameraPosition: CameraPosition(
-              target: LatLng(18.512457, 73.843106),
-            ),
+        Consumer<BookNowProvider>(
+          builder: (context, v, child) => Container(
+            height: MediaQuery.of(context).size.height - 250,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(color: AppColors.white),
+            child: v.isLoading
+                ? Indicator()
+                : GoogleMap(
+                    initialCameraPosition: CameraPosition(
+                      target: v.currentLocation ?? LatLng(0, 0),
+                      zoom: 15,
+                    ),
+                    onMapCreated: (c) => _mapController = c,
+                    markers: v.currentLocation != null
+                        ? {
+                            Marker(
+                              markerId: MarkerId('currentLocation'),
+                              position: v.currentLocation!,
+                            ),
+                          }
+                        : {},
+                  ),
           ),
         ),
         SafeArea(
@@ -53,14 +88,19 @@ class HomeScreen extends StatelessWidget {
                 Expanded(
                   child: CommonTextField(
                     borderRadius: 12,
-                    hintText: "Set Destination",
+                    hintText: "Your Location",
+                    onTap: () {
+                      context.read<CommonProvider>().changeBooking(0);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => BookingScreen()));
+                    },
+                    con: context.watch<BookNowProvider>().homeSearchCon,
                     fillColor: AppColors.white.withOpacity(0.7),
                     borderColor: AppColors.borderColor.withOpacity(0.1),
-                    prefixIcon: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: SvgPicture.asset(AppImage.menu, width: 24, height: 24),
-                    ),
-                    suffix: SvgPicture.asset(AppImage.search, width: 24, height: 24),
+                    // prefixIcon: Padding(
+                    //   padding: const EdgeInsets.all(10.0),
+                    //   child: SvgPicture.asset(AppImage.menu, width: 24, height: 24),
+                    // ),
+                    // suffix: SvgPicture.asset(AppImage.search, width: 24, height: 24),
                   ),
                 ),
               ],
@@ -90,22 +130,49 @@ class HomeScreen extends StatelessWidget {
                     )
                   ],
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 60),
-                      Text("Today's Offer", style: TextStyle(fontWeight: FontWeight.w500)),
-                      SizedBox(height: 20),
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: AppColors.black.withOpacity(0.1)),
-                          borderRadius: BorderRadius.circular(12),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 60),
+                        Text("Today's Offer", style: TextStyle(fontWeight: FontWeight.w500)),
+                        SizedBox(height: 15),
+                        Consumer<DashboardProvider>(
+                          builder: (BuildContext context, value, Widget? child) => !value.loading
+                              ? CarouselSlider(
+                                  options: CarouselOptions(
+                                    initialPage: 0,
+                                    height: 160,
+                                    viewportFraction: 1,
+                                    aspectRatio: MediaQuery.of(context).size.width / 160,
+                                    enableInfiniteScroll: true,
+                                    autoPlay: value.dashboardResponse?.banner.length == 1 ? false : true,
+                                    autoPlayInterval: const Duration(seconds: 5),
+                                  ),
+                                  items: (value.dashboardResponse?.banner ?? [])
+                                      .map(
+                                        (e) => Container(
+                                          margin: EdgeInsets.symmetric(horizontal: 10),
+                                          width: MediaQuery.of(context).size.width,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(color: AppColors.black.withOpacity(0.1)),
+                                            borderRadius: BorderRadius.circular(12),
+                                          ),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(12),
+                                            child: Image.network(e.appBannerImage, fit: BoxFit.fill),
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                                )
+                              : SizedBox(),
                         ),
-                        child: ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.asset(AppImage.offer)),
-                      )
-                    ],
+                        SizedBox(height: 80),
+                      ],
+                    ),
                   ),
                 ),
               ),

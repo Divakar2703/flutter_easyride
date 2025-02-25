@@ -88,34 +88,35 @@ class CommonTextField extends StatelessWidget {
           autovalidateMode: AutovalidateMode.onUserInteraction,
           style: style,
           decoration: InputDecoration(
-              fillColor: fillColor,
-              contentPadding: contentPadding,
-              filled: fillColor != null ? true : false,
-              constraints: BoxConstraints(maxHeight: constraintHeight ?? double.infinity),
-              isDense: true,
-              hintText: hintText,
-              hintStyle: hintStyle,
-              labelStyle: labelStyle,
-              labelText: labelText,
-              prefixIcon: prefixIcon,
-              focusedBorder: border ??
-                  OutlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.yellow),
-                    borderRadius: BorderRadius.circular(borderRadius ?? 10),
-                  ),
-              enabledBorder: border ??
-                  OutlineInputBorder(
-                    borderSide: BorderSide(color: borderColor ?? AppColors.black.withOpacity(0.1)),
-                    borderRadius: BorderRadius.circular(borderRadius ?? 10),
-                  ),
-              focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(borderRadius ?? 10)),
-              errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(borderRadius ?? 10)),
-              suffixIcon: suffix != null
-                  ? Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: InkWell(onTap: suffixOnTap, child: suffix),
-                    )
-                  : const SizedBox()),
+            fillColor: fillColor,
+            contentPadding: contentPadding,
+            filled: fillColor != null ? true : false,
+            constraints: BoxConstraints(maxHeight: constraintHeight ?? double.infinity),
+            isDense: true,
+            hintText: hintText,
+            hintStyle: hintStyle,
+            labelStyle: labelStyle,
+            labelText: labelText,
+            prefixIcon: prefixIcon,
+            focusedBorder: border ??
+                OutlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.yellow),
+                  borderRadius: BorderRadius.circular(borderRadius ?? 10),
+                ),
+            enabledBorder: border ??
+                OutlineInputBorder(
+                  borderSide: BorderSide(color: borderColor ?? AppColors.black.withOpacity(0.1)),
+                  borderRadius: BorderRadius.circular(borderRadius ?? 10),
+                ),
+            focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(borderRadius ?? 10)),
+            errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(borderRadius ?? 10)),
+            suffixIcon: suffix != null
+                ? Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: InkWell(onTap: suffixOnTap, child: suffix),
+                  )
+                : null,
+          ),
         ),
       ],
     );

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
+import 'package:flutter_easy_ride/utils/toast.dart';
 import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:flutter_easy_ride/view/components/common_location_textfield.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class BookNowScreen extends StatelessWidget {
   const BookNowScreen({super.key});
@@ -49,24 +51,50 @@ class BookNowScreen extends StatelessWidget {
           ),
         ),
         SizedBox(height: 10),
-        ListView.builder(
-          shrinkWrap: true,
-          padding: EdgeInsets.zero,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: 5,
-          itemBuilder: (context, index) => Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: SvgPicture.asset(AppImage.loc),
-                title: Text("Sector 57 $index"),
-                subtitle: Text("Sec 57, Gurugram, Haryana"),
-              ),
-              Divider(height: 0, color: AppColors.borderColor.withOpacity(0.2))
-            ],
-          ),
+        Consumer<BookNowProvider>(
+          builder: (context, v, child) => v.loadDropLocation
+              ? Shimmer.fromColors(
+                  baseColor: Colors.red.shade300,
+                  highlightColor: Colors.blueAccent.shade100,
+                  child: ListView.builder(
+                    itemCount: 5,
+                    shrinkWrap: true,
+                    padding: EdgeInsets.zero,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) => ListTile(
+                      leading: Container(height: 25, width: 25),
+                      title: Text(""),
+                    ),
+                  ),
+                )
+              : ListView.builder(
+                  shrinkWrap: true,
+                  padding: EdgeInsets.zero,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: v.nearByLocationList?.length ?? 0,
+                  itemBuilder: (context, index) => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                        leading: SvgPicture.asset(AppImage.loc),
+                        title: Text(v.nearByLocationList?[index].dropAddress ?? ""),
+                      ),
+                      Divider(height: 0, color: AppColors.borderColor.withOpacity(0.2))
+                    ],
+                  ),
+                ),
         ),
-        CommonButton(label: "Confirm"),
+        CommonButton(
+          label: "Confirm",
+          onPressed: () {
+            if ((context.read<BookNowProvider>().locationTextfieldList.first.con?.text.isNotEmpty ?? false) &&
+                (context.read<BookNowProvider>().locationTextfieldList.last.con?.text.isNotEmpty ?? false)) {
+              context.read<BookNowProvider>().removeExtraLocation();
+            } else {
+              AppUtils.show("Please select source & destination location");
+            }
+          },
+        ),
       ],
     );
   }

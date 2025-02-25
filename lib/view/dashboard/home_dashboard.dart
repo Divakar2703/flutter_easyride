@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/Book_Now/common_widget/shimmer_loader.dart';
-import 'package:flutter_easy_ride/provider/dashboard_provider.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
+import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_easy_ride/view/dashboard/pending_booking_card.dart';
+import 'package:flutter_easy_ride/view/home/provider/dashboard_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../../provider/api_provider.dart';
 import '../home/components/banner_slider.dart';
 import '../tracking/tracking.dart';
 import 'dashboard/pre_booking_rental_book_now_card.dart';
@@ -23,9 +23,8 @@ class HomeDashboard extends StatefulWidget {
 class _HomeDashboardState extends State<HomeDashboard> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    Provider.of<ApiProvider>(context, listen: false).getCurrentLocation();
+    Provider.of<BookNowProvider>(context, listen: false).fetchCurrentLocation();
   }
 
   @override

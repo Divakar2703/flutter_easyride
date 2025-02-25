@@ -8,21 +8,17 @@ class PreBookingRentalBookNowCard extends StatelessWidget {
   const PreBookingRentalBookNowCard({super.key});
 
   void navigate(BuildContext context, String destination) {
-    if(destination=="Book Now"){
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>BookNowScreen()));
-
-    }
-    else if(destination=="Pre-Booking"){
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>PreBookingScreen()));
-
-    }
-    else{
+    if (destination == "Book Now") {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => BookNowScreen()));
+    } else if (destination == "Pre-Booking") {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => PreBookingScreen()));
+    } else {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => RentalHourlyAndRecurringView()), // Replace with your actual destination widget.
+        MaterialPageRoute(
+            builder: (context) => RentalHourlyAndRecurringView()), // Replace with your actual destination widget.
       );
     }
-
   }
 
   Widget _buildCard(String title, IconData icon, BuildContext context) {
@@ -34,14 +30,11 @@ class PreBookingRentalBookNowCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.only(left: 8, right: 12, top: 8, bottom: 8),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
-            // color: Colors.white,
-    gradient: LinearGradient(
-    colors: [
-    Colors.blue.shade300,
-    Colors.blue.shade600
-    ],)
-          ),
+              borderRadius: BorderRadius.circular(30),
+              // color: Colors.white,
+              gradient: LinearGradient(
+                colors: [Colors.blue.shade300, Colors.blue.shade600],
+              )),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

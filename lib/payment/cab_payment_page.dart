@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/payment/dialog/payment_success_dialog.dart';
 import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import '../provider/dashboard_provider.dart';
+
+import '../view/home/provider/dashboard_provider.dart';
 import 'dialog/payment_failed_dialog.dart';
 import 'model/cab_payment_model.dart';
 
@@ -70,7 +72,8 @@ class _CabPaymentPageState extends State<CabPaymentPage> {
     String paymentPageUrl = "https://pay-24.in/qw/main/index.php/onlinepayment/paynow";
 
     // Construct the POST data with the necessary parameters
-    String postData = 'ORDER_ID=${widget.orderId}&MID=15&WEB_CALLBACK_URL=https://bits-panindia.com/WL-CNT/main/index.php/homepage/pay24Response_android'
+    String postData =
+        'ORDER_ID=${widget.orderId}&MID=15&WEB_CALLBACK_URL=https://bits-panindia.com/WL-CNT/main/index.php/homepage/pay24Response_android'
         '&CONV_CHARGE=${widget.convCharge}&MAIN_AMOUNT=1'
         '&TXN_AMOUNT=1&CUST_ID=15';
     print("re payment ==${postData}");
@@ -115,7 +118,7 @@ class _CabPaymentPageState extends State<CabPaymentPage> {
         'convCharge': response.convCharge,
         'custRefNum': response.custRefNo,
       });
-      var req={
+      var req = {
         'orderId': response.orderId, // Changed from ORDER_ID to orderId
         'orderNo': response.orderNo,
         'txnAmount': response.txnAmount,
@@ -130,18 +133,16 @@ class _CabPaymentPageState extends State<CabPaymentPage> {
         'custRefNum': response.custRefNo,
       };
       print("req==${req}");
-      if(response.status=="SUCCESS"){
-        transactionID=response.custId??"";
-        showPaymentSuccessDialog(context,req);
-        Provider.of<DashboardProvider>(context, listen: false).sendNotification(response.orderNo??"", response.orderId??"", double.parse(response.txnAmount??"0"));
+      if (response.status == "SUCCESS") {
+        transactionID = response.custId ?? "";
+        showPaymentSuccessDialog(context, req);
+        Provider.of<DashboardProvider>(context, listen: false)
+            .sendNotification(response.orderNo ?? "", response.orderId ?? "", double.parse(response.txnAmount ?? "0"));
 
-        setState(() {
-        });
-      }
-      else{
+        setState(() {});
+      } else {
         showPaymentFailedDialog(context);
       }
-
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Invalid UPI Id')),
@@ -158,12 +159,13 @@ class _CabPaymentPageState extends State<CabPaymentPage> {
     );
   }
 
-  void showPaymentSuccessDialog(BuildContext context,  final Map<String, dynamic> req
-  ) {
+  void showPaymentSuccessDialog(BuildContext context, final Map<String, dynamic> req) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return PaymentSuccessDialog(req: req,);
+        return PaymentSuccessDialog(
+          req: req,
+        );
       },
     );
   }
@@ -177,5 +179,4 @@ class _CabPaymentPageState extends State<CabPaymentPage> {
       body: WebViewWidget(controller: _controller),
     );
   }
-
 }

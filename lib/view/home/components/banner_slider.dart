@@ -12,7 +12,7 @@ class BannerSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16.0), // Adjust border radius as needed
+        borderRadius: BorderRadius.circular(16.0),
       ),
       padding: const EdgeInsets.all(8.0), // Adjust padding as needed
       child: SizedBox(

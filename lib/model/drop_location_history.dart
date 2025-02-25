@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class HistoryResponse {
   final List<DropLocation> list;
   final String status;

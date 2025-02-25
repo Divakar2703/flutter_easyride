@@ -7,7 +7,6 @@ import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
 import 'package:flutter_easy_ride/api/service_locator.dart';
 import 'package:flutter_easy_ride/book_easyride/provider/triphistry_provider.dart';
 import 'package:flutter_easy_ride/provider/api_provider.dart';
-import 'package:flutter_easy_ride/provider/dashboard_provider.dart';
 import 'package:flutter_easy_ride/provider/map_provider.dart';
 import 'package:flutter_easy_ride/rental/components/rentalbooking_provider.dart';
 import 'package:flutter_easy_ride/rental/get_rental_vehical_provider.dart';
@@ -22,6 +21,7 @@ import 'package:flutter_easy_ride/view/booking/provider/rental_provider.dart';
 import 'package:flutter_easy_ride/view/car_selection/provider/car_selection_provider.dart';
 import 'package:flutter_easy_ride/view/driver_details/provider/driver_details_provider.dart';
 import 'package:flutter_easy_ride/view/home/provider/bottom_bar_provider.dart';
+import 'package:flutter_easy_ride/view/home/provider/dashboard_provider.dart';
 import 'package:flutter_easy_ride/view/notification/services/notification_service.dart';
 import 'package:provider/provider.dart';
 

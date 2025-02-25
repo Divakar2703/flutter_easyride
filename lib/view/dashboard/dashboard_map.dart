@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/model/nearby_vehicle.dart';
 import 'package:flutter_easy_ride/view/authentication/provider/auth_provider.dart';
+import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_easy_ride/view/drawer/cab_drawer.dart';
 import 'package:flutter_easy_ride/view/notification/ui/notification_screen.dart';
 import 'package:geocoding/geocoding.dart';
@@ -9,8 +10,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/api_provider.dart';
-import '../../provider/dashboard_provider.dart';
 import '../../utils/eve.dart';
+import '../home/provider/dashboard_provider.dart';
 import 'home_dashboard.dart';
 
 class DashboardMap extends StatefulWidget {
@@ -32,7 +33,7 @@ class _MapPageState extends State<DashboardMap> {
   void initState() {
     super.initState();
     _getCurrentLocation();
-    Provider.of<ApiProvider>(context, listen: false).getCurrentLocation();
+    Provider.of<BookNowProvider>(context, listen: false).fetchCurrentLocation();
     Provider.of<ApiProvider>(context, listen: false).fetchAuth();
     Provider.of<DashboardProvider>(context, listen: false).fetchDashboard();
     Provider.of<DashboardProvider>(context, listen: false).getLocationVehicles();
@@ -41,9 +42,8 @@ class _MapPageState extends State<DashboardMap> {
 
   void _getCurrentLocation() async {
     try {
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
+      Position position =
+          await Geolocator.getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
       setState(() {
         sourceLocation = LatLng(position.latitude, position.longitude);
         // Add a circle around the current location

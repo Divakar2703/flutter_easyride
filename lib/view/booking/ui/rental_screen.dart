@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
+import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_easy_ride/view/booking/provider/rental_provider.dart';
 import 'package:flutter_easy_ride/view/car_selection/ui/car_selection_screen.dart';
 import 'package:flutter_easy_ride/view/components/common_button.dart';
@@ -15,7 +16,11 @@ class RentalScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CommonLocationTextfield(),
+        if (context.watch<BookNowProvider>().controllerList.first.text.isEmpty ||
+            context.watch<BookNowProvider>().controllerList.last.text.isEmpty) ...[
+          CommonLocationTextfield(),
+          SizedBox(height: 20),
+        ],
         SizedBox(height: 30),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
