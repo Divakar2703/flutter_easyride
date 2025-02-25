@@ -4,11 +4,11 @@ import 'package:flutter_easy_ride/provider/api_provider.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/utils/indicator.dart';
-import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_easy_ride/view/booking/provider/common_provider.dart';
 import 'package:flutter_easy_ride/view/booking/ui/booking_screen.dart';
 import 'package:flutter_easy_ride/view/components/common_textfield.dart';
 import 'package:flutter_easy_ride/view/components/image_text_widget.dart';
+import 'package:flutter_easy_ride/view/home/provider/bottom_bar_provider.dart';
 import 'package:flutter_easy_ride/view/home/provider/dashboard_provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -27,10 +27,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance
-        .addPostFrameCallback((_) => Provider.of<BookNowProvider>(context, listen: false).fetchCurrentLocation());
+        .addPostFrameCallback((_) => Provider.of<BottomBarProvider>(context, listen: false).fetchCurrentLocation());
     Provider.of<ApiProvider>(context, listen: false).fetchAuth();
     Provider.of<DashboardProvider>(context, listen: false).fetchDashboard();
-    Provider.of<DashboardProvider>(context, listen: false).getLocationVehicles();
     Provider.of<DashboardProvider>(context, listen: false).pendingBooking();
   }
 
@@ -39,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        Consumer<BookNowProvider>(
+        Consumer<BottomBarProvider>(
           builder: (context, v, child) => Container(
             height: MediaQuery.of(context).size.height - 250,
             width: MediaQuery.of(context).size.width,
@@ -52,14 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       zoom: 15,
                     ),
                     onMapCreated: (c) => _mapController = c,
-                    markers: v.currentLocation != null
-                        ? {
-                            Marker(
-                              markerId: MarkerId('currentLocation'),
-                              position: v.currentLocation!,
-                            ),
-                          }
-                        : {},
+                    markers: v.markers,
                   ),
           ),
         ),
@@ -93,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       context.read<CommonProvider>().changeBooking(0);
                       Navigator.push(context, MaterialPageRoute(builder: (context) => BookingScreen()));
                     },
-                    con: context.watch<BookNowProvider>().homeSearchCon,
+                    con: context.watch<BottomBarProvider>().homeSearchCon,
                     fillColor: AppColors.white.withOpacity(0.7),
                     borderColor: AppColors.borderColor.withOpacity(0.1),
                     // prefixIcon: Padding(

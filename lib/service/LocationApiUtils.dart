@@ -6,18 +6,14 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
-
-
 class LocationUtils {
   static var searchAutocompleteUrl = "https://places.googleapis.com/v1/places:autocomplete?input=";
   static var placeDetailUrl = "https://places.googleapis.com/v1/places/";
 
   static Future<Map<String, dynamic>> searchPlaces(String input) async {
-    String storedToken = await
-        LocalStorage.getString('storedPlaceToken') ?? "";
-    String sessionToken =
-        storedToken.isNotEmpty ? storedToken : await saveAddressSessionToken();
-    String apiKey = "AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y";
+    String storedToken = await LocalStorage.getString('storedPlaceToken') ?? "";
+    String sessionToken = storedToken.isNotEmpty ? storedToken : await saveAddressSessionToken();
+    String apiKey = "AIzaSyCqOtn--DWaSee5PMjb1J1zkPe7gw5XMWQ";
 
     String url = '${searchAutocompleteUrl}$input&session_token=$sessionToken&key=$apiKey';
     print("url===$url");
@@ -36,9 +32,9 @@ class LocationUtils {
   static Future<Map<String, dynamic>> getPlaceDetails(String placeId) async {
     String url =
         '${placeDetailUrl}$placeId?fields=formattedAddress,location&key=AIzaSyAKgqAyTO5G0rIf8laUc5_gOaF16Qwjg2Y';
-print("url===${url}");
+    print("url===${url}");
     final response = await http.get(Uri.parse(url));
-print("response===${response.body}");
+    print("response===${response.body}");
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
@@ -49,8 +45,7 @@ print("response===${response.body}");
 
   static Future<String> saveAddressSessionToken() async {
     var uniqueSessionToken = Uuid().v4();
-    await LocalStorage.saveString(
-        "storedPlaceToken", uniqueSessionToken);
+    await LocalStorage.saveString("storedPlaceToken", uniqueSessionToken);
     return uniqueSessionToken;
   }
 
@@ -58,8 +53,7 @@ print("response===${response.body}");
     try {
       // Request location permission
       LocationPermission permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied ||
-          permission == LocationPermission.deniedForever) {
+      if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
         return null;
       }
 
@@ -74,8 +68,7 @@ print("response===${response.body}");
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.medium,
         // Change to medium for faster response
-        timeLimit:
-            Duration(seconds: 10), // Optional: set a time limit to speed up
+        timeLimit: Duration(seconds: 10), // Optional: set a time limit to speed up
       );
 
       return position;
@@ -85,11 +78,9 @@ print("response===${response.body}");
     }
   }
 
-  static Future<Placemark?> getAddFromLatLong(
-      double latitude, double longitude) async {
+  static Future<Placemark?> getAddFromLatLong(double latitude, double longitude) async {
     try {
-      List<Placemark> placeMarks =
-          await placemarkFromCoordinates(latitude, longitude);
+      List<Placemark> placeMarks = await placemarkFromCoordinates(latitude, longitude);
 
       if (placeMarks.isNotEmpty) {
         Placemark placeMark = placeMarks.first;
@@ -117,5 +108,4 @@ print("response===${response.body}");
     ].where((part) => part != null && part.isNotEmpty).join(', ');
     return completeAddress;
   }
-
 }

@@ -76,33 +76,6 @@ class DashboardProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> getLocationVehicles() async {
-    loading = true;
-    final String url = ApiHelper.nearbyVehicles;
-    var params = {"pickup_lat": ALatitude, "pickup_long": ALongitude};
-    print("params==${params}");
-
-    try {
-      final response = await NetworkUtility.sendPostRequest(url, params);
-      print('Response body: ${response.body}');
-
-      if (response.statusCode == 200) {
-        loading = false;
-        var jsondata = jsonDecode(response.body);
-        vehicleResponse = NearByVehicle.fromJson(jsondata);
-        notifyListeners();
-      } else {
-        loading = false;
-        vehicleResponse = null;
-
-        print('Error: ${response.statusCode}, ${response.body}');
-      }
-    } catch (e) {
-      loading = false;
-      print('Error sending POST request: $e');
-    }
-  }
-
   Future<void> sendNotification(String orderNo, String bookingID, double amount) async {
     loading = true;
     final String url = ApiHelper.payment_notification;

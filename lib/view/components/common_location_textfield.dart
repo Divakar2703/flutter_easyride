@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
+import 'package:flutter_easy_ride/utils/toast.dart';
 import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -99,7 +100,14 @@ class CommonLocationTextfield extends StatelessWidget {
         Positioned(
           right: -5,
           child: InkWell(
-            onTap: () => context.read<BookNowProvider>().addLocations(),
+            onTap: () {
+              if ((context.read<BookNowProvider>().locationTextfieldList.first.con?.text.isNotEmpty ?? false) &&
+                  (context.read<BookNowProvider>().locationTextfieldList.last.con?.text.isNotEmpty ?? false)) {
+                context.read<BookNowProvider>().addLocations();
+              } else {
+                AppUtils.show("Please Select first destination location");
+              }
+            },
             child: Container(
               decoration: BoxDecoration(
                   color: AppColors.white,

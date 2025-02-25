@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
-import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:flutter_easy_ride/view/components/common_location_textfield.dart';
 import 'package:flutter_easy_ride/view/components/custom_time_picker.dart';
 import 'package:flutter_easy_ride/view/components/horizontal_calender.dart';
@@ -33,8 +32,6 @@ class PreBookingScreen extends StatelessWidget {
         HorizontalCalendar(),
         SizedBox(height: 15),
         CustomTimePicker(),
-        SizedBox(height: 10),
-        CommonButton(label: "Confirm")
       ],
     );
   }

@@ -28,7 +28,7 @@ class CabBookProvider with ChangeNotifier {
   List<AutocompletePrediction> pickPlacePredictions = [];
   TextEditingController pickupController = TextEditingController();
   TextEditingController dropController = TextEditingController();
-  List<Suggestion> suggetions = [];
+  List<Suggestions> suggetions = [];
   final List<Vehicle> vehicle = [];
   CouponData? couponData;
   Notes? notes;
@@ -118,7 +118,7 @@ class CabBookProvider with ChangeNotifier {
     _dropLocation = query;
     var jsondata = await LocationUtils.searchPlaces(query);
     SuggestionsResponse suggestionsResponse = SuggestionsResponse.fromJson(jsondata);
-    suggetions = suggestionsResponse.suggestions;
+    suggetions = suggestionsResponse.suggestions!;
     notifyListeners();
   }
 

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
-import 'package:flutter_easy_ride/utils/toast.dart';
 import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
-import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:flutter_easy_ride/view/components/common_location_textfield.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -71,29 +69,24 @@ class BookNowScreen extends StatelessWidget {
                   shrinkWrap: true,
                   padding: EdgeInsets.zero,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: v.nearByLocationList?.length ?? 0,
+                  itemCount: v.placesList.length,
                   itemBuilder: (context, index) => Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       ListTile(
                         leading: SvgPicture.asset(AppImage.loc),
-                        title: Text(v.nearByLocationList?[index].dropAddress ?? ""),
+                        title: Text(v.placesList[index].placePrediction?.text?.text ?? ""),
+                        onTap: () {
+                          String selectedText = v.placesList[index].placePrediction?.text?.text ?? "";
+                          bool isSource = v.selectedController == v.controllerList.first;
+                          bool isDestination = v.selectedController == v.controllerList.last;
+                          v.updateSelectedTextField(selectedText, isSource: isSource, isDestination: isDestination);
+                        },
                       ),
                       Divider(height: 0, color: AppColors.borderColor.withOpacity(0.2))
                     ],
                   ),
                 ),
-        ),
-        CommonButton(
-          label: "Confirm",
-          onPressed: () {
-            if ((context.read<BookNowProvider>().locationTextfieldList.first.con?.text.isNotEmpty ?? false) &&
-                (context.read<BookNowProvider>().locationTextfieldList.last.con?.text.isNotEmpty ?? false)) {
-              context.read<BookNowProvider>().removeExtraLocation();
-            } else {
-              AppUtils.show("Please select source & destination location");
-            }
-          },
         ),
       ],
     );

@@ -155,8 +155,8 @@ class _PreBookingScreenState extends State<PreBookingScreen> {
                   itemCount: cabProvider.suggetions.length,
                   itemBuilder: (context, index) => InkWell(
                     onTap: () {
-                      cabProvider.getDropLocation(cabProvider.suggetions[index].placePrediction.text.text ?? "",
-                          cabProvider.suggetions[index].placePrediction.placeId ?? "", "PreBooking");
+                      cabProvider.getDropLocation(cabProvider.suggetions[index].placePrediction?.text?.text ?? "",
+                          cabProvider.suggetions[index].placePrediction?.placeId ?? "", "PreBooking");
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -175,7 +175,7 @@ class _PreBookingScreenState extends State<PreBookingScreen> {
                             child: Text(
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis, // Show ellipsis if text exceeds the limit
-                              cabProvider.suggetions[index].placePrediction.text.text ?? "dehradun",
+                              cabProvider.suggetions[index].placePrediction?.text?.text ?? "dehradun",
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey.shade800,

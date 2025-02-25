@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/model/nearby_vehicle.dart';
 import 'package:flutter_easy_ride/view/authentication/provider/auth_provider.dart';
-import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_easy_ride/view/drawer/cab_drawer.dart';
+import 'package:flutter_easy_ride/view/home/provider/bottom_bar_provider.dart';
 import 'package:flutter_easy_ride/view/notification/ui/notification_screen.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -33,10 +33,10 @@ class _MapPageState extends State<DashboardMap> {
   void initState() {
     super.initState();
     _getCurrentLocation();
-    Provider.of<BookNowProvider>(context, listen: false).fetchCurrentLocation();
+    Provider.of<BottomBarProvider>(context, listen: false).fetchCurrentLocation();
     Provider.of<ApiProvider>(context, listen: false).fetchAuth();
     Provider.of<DashboardProvider>(context, listen: false).fetchDashboard();
-    Provider.of<DashboardProvider>(context, listen: false).getLocationVehicles();
+    Provider.of<BottomBarProvider>(context, listen: false).getLocationVehicles();
     Provider.of<DashboardProvider>(context, listen: false).pendingBooking();
   }
 
@@ -89,12 +89,12 @@ class _MapPageState extends State<DashboardMap> {
 
     for (var vehicle in vehicles) {
       try {
-        double lat = double.parse(vehicle.curr_lat);
-        double lng = double.parse(vehicle.curr_long);
+        double lat = double.parse(vehicle.currLat ?? "0.0");
+        double lng = double.parse(vehicle.currLong ?? "0.0");
 
         _markers.add(
           Marker(
-            markerId: MarkerId(vehicle.id),
+            markerId: MarkerId(vehicle.id ?? "0"),
             position: LatLng(lat, lng),
             infoWindow: InfoWindow(title: vehicle.name),
             icon: customIcon ?? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),

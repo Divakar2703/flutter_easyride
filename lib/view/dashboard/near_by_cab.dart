@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 
 import '../../model/nearby_vehicle.dart';
-import '../../model/vehicle_data.dart';
 
 class NearByCab extends StatefulWidget {
   NearByVehicle? vehicleResponse;
 
-   NearByCab({super.key,required this.vehicleResponse});
+  NearByCab({super.key, required this.vehicleResponse});
 
   @override
   State<NearByCab> createState() => _NearByCabState();
 }
 
 class _NearByCabState extends State<NearByCab> {
-
   final List<Map<String, String>> cabs = [
     {'name': 'Cab 1', 'availability': 'Available now', 'image': 'assets/images/cab_one.png'},
     {'name': 'Cab 2', 'availability': 'Available in 5 minutes', 'image': 'assets/images/cab_two.png'},
@@ -25,14 +23,14 @@ class _NearByCabState extends State<NearByCab> {
       height: 230,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: widget.vehicleResponse?.vehicle.length,
+        itemCount: widget.vehicleResponse?.vehicle?.length,
         itemBuilder: (context, index) {
-          var cabs=widget.vehicleResponse?.vehicle[index];
+          var cabs = widget.vehicleResponse?.vehicle?[index];
 
           return _buildCabContainer(
-            cabs!.name,
-            cabs.description,
-            cabs.image,
+            cabs?.name ?? "",
+            cabs?.description ?? "",
+            cabs?.image ?? "",
           );
         },
       ),
@@ -84,7 +82,7 @@ class _NearByCabState extends State<NearByCab> {
                     fontFamily: 'Poppins',
                   ),
                 ),
-                const  SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Text(
                   availability,
                   style: TextStyle(

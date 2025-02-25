@@ -3,11 +3,14 @@ import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:flutter_easy_ride/utils/indicator.dart';
+import 'package:flutter_easy_ride/utils/toast.dart';
 import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_easy_ride/view/booking/provider/common_provider.dart';
 import 'package:flutter_easy_ride/view/booking/ui/book_now_screen.dart';
 import 'package:flutter_easy_ride/view/booking/ui/pre_booking_screen.dart';
 import 'package:flutter_easy_ride/view/booking/ui/rental_screen.dart';
+import 'package:flutter_easy_ride/view/car_selection/ui/car_selection_screen.dart';
+import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:flutter_easy_ride/view/components/image_text_widget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -30,7 +33,8 @@ class _BookingScreenState extends State<BookingScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<BookNowProvider>().addLocationTextFields(sourceLocation, destination, address);
-      // Provider.of<BookNowProvider>(context, listen: false).getDropHistoryList();
+      Provider.of<BookNowProvider>(context, listen: false).fetchCurrentLocation();
+      Provider.of<BookNowProvider>(context, listen: false).searchLocation(address);
     });
   }
 
@@ -55,11 +59,12 @@ class _BookingScreenState extends State<BookingScreen> {
                   builder: (context, v, child) => v.isLoading
                       ? Indicator()
                       : GoogleMap(
-                          initialCameraPosition: CameraPosition(target: v.currentLocation ?? LatLng(0, 0), zoom: 15),
+                          markers: v.markers,
+                          polylines: v.polyLines,
                           zoomControlsEnabled: false,
                           onMapCreated: (c) => _mapController = c,
-                          onTap: (l) => v.addLocationMarkers(l),
-                          markers: v.markers.isNotEmpty ? v.markers : {},
+                          // onTap: (l) => v.addLocationMarkers(l),
+                          initialCameraPosition: CameraPosition(target: v.currentLocation ?? LatLng(0, 0), zoom: 15),
                         ),
                 ),
               ),
@@ -163,6 +168,24 @@ class _BookingScreenState extends State<BookingScreen> {
                         ),
                       ),
                     ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  child: CommonButton(
+                    label: "Confirm",
+                    onPressed: () {
+                      if ((context.read<BookNowProvider>().locationTextfieldList.first.con?.text.isNotEmpty ?? false) &&
+                          (context.read<BookNowProvider>().locationTextfieldList.last.con?.text.isNotEmpty ?? false)) {
+                        context.read<BookNowProvider>().removeExtraLocation();
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => CarSelectionScreen()));
+                      } else {
+                        AppUtils.show("Please select source & destination location");
+                      }
+                    },
                   ),
                 ),
               ),

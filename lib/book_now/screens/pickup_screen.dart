@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easy_ride/Book_Now/screens/select_vehicle.dart';
 import 'package:flutter_easy_ride/Book_Now/provider/cab_book_provider.dart';
+import 'package:flutter_easy_ride/Book_Now/screens/select_vehicle.dart';
 import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
+
 import '../../common_widget/custombutton.dart';
 import '../../common_widget/pickup_drop_widget.dart';
 import '../../view/map/map_screen.dart';
@@ -16,11 +17,10 @@ class PickupScreen extends StatefulWidget {
   State<PickupScreen> createState() => _PickupScreenState();
 }
 
-
 class _PickupScreenState extends State<PickupScreen> {
   final pickupController = TextEditingController();
   final dropController = TextEditingController();
-  bool isPickup=false;
+  bool isPickup = false;
   @override
   void initState() {
     super.initState();
@@ -30,12 +30,14 @@ class _PickupScreenState extends State<PickupScreen> {
       Provider.of<CabBookProvider>(context, listen: false).getCurrentLocation();
     });
   }
+
   @override
   void dispose() {
     pickupController.dispose();
     dropController.dispose();
     super.dispose();
   }
+
   void _getCurrentLocation() async {
     try {
       Position position = await Geolocator.getCurrentPosition(
@@ -51,8 +53,9 @@ class _PickupScreenState extends State<PickupScreen> {
       setState(() {
         ALatitude = position.latitude;
         ALongitude = position.longitude;
-        address = '${placemarks[0].thoroughfare}, ${placemarks[0].subLocality}, ${placemarks[0].locality}, ${placemarks[0].administrativeArea}, ${placemarks[0].postalCode}';
-     pickupController.text=address;
+        address =
+            '${placemarks[0].thoroughfare}, ${placemarks[0].subLocality}, ${placemarks[0].locality}, ${placemarks[0].administrativeArea}, ${placemarks[0].postalCode}';
+        pickupController.text = address;
       });
     } catch (e) {
       print('Error: $e');
@@ -76,25 +79,26 @@ class _PickupScreenState extends State<PickupScreen> {
               fontWeight: FontWeight.w500,
               fontFamily: 'Poppins', // Set Poppins as the default font
               fontSize: 17,
-              color: Colors.white
-          ),
+              color: Colors.white),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back,color: Colors.white,size: 21,),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+            size: 21,
+          ),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
       ),
-      body:Column(
+      body: Column(
         children: [
-
           PickupDropWidget(
-            onPickupTap: (){
+            onPickupTap: () {
               pickupController.clear();
-              isPickup=true;
-setState(() {
-});
+              isPickup = true;
+              setState(() {});
             },
             pickupController: pickupController,
             dropController: dropController,
@@ -103,26 +107,23 @@ setState(() {
             onPickupChange: (value) {
               setState(() {
                 pickupController.text = value; // Update pickup text
-                cabProvider.placeAutoComplete(value,"Pickup");
+                cabProvider.placeAutoComplete(value, "Pickup");
                 print('Pickup location: $value');
                 // cabProvider.placeAutoComplete(value, "Pickup");
               });
             },
-            onDropTap: (){
-              isPickup=false;
+            onDropTap: () {
+              isPickup = false;
               dropController.clear();
-              setState(() {
-
-              });
+              setState(() {});
             },
 
             // onChange for Drop
             onDropChange: (value) {
               setState(() {
-
                 dropController.text = value; // Update drop text
                 // Call your autoComplete function for Drop
-                cabProvider.placeAutoComplete(value,"Drop");
+                cabProvider.placeAutoComplete(value, "Drop");
                 print('Drop location: $value');
                 // cabProvider.placeAutoComplete(value, "Drop");
               });
@@ -130,7 +131,6 @@ setState(() {
           ),
           GestureDetector(
             onTap: () {
-
               Navigator.push(context, MaterialPageRoute(builder: (context) => MapPage()));
             },
             child: Row(
@@ -140,21 +140,21 @@ setState(() {
                   width: 160,
                   height: 35,
                   padding: EdgeInsets.symmetric(horizontal: 12),
-                  margin: EdgeInsets.symmetric(horizontal: 16,vertical: 8),
+                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
-                    color: Color(0xff1937d7).withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: Colors.grey.shade300
-                    )
-                  ),
+                      color: Color(0xff1937d7).withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.grey.shade300)),
                   child: const Row(
                     children: [
                       Icon(
                         Icons.location_on_outlined,
-                        size: 20,color: Color(0xff1937d7),),
-
-                      SizedBox(width: 6,),
+                        size: 20,
+                        color: Color(0xff1937d7),
+                      ),
+                      SizedBox(
+                        width: 6,
+                      ),
                       Text(
                         "Select on map",
                         textAlign: TextAlign.center,
@@ -172,82 +172,83 @@ setState(() {
               ],
             ),
           ),
-
           Divider(
             thickness: 1.5,
             color: Colors.grey.shade300,
           ),
-
-          if(cabProvider.suggetions.isNotEmpty)
+          if (cabProvider.suggetions.isNotEmpty)
             Expanded(
               child: ListView.builder(
                 itemCount: cabProvider.suggetions.length,
-                itemBuilder: (context, index) =>
-                    InkWell(
-                      onTap: (){
-                        print("pickup===$isPickup");
-                        if(isPickup){
-                          pickupController.text=cabProvider.pickupLocation??"";
-                          cabProvider.getPickupLocation(cabProvider.suggetions[index].placePrediction.text.text??"",cabProvider.suggetions[index].placePrediction.placeId??"","BookNow");
-setState(() {
-
-});
-                        }
-                        else{
-                          cabProvider.getDropLocation(cabProvider.suggetions[index].placePrediction.text.text??"",cabProvider.suggetions[index].placePrediction.placeId??"","BookNow");
-
-                        }
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(
+                itemBuilder: (context, index) => InkWell(
+                  onTap: () {
+                    print("pickup===$isPickup");
+                    if (isPickup) {
+                      pickupController.text = cabProvider.pickupLocation ?? "";
+                      cabProvider.getPickupLocation(cabProvider.suggetions[index].placePrediction?.text?.text ?? "",
+                          cabProvider.suggetions[index].placePrediction?.placeId ?? "", "BookNow");
+                      setState(() {});
+                    } else {
+                      cabProvider.getDropLocation(cabProvider.suggetions[index].placePrediction?.text?.text ?? "",
+                          cabProvider.suggetions[index].placePrediction?.placeId ?? "", "BookNow");
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      children: [
+                        Row(
                           children: [
-                            Row(
-                              children: [
-                                Icon(Icons.watch_later_outlined,
-                                  color: Colors.grey.shade800,size: 20,),
-                                SizedBox(width: 10,),
-                                Container(
-                                  width: MediaQuery.of(context).size.width*0.8,
-                                  child: Text(
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis, // Show ellipsis if text exceeds the limit
-                                    cabProvider.suggetions[index].placePrediction.text.text??"dehradun",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey.shade800,
-                                      fontFamily: 'Poppins', // Set Poppins as the default font
-              
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                )
-                              ],
+                            Icon(
+                              Icons.watch_later_outlined,
+                              color: Colors.grey.shade800,
+                              size: 20,
                             ),
-                            Divider(color: Colors.grey.shade200,)
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              child: Text(
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis, // Show ellipsis if text exceeds the limit
+                                cabProvider.suggetions[index].placePrediction?.text?.text ?? "dehradun",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey.shade800,
+                                  fontFamily: 'Poppins', // Set Poppins as the default font
+
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            )
                           ],
                         ),
-                      ),
+                        Divider(
+                          color: Colors.grey.shade200,
+                        )
+                      ],
                     ),
+                  ),
+                ),
               ),
             ),
-
           Spacer(),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: GestureDetector(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => SelectVehicle()));
-              },
-              child: Customtbutton(
-                text: "Continue",
-              )
-            ),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => SelectVehicle()));
+                },
+                child: Customtbutton(
+                  text: "Continue",
+                )),
           ),
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
         ],
       ),
     );
   }
 }
-

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/main.dart';
 import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:flutter_easy_ride/utils/local_storage.dart';
-import 'package:flutter_easy_ride/view/authentication/ui/login_screen.dart';
 import 'package:flutter_easy_ride/view/authentication/services/auth_service.dart';
-import 'package:flutter_easy_ride/view/dashboard/dashboard_map.dart';
+import 'package:flutter_easy_ride/view/authentication/ui/login_screen.dart';
+import 'package:flutter_easy_ride/view/home/ui/bottom_bar_screen.dart';
 
 class AuthProvider with ChangeNotifier {
   final TextEditingController nameController = TextEditingController();
@@ -72,8 +72,8 @@ class AuthProvider with ChangeNotifier {
         _otp = otp;
         userID = resp.data?.userId ?? "";
         await LocalStorage.saveUserID(resp.data?.userId ?? "");
+        Navigator.push(navigatorKey.currentContext!, MaterialPageRoute(builder: (context) => BottomBarScreen()));
         notifyListeners();
-        Navigator.push(navigatorKey.currentContext!, MaterialPageRoute(builder: (context) => DashboardMap()));
       }
     } catch (e) {}
   }

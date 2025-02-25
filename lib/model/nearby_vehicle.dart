@@ -1,78 +1,65 @@
 class NearByVehicle {
-  final List<NearbyCab> vehicle;
-  final String status;
-  final String message;
-  final int statusCode;
+  List<NearbyCab>? vehicle;
+  String? status;
+  String? message;
+  int? statusCode;
 
-  NearByVehicle({
-    required this.vehicle,
-    required this.status,
-    required this.message,
-    required this.statusCode,
-  });
+  NearByVehicle({this.vehicle, this.status, this.message, this.statusCode});
 
-  factory NearByVehicle.fromJson(Map<String, dynamic> json) {
-    return NearByVehicle(
-      vehicle: (json['vehicle'] as List<dynamic>)
-          .map((e) => NearbyCab.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      status: json['status'] as String,
-      message: json['message'] as String,
-      statusCode: json['statusCode'] as int,
-    );
+  NearByVehicle.fromJson(Map<String, dynamic> json) {
+    if (json['vehicle'] != null) {
+      vehicle = <NearbyCab>[];
+      json['vehicle'].forEach((v) {
+        vehicle!.add(new NearbyCab.fromJson(v));
+      });
+    }
+    status = json['status'];
+    message = json['message'];
+    statusCode = json['statusCode'];
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'vehicle': vehicle.map((e) => e.toJson()).toList(),
-      'status': status,
-      'message': message,
-      'statusCode': statusCode,
-    };
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.vehicle != null) {
+      data['vehicle'] = this.vehicle!.map((v) => v.toJson()).toList();
+    }
+    data['status'] = this.status;
+    data['message'] = this.message;
+    data['statusCode'] = this.statusCode;
+    return data;
   }
 }
 
 class NearbyCab {
-  final String id;
-  final String name;
-  final String image;
-  final String description;
-  final String type;
-  final String curr_lat;
-  final String curr_long;
+  String? id;
+  String? name;
+  String? image;
+  String? description;
+  String? type;
+  String? currLat;
+  String? currLong;
 
+  NearbyCab({this.id, this.name, this.image, this.description, this.type, this.currLat, this.currLong});
 
-  NearbyCab({
-    required this.id,
-    required this.name,
-    required this.image,
-    required this.description,
-    required this.type,
-    required this.curr_lat,
-    required this.curr_long
-  });
-
-  factory NearbyCab.fromJson(Map<String, dynamic> json) {
-    return NearbyCab(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      image: json['image'] as String,
-      description: json['description'] as String,
-      type: json['type'] as String,
-      curr_lat: json['curr_lat'].toString(),
-      curr_long: json["curr_long"].toString()
-    );
+  NearbyCab.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    image = json['image'];
+    description = json['description'];
+    type = json['type'];
+    currLat = json['curr_lat'];
+    currLong = json['curr_long'];
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'image': image,
-      'description': description,
-      'type': type,
-      'curr_lat':curr_lat,
-      'curr_long':curr_long
-    };
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['image'] = this.image;
+    data['description'] = this.description;
+    data['type'] = this.type;
+    data['curr_lat'] = this.currLat;
+    data['curr_long'] = this.currLong;
+    return data;
   }
 }

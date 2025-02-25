@@ -1,178 +1,154 @@
-import 'dart:convert';
-
 class SuggestionsResponse {
-  List<Suggestion> suggestions;
+  List<Suggestions>? suggestions;
 
-  SuggestionsResponse({required this.suggestions});
+  SuggestionsResponse({this.suggestions});
 
-  factory SuggestionsResponse.fromJson(Map<String, dynamic> json) {
-    return SuggestionsResponse(
-      suggestions: (json['suggestions'] as List<dynamic>)
-          .map((item) => Suggestion.fromJson(item))
-          .toList(),
-    );
+  SuggestionsResponse.fromJson(Map<String, dynamic> json) {
+    if (json['suggestions'] != null) {
+      suggestions = <Suggestions>[];
+      json['suggestions'].forEach((v) {
+        suggestions!.add(new Suggestions.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'suggestions': suggestions.map((item) => item.toJson()).toList(),
-    };
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.suggestions != null) {
+      data['suggestions'] = this.suggestions!.map((v) => v.toJson()).toList();
+    }
+    return data;
   }
 }
 
-class Suggestion {
-  PlacePrediction placePrediction;
+class Suggestions {
+  PlacePrediction? placePrediction;
 
-  Suggestion({required this.placePrediction});
+  Suggestions({this.placePrediction});
 
-  factory Suggestion.fromJson(Map<String, dynamic> json) {
-    return Suggestion(
-      placePrediction: PlacePrediction.fromJson(json['placePrediction']),
-    );
+  Suggestions.fromJson(Map<String, dynamic> json) {
+    placePrediction = json['placePrediction'] != null ? new PlacePrediction.fromJson(json['placePrediction']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'placePrediction': placePrediction.toJson(),
-    };
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.placePrediction != null) {
+      data['placePrediction'] = this.placePrediction!.toJson();
+    }
+    return data;
   }
 }
 
 class PlacePrediction {
-  String place;
-  String placeId;
-  TextInfo text;
- // StructuredFormat structuredFormat;
- // List<String> types;
+  String? place;
+  String? placeId;
+  Text? text;
+  StructuredFormat? structuredFormat;
+  List<String>? types;
 
-  PlacePrediction({
-    required this.place,
-    required this.placeId,
-    required this.text,
-    // required this.structuredFormat,
-    // required this.types,
-  });
+  PlacePrediction({this.place, this.placeId, this.text, this.structuredFormat, this.types});
 
-  factory PlacePrediction.fromJson(Map<String, dynamic> json) {
-    return PlacePrediction(
-      place: json['place'],
-      placeId: json['placeId'],
-      text: TextInfo.fromJson(json['text']),
-      // structuredFormat: StructuredFormat.fromJson(json['structuredFormat']),
-      // types: List<String>.from(json['types']),
-    );
+  PlacePrediction.fromJson(Map<String, dynamic> json) {
+    place = json['place'];
+    placeId = json['placeId'];
+    text = json['text'] != null ? new Text.fromJson(json['text']) : null;
+    structuredFormat =
+        json['structuredFormat'] != null ? new StructuredFormat.fromJson(json['structuredFormat']) : null;
+    types = json['types'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'place': place,
-      'placeId': placeId,
-      'text': text.toJson(),
-      // 'structuredFormat': structuredFormat.toJson(),
-      // 'types': types,
-    };
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['place'] = this.place;
+    data['placeId'] = this.placeId;
+    if (this.text != null) {
+      data['text'] = this.text!.toJson();
+    }
+    if (this.structuredFormat != null) {
+      data['structuredFormat'] = this.structuredFormat!.toJson();
+    }
+    data['types'] = this.types;
+    return data;
   }
 }
 
-class TextInfo {
-  String text;
-  List<Match> matches;
+class Text {
+  String? text;
+  List<Matches>? matches;
 
-  TextInfo({required this.text, required this.matches});
+  Text({this.text, this.matches});
 
-  factory TextInfo.fromJson(Map<String, dynamic> json) {
-    return TextInfo(
-      text: json['text'],
-      matches: (json['matches'] as List<dynamic>)
-          .map((item) => Match.fromJson(item))
-          .toList(),
-    );
+  Text.fromJson(Map<String, dynamic> json) {
+    text = json['text'];
+    if (json['matches'] != null) {
+      matches = <Matches>[];
+      json['matches'].forEach((v) {
+        matches!.add(new Matches.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'text': text,
-      'matches': matches.map((item) => item.toJson()).toList(),
-    };
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['text'] = this.text;
+    if (this.matches != null) {
+      data['matches'] = this.matches!.map((v) => v.toJson()).toList();
+    }
+    return data;
   }
 }
 
-class Match {
-  int endOffset;
+class Matches {
+  int? endOffset;
 
-  Match({required this.endOffset});
+  Matches({this.endOffset});
 
-  factory Match.fromJson(Map<String, dynamic> json) {
-    return Match(
-      endOffset: json['endOffset'],
-    );
+  Matches.fromJson(Map<String, dynamic> json) {
+    endOffset = json['endOffset'];
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'endOffset': endOffset,
-    };
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['endOffset'] = this.endOffset;
+    return data;
   }
 }
 
 class StructuredFormat {
-  MainText mainText;
-  SecondaryText secondaryText;
+  Text? mainText;
+  SecondaryText? secondaryText;
 
-  StructuredFormat({required this.mainText, required this.secondaryText});
+  StructuredFormat({this.mainText, this.secondaryText});
 
-  factory StructuredFormat.fromJson(Map<String, dynamic> json) {
-    return StructuredFormat(
-      mainText: MainText.fromJson(json['mainText']),
-      secondaryText: SecondaryText.fromJson(json['secondaryText']),
-    );
+  StructuredFormat.fromJson(Map<String, dynamic> json) {
+    mainText = json['mainText'] != null ? new Text.fromJson(json['mainText']) : null;
+    secondaryText = json['secondaryText'] != null ? new SecondaryText.fromJson(json['secondaryText']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'mainText': mainText.toJson(),
-      'secondaryText': secondaryText.toJson(),
-    };
-  }
-}
-
-class MainText {
-  String text;
-  List<Match> matches;
-
-  MainText({required this.text, required this.matches});
-
-  factory MainText.fromJson(Map<String, dynamic> json) {
-    return MainText(
-      text: json['text'],
-      matches: (json['matches'] as List<dynamic>)
-          .map((item) => Match.fromJson(item))
-          .toList(),
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'text': text,
-      'matches': matches.map((item) => item.toJson()).toList(),
-    };
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.mainText != null) {
+      data['mainText'] = this.mainText!.toJson();
+    }
+    if (this.secondaryText != null) {
+      data['secondaryText'] = this.secondaryText!.toJson();
+    }
+    return data;
   }
 }
 
 class SecondaryText {
-  String text;
+  String? text;
 
-  SecondaryText({required this.text});
+  SecondaryText({this.text});
 
-  factory SecondaryText.fromJson(Map<String, dynamic> json) {
-    return SecondaryText(
-      text: json['text'],
-    );
+  SecondaryText.fromJson(Map<String, dynamic> json) {
+    text = json['text'];
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'text': text,
-    };
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['text'] = this.text;
+    return data;
   }
 }

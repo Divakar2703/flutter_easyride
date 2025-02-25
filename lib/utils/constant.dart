@@ -4,6 +4,7 @@ class Endpoints {
   static const int receiveTimeout = 15000;
   static const String baseUrl = "https://asatvindia.in/cab/Api/";
   static String authApi = "${baseUrl}Api_auth/fetch_api_auth";
+  static const String places = "https://places.googleapis.com/v1/places:autocomplete";
 
   /// Authentication
   static String registerUser = "https://www.bits.teamtest.co.in/Api/Login/GetUserDataForService";
@@ -43,6 +44,11 @@ class AppImage {
   static const String ruPay = '${assetPng}rupay.png';
   static const String mastercard = '${assetPng}mastercard.png';
   static const String paypal = '${assetPng}paypal.png';
+  static const String carMap = '${assetPng}car_map.png';
+  static const String autoMap = '${assetPng}auto_map.png';
+  static const String bikeMap = '${assetPng}bike_map.png';
+  static const String source = '${assetPng}source_location.png';
+  static const String destination = '${assetPng}destination_location.png';
 
   ///SVG
   static const String search = '${assetSvg}search.svg';
@@ -67,4 +73,5 @@ class AppImage {
   static const String selectedNotification = '${assetSvg}selected_notification.svg';
   static const String selectedProfile = '${assetSvg}selected_profile.svg';
   static const String box = '${assetSvg}box.svg';
+  static const String remove = '${assetSvg}remove.svg';
 }

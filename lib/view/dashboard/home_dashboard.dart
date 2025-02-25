@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/Book_Now/common_widget/shimmer_loader.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
-import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_easy_ride/view/dashboard/pending_booking_card.dart';
+import 'package:flutter_easy_ride/view/home/provider/bottom_bar_provider.dart';
 import 'package:flutter_easy_ride/view/home/provider/dashboard_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +24,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
   @override
   void initState() {
     super.initState();
-    Provider.of<BookNowProvider>(context, listen: false).fetchCurrentLocation();
+    Provider.of<BottomBarProvider>(context, listen: false).fetchCurrentLocation();
   }
 
   @override

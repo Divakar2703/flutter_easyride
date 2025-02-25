@@ -1,13 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/api/dio_client.dart';
+import 'package:flutter_easy_ride/api/service_locator.dart';
 import 'package:flutter_easy_ride/model/drop_location_history.dart';
+import 'package:flutter_easy_ride/model/location_suggetions.dart';
 import 'package:flutter_easy_ride/service/api_helper.dart';
 import 'package:flutter_easy_ride/service/network_utility.dart';
+import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:flutter_easy_ride/view/booking/models/common_model.dart';
 import 'package:flutter_easy_ride/view/components/common_textfield.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -23,6 +28,8 @@ class BookNowProvider with ChangeNotifier {
 
   List<CommonTextField> locationTextfieldList = [];
 
+  final dio = getIt.get<DioClient>();
+
   void addLocations() {
     final con = TextEditingController();
     controllerList.insert(controllerList.length - 1, con);
@@ -32,10 +39,105 @@ class BookNowProvider with ChangeNotifier {
         hintText: "Enter location",
         con: con,
         border: InputBorder.none,
+        suffix: SvgPicture.asset(AppImage.remove),
         contentPadding: EdgeInsets.all(10),
+        onTap: () => setSelectedController(con),
+        onChanged: (v) => searchLocation(v),
+        suffixOnTap: () => removeLocation(con), // Assign remove function
       ),
     );
     notifyListeners();
+  }
+
+  /// On Map Tap & add marker
+  Set<Marker> markers = {};
+  Future<void> addLocationMarkers(LatLng l, String address, {bool isSource = false, bool isDestination = false}) async {
+    final markerId = MarkerId(isSource
+            ? 'source_marker'
+            : isDestination
+                ? 'destination_marker'
+                : 'marker_${markers.length}' // Unique ID for other markers
+        );
+
+    // Choose correct icon
+    final BitmapDescriptor icon = await BitmapDescriptor.asset(
+      ImageConfiguration(size: Size(10, 10)),
+      isDestination ? AppImage.destination : AppImage.source,
+    );
+
+    if (isSource) {
+      // Remove old source marker
+      markers.removeWhere((m) => m.markerId.value == 'source_marker');
+
+      // Ensure source is at index 0
+      if (markerPositions.isNotEmpty) {
+        markerPositions[0] = l;
+      } else {
+        markerPositions.insert(0, l);
+      }
+    } else if (isDestination) {
+      // Remove old destination marker
+      markers.removeWhere((m) => m.markerId.value == 'destination_marker');
+
+      // Ensure destination is at the last index
+      if (markerPositions.length > 1) {
+        markerPositions[markerPositions.length - 1] = l;
+      } else {
+        markerPositions.add(l);
+      }
+    } else {
+      // Insert new markers between source and destination
+      if (markerPositions.length > 1) {
+        markerPositions.insert(markerPositions.length - 1, l);
+      } else {
+        markerPositions.add(l);
+      }
+    }
+
+    // Add the new marker
+    markers.add(
+      Marker(
+          markerId: markerId,
+          position: l,
+          icon: icon,
+          anchor: Offset(0.5, 0.5),
+          infoWindow: InfoWindow(title: address)),
+    );
+
+    // Ensure polyline updates properly
+    if (markerPositions.length >= 2) {
+      _drawPolyline();
+    }
+
+    notifyListeners();
+  }
+
+  /// Remove Location Textfield
+  int count = 1;
+  void removeLocation(TextEditingController con) {
+    String removeMarkId = "";
+    int indexToRemove = controllerList.indexOf(con);
+    if (indexToRemove != -1) {
+      controllerList.removeAt(indexToRemove);
+      markers.forEach((m) {
+        if (m.infoWindow.title == locationTextfieldList[indexToRemove].con?.text) {
+          removeMarkId = m.markerId.value;
+        }
+      });
+      locationTextfieldList.removeAt(indexToRemove);
+      print(markerPositions);
+      // if (locationTextfieldList[indexToRemove].con != con && indexToRemove < markerPositions.length) {
+      //   markerPositions.removeAt(indexToRemove);
+      // }
+      if (locationTextfieldList[indexToRemove].con != con && indexToRemove < markerPositions.length) {
+        markerPositions.removeAt(indexToRemove);
+      }
+      print(markerPositions);
+      markers.removeWhere((m) => m.markerId.value == removeMarkId);
+      _drawPolyline();
+
+      notifyListeners();
+    }
   }
 
   /// Remove Extra Location Field
@@ -64,33 +166,71 @@ class BookNowProvider with ChangeNotifier {
         hintText: "Source",
         con: sourceLocation,
         border: InputBorder.none,
+        onTap: () => setSelectedController(sourceLocation),
+        onChanged: (v) => searchLocation(v),
         contentPadding: EdgeInsets.all(10),
       ),
       CommonTextField(
         hintText: "Destination",
         con: destination,
         border: InputBorder.none,
+        onTap: () => setSelectedController(destination),
+        onChanged: (v) => searchLocation(v),
         contentPadding: EdgeInsets.all(10),
       )
     ]);
     notifyListeners();
   }
 
-  /// On Map Tap
-  Set<Marker> markers = {};
-  addLocationMarkers(LatLng l) {
-    final markerId = MarkerId('marker_${markers.length}');
-    final marker = Marker(
-      markerId: markerId,
-      position: l,
-      infoWindow: InfoWindow(title: 'Marker ${markers.length + 1}'),
+  /// Draw Poly Lines
+  Set<Polyline> polyLines = {};
+  List<LatLng> markerPositions = [];
+  _drawPolyline() {
+    if (markerPositions.length < 2) return;
+    polyLines.clear();
+    polyLines.add(
+      Polyline(
+          polylineId: PolylineId('route'),
+          color: AppColors.black,
+          width: 2,
+          points: markerPositions,
+          startCap: Cap.roundCap,
+          endCap: Cap.roundCap,
+          jointType: JointType.round),
     );
-    markers.add(marker);
     notifyListeners();
   }
 
+  /// Write Data On Selected Textfield
+  TextEditingController? selectedController;
+  setSelectedController(TextEditingController con) => selectedController = con;
+
+  /// Update textfield value
+  Future<void> updateSelectedTextField(String text, {bool isSource = true, bool isDestination = false}) async {
+    if (selectedController != null) {
+      selectedController!.text = text;
+      placesList.clear();
+      notifyListeners();
+    }
+    final resp = await locationFromAddress(text);
+    addLocationMarkers(LatLng(resp.first.latitude, resp.first.longitude), text,
+        isSource: isSource, isDestination: isDestination);
+  }
+
+  ///Search Places
+  List<Suggestions> placesList = [];
+  searchLocation(String v) async {
+    placesList.clear();
+    try {
+      final resp = await dio
+          .post(Endpoints.places, queryParameters: {"input": v, "key": "AIzaSyCqOtn--DWaSee5PMjb1J1zkPe7gw5XMWQ"});
+      final model = SuggestionsResponse.fromJson(resp.data);
+      placesList = model.suggestions ?? [];
+      notifyListeners();
+    } catch (e) {}
+  }
+
   /// Get Current Location
-  TextEditingController homeSearchCon = TextEditingController();
   LatLng? _currentLocation;
   bool _isLoading = false;
 
@@ -129,9 +269,8 @@ class BookNowProvider with ChangeNotifier {
       ALongitude = position.longitude;
       address =
           '${placeMarks[0].thoroughfare}, ${placeMarks[0].subLocality}, ${placeMarks[0].locality}, ${placeMarks[0].administrativeArea}, ${placeMarks[0].postalCode}';
-      homeSearchCon.text = address;
       if (_currentLocation != null) {
-        addLocationMarkers(_currentLocation!);
+        addLocationMarkers(_currentLocation!, address, isSource: true);
       }
     } catch (e) {
       print('Error fetching location: $e');

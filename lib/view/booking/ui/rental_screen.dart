@@ -3,8 +3,6 @@ import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_easy_ride/view/booking/provider/rental_provider.dart';
-import 'package:flutter_easy_ride/view/car_selection/ui/car_selection_screen.dart';
-import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:flutter_easy_ride/view/components/common_location_textfield.dart';
 import 'package:flutter_easy_ride/view/components/vertical_text.dart';
 import 'package:provider/provider.dart';
@@ -53,15 +51,6 @@ class RentalScreen extends StatelessWidget {
                 .toList(),
           ),
         ),
-        SizedBox(height: 15),
-        CommonButton(
-          label: "Confirm",
-          onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => CarSelectionScreen(),
-            ),
-          ),
-        )
       ],
     );
   }

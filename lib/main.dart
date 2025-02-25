@@ -110,8 +110,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   commonCall() async {
-    await context.read<ApiProvider>().fetchAuth();
     userID = await LocalStorage.getUserID();
+    await context.read<ApiProvider>().fetchAuth();
   }
 
   @override
