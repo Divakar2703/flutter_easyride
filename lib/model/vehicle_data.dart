@@ -1,77 +1,85 @@
 class VehicleResponse {
-  final List<Vehicle> vehicle;
-  final String status;
-  final String message;
-  final int statusCode;
+  List<Vehicle>? vehicle;
+  String? status;
+  String? message;
+  int? statusCode;
 
-  VehicleResponse({
-    required this.vehicle,
-    required this.status,
-    required this.message,
-    required this.statusCode,
-  });
+  VehicleResponse({this.vehicle, this.status, this.message, this.statusCode});
 
-  // Factory method to create a VehicleResponse object from JSON
-  factory VehicleResponse.fromJson(Map<String, dynamic> json) {
-    return VehicleResponse(
-      vehicle: (json['vehicle'] as List)
-          .map((vehicle) => Vehicle.fromJson(vehicle))
-          .toList(),
-      status: json['status'] as String,
-      message: json['message'] as String,
-      statusCode: json['statusCode'] as int,
-    );
+  VehicleResponse.fromJson(Map<String, dynamic> json) {
+    if (json['vehicle'] != null) {
+      vehicle = <Vehicle>[];
+      json['vehicle'].forEach((v) {
+        vehicle!.add(new Vehicle.fromJson(v));
+      });
+    }
+    status = json['status'];
+    message = json['message'];
+    statusCode = json['statusCode'];
   }
 
-  // Method to convert a VehicleResponse object to JSON
   Map<String, dynamic> toJson() {
-    return {
-      'vehicle': vehicle.map((v) => v.toJson()).toList(),
-      'status': status,
-      'message': message,
-      'statusCode': statusCode,
-    };
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.vehicle != null) {
+      data['vehicle'] = this.vehicle!.map((v) => v.toJson()).toList();
+    }
+    data['status'] = this.status;
+    data['message'] = this.message;
+    data['statusCode'] = this.statusCode;
+    return data;
   }
 }
 
 class Vehicle {
-  final String id;
-  final String name;
-  final String image;
-  final String description;
-  final String type;
-  final double fare;
+  String? id;
+  String? name;
+  String? image;
+  String? description;
+  String? type;
+  String? seat;
+  String? promocodeStatus;
+  double? fare;
+  String? discount;
+  double? netFare;
+  bool isSelected = false;
 
-  Vehicle({
-    required this.id,
-    required this.name,
-    required this.image,
-    required this.description,
-    required this.type,
-    required this.fare,
-  });
+  Vehicle(
+      {this.id,
+      this.name,
+      this.image,
+      this.description,
+      this.type,
+      this.seat,
+      this.promocodeStatus,
+      this.fare,
+      this.discount,
+      this.netFare});
 
-  // Factory method to create a Vehicle object from JSON
-  factory Vehicle.fromJson(Map<String, dynamic> json) {
-    return Vehicle(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      image: json['image'] as String,
-      description: json['description'] as String,
-      type: json["type"]??"",
-      fare: (json['fare'] as num).toDouble(),
-    );
+  Vehicle.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    image = json['image'];
+    description = json['description'];
+    type = json['type'];
+    seat = json['seat'];
+    promocodeStatus = json['promocode_status'];
+    fare = json['fare'];
+    discount = json['discount'];
+    netFare = json['net_fare'];
   }
 
-  // Method to convert a Vehicle object to JSON
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'image': image,
-      'description': description,
-      'type':type,
-      'fare': fare,
-    };
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['image'] = this.image;
+    data['description'] = this.description;
+    data['type'] = this.type;
+    data['seat'] = this.seat;
+    data['promocode_status'] = this.promocodeStatus;
+    data['fare'] = this.fare;
+    data['discount'] = this.discount;
+    data['net_fare'] = this.netFare;
+    return data;
   }
 }

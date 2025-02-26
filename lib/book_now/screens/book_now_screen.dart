@@ -66,7 +66,6 @@ class _BookNowScreenState extends State<BookNowScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      //   appBar: AppBar(title: Text('Choose Your Ride')),
       body: cabBookProvider.isLoading
           ? ShimmerLoader()
           : Column(

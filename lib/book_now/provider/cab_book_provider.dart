@@ -165,10 +165,11 @@ class CabBookProvider with ChangeNotifier {
         VehicleResponse vehicleResponse = VehicleResponse.fromJson(jsondataa);
         if (vehicleResponse.status == "success") {
           // Check if type is empty and filter accordingly
-          List<Vehicle> filteredVehicles = vehicleResponse.vehicle.where((vehicle) {
-            // If cabType is empty, include all vehicles; otherwise, filter by type
-            return cabType.isEmpty || vehicle.type == cabType;
-          }).toList();
+          List<Vehicle> filteredVehicles = vehicleResponse.vehicle?.where((vehicle) {
+                // If cabType is empty, include all vehicles; otherwise, filter by type
+                return cabType.isEmpty || vehicle.type == cabType;
+              }).toList() ??
+              [];
 
           // Update the response with filtered data
           vehicleResponse = VehicleResponse(

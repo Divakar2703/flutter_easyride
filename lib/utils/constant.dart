@@ -2,9 +2,10 @@ class Endpoints {
   Endpoints._();
   static const int connectionTimeout = 15000;
   static const int receiveTimeout = 15000;
-  static const String baseUrl = "https://asatvindia.in/cab/Api/";
-  static String authApi = "${baseUrl}Api_auth/fetch_api_auth";
+  static const String baseUrl = "https://asatvindia.in/cab/Api";
+  static const String authApi = "$baseUrl/Api_auth/fetch_api_auth";
   static const String places = "https://places.googleapis.com/v1/places:autocomplete";
+  static const String getVehicles = "$baseUrl/User/getvehicle";
 
   /// Authentication
   static String registerUser = "https://www.bits.teamtest.co.in/Api/Login/GetUserDataForService";

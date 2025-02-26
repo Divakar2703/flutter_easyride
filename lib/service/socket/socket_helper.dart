@@ -1,9 +1,10 @@
-import 'dart:convert';
-import 'package:flutter/material.dart';
-import '../../model/driver_details.dart';
 import 'dart:async';
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../../model/driver_details.dart';
 import '../../utils/eve.dart';
 
 class SocketHelper {
@@ -118,7 +119,7 @@ class SocketHelper {
 
     _socket.on('findDriverResult', (data) {
       print("Received data: $data");
-      requestStatus=true;
+      requestStatus = true;
       print("requestStatus==$requestStatus");
       try {
         // Decode data only if it's a String; if it's already a Map, use it directly
@@ -133,9 +134,9 @@ class SocketHelper {
 
         // Additional logic based on response status
         if (driverDetails.status == 'success') {
-         // confirmOrRejectRequest(reqId: driverDetails.sendRequestId, isConfirm: '1', isReject: '0');
+          // confirmOrRejectRequest(reqId: driverDetails.sendRequestId, isConfirm: '1', isReject: '0');
           print('Driver found successfully');
-         // _socket.disconnect();
+          // _socket.disconnect();
         }
       } catch (e) {
         debugPrint('Driver Error processing message: ${e.toString()}');
@@ -160,11 +161,7 @@ class SocketHelper {
 
     // Log the emitted data for debugging
     print("confirmOrRejectRequest: ${jsonEncode(jsonData)}");
-
-
   }
-
-
 
   void disconnect() {
     if (isConnected) {
@@ -173,6 +170,4 @@ class SocketHelper {
       print("Socket disconnected.");
     }
   }
-
-
 }

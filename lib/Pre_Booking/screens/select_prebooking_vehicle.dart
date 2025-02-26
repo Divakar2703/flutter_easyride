@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/Pre_Booking/screens/booking_details_screen.dart';
-import 'package:flutter_easy_ride/model/vehicle_data.dart';
 import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+
 import '../../Book_Now/provider/cab_book_provider.dart';
-import '../../book_easyride/model/triphistry.dart';
 import '../../common_widget/custombutton.dart';
 import '../../common_widget/map_widget.dart';
 import '../../common_widget/vehicle_widget.dart';
 import '../../provider/map_provider.dart';
-import '../provider/preebooking_provider.dart';
 
 final Color kDarkBlueColor = const Color(0xff1937d7);
 
@@ -18,17 +16,14 @@ class SelectPrebookingVehicle extends StatefulWidget {
   const SelectPrebookingVehicle({super.key});
 
   @override
-  State<SelectPrebookingVehicle> createState() =>
-      _SelectPrebookingVehicleState();
+  State<SelectPrebookingVehicle> createState() => _SelectPrebookingVehicleState();
 }
 
 class _SelectPrebookingVehicleState extends State<SelectPrebookingVehicle> {
   late GoogleMapController mapController;
-  final LatLng _pickupLocation =
-      LatLng(ALatitude, ALongitude); // Pickup location coordinates
+  final LatLng _pickupLocation = LatLng(ALatitude, ALongitude); // Pickup location coordinates
   int selectedRow = -1;
-  Set<int> selectedRows =
-      Set<int>(); // Use a Set to keep track of selected indices
+  Set<int> selectedRows = Set<int>(); // Use a Set to keep track of selected indices
 
   @override
   void initState() {
@@ -37,10 +32,8 @@ class _SelectPrebookingVehicleState extends State<SelectPrebookingVehicle> {
     //Provider.of<PreebookingProvider>(context, listen: false).getprebookvehicle();
 
     final mapProvider = Provider.of<MapProvider>(context, listen: false);
-    mapProvider.loadMapData(
-        ALatitude, ALongitude, dropLat,dropLong);
-    mapProvider.getPolyPoints(
-        ALatitude, ALongitude, dropLat, dropLong);
+    mapProvider.loadMapData(ALatitude, ALongitude, dropLat, dropLong);
+    mapProvider.getPolyPoints(ALatitude, ALongitude, dropLat, dropLong);
   }
 
   @override
@@ -73,8 +66,7 @@ class _SelectPrebookingVehicleState extends State<SelectPrebookingVehicle> {
                   children: [
                     Container(
                       height: MediaQuery.of(context).size.height * 0.3,
-                      padding:
-                          EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.only(
                           topRight: Radius.circular(16),
@@ -82,54 +74,44 @@ class _SelectPrebookingVehicleState extends State<SelectPrebookingVehicle> {
                         ),
                         color: Colors.white,
                       ),
-                      child: Consumer<CabBookProvider>(
-                          builder: (context, cabProvider, child) {
+                      child: Consumer<CabBookProvider>(builder: (context, cabProvider, child) {
                         if (cabProvider.vehicleResponse == null) {
                           return Center(child: CircularProgressIndicator());
-                        } else if (cabProvider.vehicleResponse!.vehicle ==
-                                null ||
+                        } else if (cabProvider.vehicleResponse!.vehicle == null ||
                             cabProvider.vehicleResponse!.vehicle!.isEmpty) {
-                          return Center(
-                              child: Text("No vehicles available"));
+                          return Center(child: Text("No vehicles available"));
                         } else {
                           return ListView.builder(
                             shrinkWrap: true,
-                            itemCount:
-                                cabProvider.vehicleResponse?.vehicle.length,
+                            itemCount: cabProvider.vehicleResponse?.vehicle?.length,
                             itemBuilder: (BuildContext context, int index) {
-                              var vehicle =
-                                  cabProvider.vehicleResponse?.vehicle[index];
+                              var vehicle = cabProvider.vehicleResponse?.vehicle?[index];
                               return VehicleListItem(
-                                title: vehicle!.name,
-                                subtitle: vehicle.description,
-                                price: vehicle.fare.toString(),
+                                title: vehicle?.name ?? "",
+                                subtitle: vehicle?.description ?? "",
+                                price: "${vehicle?.fare ?? ""}",
                                 time: "2 min",
-                                assetPath: vehicle.image,
+                                assetPath: vehicle?.image ?? "",
                                 isSelected: selectedRows.contains(index),
                                 onTap: () {
-
-
                                   setState(() {
-                                    selectedVehicle=vehicle.id;
-                                    selectedFare=vehicle.fare;
-                                    vehicleDetails=cabProvider.vehicleResponse?.vehicle[index];
-                                    setState(() {
-                                    });
+                                    selectedVehicle = vehicle?.id ?? "";
+                                    selectedFare = vehicle?.fare ?? 0.0;
+                                    vehicleDetails = cabProvider.vehicleResponse?.vehicle?[index];
+                                    setState(() {});
                                     // Toggle the selection state
                                     if (selectedRows.contains(index)) {
                                       selectedRows.remove(index); // Deselect if already selected
                                     } else {
-                                      cabProvider.getOffers(
-                                          int.parse(vehicle.id));
-                                      selectedRows.add(
-                                          index); // Select if not selected
-                                      cabProvider.sendRequestToDriver(vehicle.id,"pre_booking");
+                                      cabProvider.getOffers(int.parse(vehicle?.id ?? "0"));
+                                      selectedRows.add(index); // Select if not selected
+                                      cabProvider.sendRequestToDriver(vehicle?.id ?? "", "pre_booking");
                                     }
-                                  });                                },
+                                  });
+                                },
                               );
                             },
                           );
-
                         }
                       }),
                     ),
@@ -140,13 +122,10 @@ class _SelectPrebookingVehicleState extends State<SelectPrebookingVehicle> {
                         width: double.infinity,
                         child: Customtbutton(
                           text: "Confirm",
-                          onPressed: (){
+                          onPressed: () {
                             Navigator.of(context).push(_createRoute());
-
                           },
                         ),
-
-
                       ),
                     ),
                   ],
@@ -161,15 +140,13 @@ class _SelectPrebookingVehicleState extends State<SelectPrebookingVehicle> {
 
   Route _createRoute() {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) =>
-          BookingDetailsScreen(),
+      pageBuilder: (context, animation, secondaryAnimation) => BookingDetailsScreen(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(1.0, 0.0); // Start off the screen to the right
         const end = Offset.zero; // Slide to the center
         const curve = Curves.easeInOut;
 
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
         return SlideTransition(
           position: animation.drive(tween),

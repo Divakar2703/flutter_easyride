@@ -59,34 +59,28 @@ class BookNowProvider with ChangeNotifier {
                 : 'marker_${markers.length}' // Unique ID for other markers
         );
 
-    // Choose correct icon
     final BitmapDescriptor icon = await BitmapDescriptor.asset(
       ImageConfiguration(size: Size(10, 10)),
       isDestination ? AppImage.destination : AppImage.source,
     );
 
     if (isSource) {
-      // Remove old source marker
       markers.removeWhere((m) => m.markerId.value == 'source_marker');
 
-      // Ensure source is at index 0
       if (markerPositions.isNotEmpty) {
         markerPositions[0] = l;
       } else {
         markerPositions.insert(0, l);
       }
     } else if (isDestination) {
-      // Remove old destination marker
       markers.removeWhere((m) => m.markerId.value == 'destination_marker');
 
-      // Ensure destination is at the last index
       if (markerPositions.length > 1) {
         markerPositions[markerPositions.length - 1] = l;
       } else {
         markerPositions.add(l);
       }
     } else {
-      // Insert new markers between source and destination
       if (markerPositions.length > 1) {
         markerPositions.insert(markerPositions.length - 1, l);
       } else {
@@ -94,7 +88,6 @@ class BookNowProvider with ChangeNotifier {
       }
     }
 
-    // Add the new marker
     markers.add(
       Marker(
           markerId: markerId,
@@ -104,7 +97,6 @@ class BookNowProvider with ChangeNotifier {
           infoWindow: InfoWindow(title: address)),
     );
 
-    // Ensure polyline updates properly
     if (markerPositions.length >= 2) {
       _drawPolyline();
     }
@@ -125,17 +117,12 @@ class BookNowProvider with ChangeNotifier {
         }
       });
       locationTextfieldList.removeAt(indexToRemove);
-      print(markerPositions);
-      // if (locationTextfieldList[indexToRemove].con != con && indexToRemove < markerPositions.length) {
-      //   markerPositions.removeAt(indexToRemove);
-      // }
       if (locationTextfieldList[indexToRemove].con != con && indexToRemove < markerPositions.length) {
         markerPositions.removeAt(indexToRemove);
       }
       print(markerPositions);
       markers.removeWhere((m) => m.markerId.value == removeMarkId);
       _drawPolyline();
-
       notifyListeners();
     }
   }

@@ -7,6 +7,7 @@ import 'package:flutter_easy_ride/view/components/common_tile_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../driver_details/ui/driver_detail_screen.dart';
 
@@ -80,18 +81,53 @@ class CarSelectionScreen extends StatelessWidget {
                     "Choose Your Ride",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                   ),
-                  Expanded(
-                    child: ListView.separated(
-                      shrinkWrap: true,
-                      padding: EdgeInsets.all(20),
-                      itemCount: context.read<CarSelectionProvider>().carList.length,
-                      separatorBuilder: (context, index) => SizedBox(height: 10),
-                      itemBuilder: (context, index) => CommonTileView(
-                          image: context.read<CarSelectionProvider>().carList[index].image,
-                          time: context.read<CarSelectionProvider>().carList[index].time,
-                          title: context.read<CarSelectionProvider>().carList[index].title,
-                          price: context.read<CarSelectionProvider>().carList[index].price,
-                          subTitle: context.read<CarSelectionProvider>().carList[index].subTitle),
+                  Consumer<CarSelectionProvider>(
+                    builder: (context, v, child) => Expanded(
+                      child: v.loading
+                          ? ListView.separated(
+                              shrinkWrap: true,
+                              padding: EdgeInsets.all(20),
+                              itemCount: 4, // Show 5 shimmer items
+                              separatorBuilder: (context, index) => SizedBox(height: 10),
+                              itemBuilder: (context, index) => Shimmer.fromColors(
+                                baseColor: Colors.grey[300]!,
+                                highlightColor: Colors.grey[100]!,
+                                child: Container(
+                                  height: 80,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.white,
+                                    borderRadius: BorderRadius.circular(18),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AppColors.black.withOpacity(0.1),
+                                        offset: Offset(0, 2),
+                                        blurRadius: 12,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            )
+                          : v.vehicleList.isEmpty
+                              ? Center(child: Text("Vehicles not available at this location."))
+                              : ListView.separated(
+                                  shrinkWrap: true,
+                                  padding: EdgeInsets.all(20),
+                                  itemCount: context.read<CarSelectionProvider>().vehicleList.length,
+                                  separatorBuilder: (context, index) => SizedBox(height: 10),
+                                  itemBuilder: (context, index) => CommonTileView(
+                                      onTap: () {
+                                        v.vehicleList.forEach((e) => e.isSelected = false);
+                                        v.vehicleList[index].isSelected = true;
+                                      },
+                                      isSelected: context.read<CarSelectionProvider>().vehicleList[index].isSelected,
+                                      image: context.read<CarSelectionProvider>().vehicleList[index].image,
+                                      // time: context.read<CarSelectionProvider>().vehicleList[index].time,
+                                      title: context.read<CarSelectionProvider>().vehicleList[index].name,
+                                      price: "₹${context.read<CarSelectionProvider>().vehicleList[index].fare}",
+                                      subTitle: context.read<CarSelectionProvider>().vehicleList[index].description),
+                                ),
                     ),
                   ),
                 ],

@@ -9,6 +9,7 @@ import 'package:flutter_easy_ride/view/booking/provider/common_provider.dart';
 import 'package:flutter_easy_ride/view/booking/ui/book_now_screen.dart';
 import 'package:flutter_easy_ride/view/booking/ui/pre_booking_screen.dart';
 import 'package:flutter_easy_ride/view/booking/ui/rental_screen.dart';
+import 'package:flutter_easy_ride/view/car_selection/provider/car_selection_provider.dart';
 import 'package:flutter_easy_ride/view/car_selection/ui/car_selection_screen.dart';
 import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:flutter_easy_ride/view/components/image_text_widget.dart';
@@ -34,7 +35,7 @@ class _BookingScreenState extends State<BookingScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<BookNowProvider>().addLocationTextFields(sourceLocation, destination, address);
       Provider.of<BookNowProvider>(context, listen: false).fetchCurrentLocation();
-      Provider.of<BookNowProvider>(context, listen: false).searchLocation(address);
+      // Provider.of<BookNowProvider>(context, listen: false).searchLocation(address);
     });
   }
 
@@ -178,10 +179,17 @@ class _BookingScreenState extends State<BookingScreen> {
                   child: CommonButton(
                     label: "Confirm",
                     onPressed: () {
-                      if ((context.read<BookNowProvider>().locationTextfieldList.first.con?.text.isNotEmpty ?? false) &&
-                          (context.read<BookNowProvider>().locationTextfieldList.last.con?.text.isNotEmpty ?? false)) {
-                        context.read<BookNowProvider>().removeExtraLocation();
+                      final provider = context.read<BookNowProvider>();
+                      if ((provider.locationTextfieldList.first.con?.text.isNotEmpty ?? false) &&
+                          (provider.locationTextfieldList.last.con?.text.isNotEmpty ?? false)) {
+                        provider.removeExtraLocation();
                         Navigator.push(context, MaterialPageRoute(builder: (context) => CarSelectionScreen()));
+                        context.read<CarSelectionProvider>().getVehicles(
+                              pickup_lat: provider.markerPositions.first.latitude,
+                              pickup_long: provider.markerPositions.first.longitude,
+                              drop_lat: provider.markerPositions.last.latitude,
+                              drop_long: provider.markerPositions.last.longitude,
+                            );
                       } else {
                         AppUtils.show("Please select source & destination location");
                       }
