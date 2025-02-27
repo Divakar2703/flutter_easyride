@@ -1,9 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/model/nearby_vehicle.dart';
-import 'package:flutter_easy_ride/service/api_helper.dart';
-import 'package:flutter_easy_ride/service/network_utility.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:flutter_easy_ride/utils/toast.dart';
@@ -106,34 +102,28 @@ class BottomBarProvider extends ChangeNotifier {
 
   ///  Near By Vehicle
   bool loading = false;
-  NearByVehicle? vehicleResponse;
-  List<NearbyCab>? get vehicleList => vehicleResponse?.vehicle ?? [];
+  List<NearbyCab> vehicleList = [];
 
   Future<void> getLocationVehicles() async {
     loading = true;
-    final String url = ApiHelper.nearbyVehicles;
-    final params = {"pickup_lat": ALatitude, "pickup_long": ALongitude};
-
     try {
-      final response = await NetworkUtility.sendPostRequest(url, params);
-      if (response.statusCode == 200) {
+      final resp = await homeService.getLocationVehicles(lat: ALatitude, long: ALongitude);
+      if (resp != null) {
         loading = false;
-        final jsonData = jsonDecode(response.body);
-        vehicleResponse = NearByVehicle.fromJson(jsonData);
-        if (vehicleList?.isNotEmpty ?? false) {
-          vehicleList?.forEach(
+        vehicleList = resp.vehicle ?? [];
+        if (vehicleList.isNotEmpty) {
+          vehicleList.forEach(
             (e) => addLocationMarkers(
               LatLng(double.parse(e.currLat ?? "0.0"), double.parse(e.currLong ?? "0.0")),
               e: e,
             ),
           );
         } else {
-          AppUtils.show(vehicleResponse?.message ?? "");
+          AppUtils.show(resp.message ?? "");
         }
         notifyListeners();
       } else {
         loading = false;
-        vehicleResponse = null;
       }
     } catch (e) {
       loading = false;

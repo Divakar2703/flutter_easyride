@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
+import 'package:flutter_easy_ride/utils/indicator.dart';
+import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:flutter_easy_ride/view/components/common_textfield.dart';
 import 'package:flutter_easy_ride/view/components/dotted_line.dart';
@@ -26,11 +28,17 @@ class DriverDetailScreen extends StatelessWidget {
             height: MediaQuery.of(context).size.height - 450,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(color: AppColors.white),
-            child: GoogleMap(
-              zoomControlsEnabled: false,
-              initialCameraPosition: CameraPosition(
-                target: LatLng(18.512457, 73.843106),
-              ),
+            child: Consumer<BookNowProvider>(
+              builder: (context, v, child) => v.isLoading
+                  ? Indicator()
+                  : GoogleMap(
+                      markers: v.markers,
+                      polylines: v.polyLines,
+                      zoomControlsEnabled: false,
+                      // onMapCreated: (c) => _mapController = c,
+                      // onTap: (l) => v.addLocationMarkers(l),
+                      initialCameraPosition: CameraPosition(target: v.currentLocation ?? LatLng(0, 0), zoom: 15),
+                    ),
             ),
           ),
           SafeArea(
@@ -452,9 +460,9 @@ class DriverDetailScreen extends StatelessWidget {
                     img: AppImage.close,
                     label: "Cancel Ride",
                     horizontalPadding: 10,
-                    labelColor: AppColors.pink.withOpacity(0.7),
+                    labelColor: AppColors.redColor.withOpacity(0.7),
                     buttonColor: AppColors.white,
-                    buttonBorderColor: AppColors.pink.withOpacity(0.7),
+                    buttonBorderColor: AppColors.redColor.withOpacity(0.7),
                   ),
                 ),
                 SizedBox(width: 10),

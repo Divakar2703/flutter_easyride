@@ -5,9 +5,7 @@ import '../utils/eve.dart';
 class PaymentMethodBottomSheet extends StatelessWidget {
   final Function(String) onPaymentSelected;
 
-   PaymentMethodBottomSheet({Key? key, required this.onPaymentSelected}) : super(key: key);
-
-
+  PaymentMethodBottomSheet({Key? key, required this.onPaymentSelected}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +24,14 @@ class PaymentMethodBottomSheet extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Select Payment Method',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
               const SizedBox(height: 10),
+              Center(
+                child: const Text(
+                  'Select Payment Method',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+              const SizedBox(height: 20),
               Expanded(
                 child: ListView.separated(
                   controller: controller,
@@ -39,18 +40,20 @@ class PaymentMethodBottomSheet extends StatelessWidget {
                     return GestureDetector(
                       onTap: () {
                         onPaymentSelected(banks[index]['name']);
-                      //  Navigator.pop(context); // Close the bottom sheet after selection
+                        //  Navigator.pop(context); // Close the bottom sheet after selection
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Row(
                           children: [
                             // Image for the payment method
-                            Image.asset(
-                              banks[index]['image'],
-                              width: 30, // Adjust the size of the image as needed
-                              height: 30,
-                            ),
+                            banks[index]['image'] != ''
+                                ? Image.asset(
+                                    banks[index]['image'],
+                                    width: 30, // Adjust the size of the image as needed
+                                    height: 30,
+                                  )
+                                : SizedBox(),
                             const SizedBox(width: 10), // Space between image and text
                             // Payment method name
                             Text(

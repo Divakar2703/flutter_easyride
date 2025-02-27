@@ -178,11 +178,10 @@ class _BookingScreenState extends State<BookingScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                   child: CommonButton(
                     label: "Confirm",
-                    onPressed: () {
+                    onPressed: () async {
                       final provider = context.read<BookNowProvider>();
                       if ((provider.locationTextfieldList.first.con?.text.isNotEmpty ?? false) &&
                           (provider.locationTextfieldList.last.con?.text.isNotEmpty ?? false)) {
-                        provider.removeExtraLocation();
                         Navigator.push(context, MaterialPageRoute(builder: (context) => CarSelectionScreen()));
                         context.read<CarSelectionProvider>().getVehicles(
                               pickup_lat: provider.markerPositions.first.latitude,

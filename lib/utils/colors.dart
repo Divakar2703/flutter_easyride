@@ -33,7 +33,7 @@ class AppColors {
 
   static const Color white = Colors.white;
   static const Color borderColor = Color(0xFF202020);
-  static const Color pink = Color(0xFFFF4747);
+  static const Color redColor = Color(0xFFFF4747);
   static const Color lightBlue = Color(0xFFEFF7FF);
   static const Color blue = Color(0xFF007BFF);
   static const Color green = Color(0xFF1DAC00);

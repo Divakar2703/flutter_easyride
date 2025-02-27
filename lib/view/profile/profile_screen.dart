@@ -1,39 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
+import 'package:flutter_easy_ride/utils/constant.dart';
+import 'package:flutter_easy_ride/view/components/horizontal_image_text.dart';
 import 'package:flutter_easy_ride/view/home/provider/bottom_bar_provider.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-import '../../Profile/Edit_Profile/edit_Email.dart';
-import '../../Profile/Edit_Profile/edit_Enumber.dart';
-import '../../Profile/Edit_Profile/edit_Gender.dart';
-import '../../Profile/Edit_Profile/edit_Name.dart';
-import '../../Profile/Edit_Profile/edit_number.dart';
-
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
-
-  @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
-  DateTime _selectedDate = DateTime.now();
-  TimeOfDay _selectedTime = TimeOfDay(hour: 15, minute: 5); // Default time
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-      });
-    }
-  }
+class ProfileScreen extends StatelessWidget {
+  ProfileScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -65,384 +39,107 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
         ),
-        SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 8, bottom: 10),
-                  child: Row(
+        Expanded(
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 10),
+                  Row(
                     children: [
-                      Icon(
-                        Icons.person_sharp,
-                        color: Color(0xff1937d7),
-                        size: 24,
-                      ),
-                      SizedBox(
-                        width: 18,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Name',
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.black87,
-                              fontFamily: 'Poppins', // Set Poppins as the default font
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Text(
-                            'Pintu Yadav',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey.shade700,
-                              fontFamily: 'Poppins', // Set Poppins as the default font
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      IconButton(
-                        icon: Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          color: Colors.grey.shade600,
-                          size: 16,
-                        ),
-                        onPressed: () {
-                          editNameBottomSheet(context);
-                        },
-                      )
-                    ],
-                  ),
-                ),
-                Divider(
-                  thickness: 1.5,
-                  color: Colors.grey.shade300,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8, bottom: 10, top: 10),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.call,
-                        color: Color(0xff1937d7),
-                        size: 24,
-                      ),
-                      SizedBox(
-                        width: 18,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Phone Number',
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.black87,
-                              fontFamily: 'Poppins', // Set Poppins as the default font
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Text(
-                            '+91-5487934589',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey.shade700,
-                              fontFamily: 'Poppins', // Set Poppins as the default font
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      IconButton(
-                        icon: Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          color: Colors.grey.shade600,
-                          size: 16,
-                        ),
-                        onPressed: () {
-                          editNumberBottomSheet(context);
-                        },
-                      )
-                    ],
-                  ),
-                ),
-                Divider(
-                  thickness: 1.5,
-                  color: Colors.grey.shade300,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8, bottom: 10, top: 10),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.email_outlined,
-                        color: Color(0xff1937d7),
-                        size: 24,
-                      ),
-                      SizedBox(width: 18),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Email',
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Poppins', // Set Poppins as the default font
-                            ),
-                          ),
-                          Text(
-                            'xyz3487@gmail.com',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey.shade700,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: 'Poppins', // Set Poppins as the default font
-                            ),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      IconButton(
-                        icon: Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          color: Colors.grey.shade600,
-                          size: 16,
-                        ),
-                        onPressed: () {
-                          editEmailBottomSheet(context);
-                        },
-                      )
-                    ],
-                  ),
-                ),
-                Divider(
-                  thickness: 1.5,
-                  color: Colors.grey.shade300,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8, bottom: 10, top: 10),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.person_search_outlined,
-                        color: Color(0xff1937d7),
-                        size: 24,
-                      ),
-                      SizedBox(
-                        width: 18,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Gender',
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Poppins', // Set Poppins as the default font
-                            ),
-                          ),
-                          Text(
-                            'Male',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey.shade700,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: 'Poppins', // Set Poppins as the default font
-                            ),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      IconButton(
-                        icon: Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          color: Colors.grey.shade600,
-                          size: 16,
-                        ),
-                        onPressed: () {
-                          editGenderBottomSheet(context, (String gender) {
-                            // Handle the selected gender here
-                          });
-                        },
-                      )
-                    ],
-                  ),
-                ),
-                Divider(
-                  thickness: 1.5,
-                  color: Colors.grey.shade300,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8, bottom: 10, top: 10),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.date_range,
-                        color: Color(0xff1937d7),
-                        size: 24,
-                      ),
-                      SizedBox(
-                        width: 18,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Date of Birth',
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Poppins', // Set Poppins as the default font
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () => _selectDate(context),
-                            child: Text(
-                              '${DateFormat('EEEE, MMMM dd').format(_selectedDate)}',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey.shade700,
-                                fontFamily: 'Poppins', // Set Poppins as the default font
-
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      IconButton(
-                        icon: Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          color: Colors.grey.shade600,
-                          size: 16,
-                        ),
-                        onPressed: () {
-                          //  openCalendar(context);
-                        },
-                      )
-                    ],
-                  ),
-                ),
-                Divider(
-                  thickness: 1.5,
-                  color: Colors.grey.shade300,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 6, left: 8, bottom: 10, top: 10),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.card_membership_outlined,
-                        color: Color(0xff1937d7),
-                        size: 24,
-                      ),
-                      SizedBox(
-                        width: 18,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Mamber Since',
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Poppins', // Set Poppins as the default font
-                            ),
-                          ),
-                          Text(
-                            'September 23',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey.shade700,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: 'Poppins', // Set Poppins as the default font
-                            ),
-                          ),
-                        ],
-                      ),
-                      // Spacer(),
-                      // Icon(Icons.arrow_forward_ios_rounded,
-                      //   color: Colors.grey.shade600,size: 16,),
-                    ],
-                  ),
-                ),
-                Divider(
-                  thickness: 1.5,
-                  color: Colors.grey.shade300,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 6, left: 8, bottom: 10, top: 10),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.card_membership_outlined,
-                        color: Color(0xff1937d7),
-                        size: 24,
-                      ),
-                      SizedBox(
-                        width: 18,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Emergency contect',
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Poppins', // Set Poppins as the default font
-                            ),
-                          ),
-                          Text(
-                            '+91-47843897234',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey.shade700,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: 'Poppins', // Set Poppins as the default font
-                            ),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      GestureDetector(
-                        onTap: () {
-                          editEnumberBottomSheet(context);
-                        },
+                      Expanded(
                         child: Text(
-                          'Add',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.red,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Poppins', // Set Poppins as the default font
-                          ),
+                          "Parth Kevadiya",
+                          style: TextStyle(color: AppColors.borderColor, fontWeight: FontWeight.w500, fontSize: 22),
                         ),
                       ),
+                      SvgPicture.asset(AppImage.editSvg),
                     ],
                   ),
-                ),
-                Divider(
-                  thickness: 1.5,
-                  color: Colors.grey.shade300,
-                ),
-              ],
+                  SizedBox(height: 20),
+                  HorizontalImageText(image: AppImage.call, title: "9027573215"),
+                  Divider(color: AppColors.black.withOpacity(0.1), height: 20),
+                  HorizontalImageText(image: AppImage.email, title: "asadkhann2003@gmail.com"),
+                  Divider(color: AppColors.black.withOpacity(0.1), height: 20),
+                  SizedBox(height: 20),
+                  Container(
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppColors.black.withOpacity(0.1)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Saved Address",
+                          style: TextStyle(color: AppColors.borderColor, fontWeight: FontWeight.w500, fontSize: 16),
+                        ),
+                        SizedBox(height: 20),
+                        HorizontalImageText(
+                            image: AppImage.homeSvg,
+                            titleColor: AppColors.borderColor,
+                            title: "Home",
+                            subTitle: "Murad Nagar, Ghaziabad"),
+                        Divider(color: AppColors.black.withOpacity(0.1)),
+                        HorizontalImageText(
+                            image: AppImage.officeSvg,
+                            titleColor: AppColors.borderColor,
+                            title: "Office",
+                            subTitle: "Sec 57, Gurugram, Haryana"),
+                        Divider(color: AppColors.black.withOpacity(0.1)),
+                        SizedBox(height: 20),
+                        Center(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 30),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: AppColors.black.withOpacity(0.1)),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SvgPicture.asset(AppImage.pluse),
+                                SizedBox(width: 3),
+                                Text(
+                                  "Add New",
+                                  style: TextStyle(color: AppColors.black.withOpacity(0.7)),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 25),
+                  Container(
+                    padding: EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppColors.black.withOpacity(0.1)),
+                    ),
+                    child: HorizontalImageText(
+                      image: AppImage.setting,
+                      title: "Account Setting",
+                      titleColor: AppColors.borderColor,
+                      titleFontSize: 16,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  HorizontalImageText(
+                    title: "Logout",
+                    viewIcon: true,
+                    titleFontSize: 16,
+                    image: AppImage.logout,
+                    titleColor: AppColors.redColor,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

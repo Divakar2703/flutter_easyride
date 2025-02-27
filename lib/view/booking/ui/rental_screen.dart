@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
-import 'package:flutter_easy_ride/view/booking/provider/rental_provider.dart';
 import 'package:flutter_easy_ride/view/components/common_location_textfield.dart';
 import 'package:flutter_easy_ride/view/components/vertical_text.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +18,6 @@ class RentalScreen extends StatelessWidget {
           CommonLocationTextfield(),
           SizedBox(height: 20),
         ],
-        SizedBox(height: 30),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -31,24 +29,29 @@ class RentalScreen extends StatelessWidget {
         SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           scrollDirection: Axis.horizontal,
-          child: Row(
-            children: context
-                .read<RentalProvider>()
-                .kmList
-                .map(
-                  (e) => Padding(
-                    padding: const EdgeInsets.only(right: 6.0),
+          child: Consumer<BookNowProvider>(
+            builder: (context, v, child) => Row(
+              children: List.generate(
+                v.kmList.length,
+                (index) => Padding(
+                  padding: const EdgeInsets.only(right: 6.0),
+                  child: InkWell(
+                    onTap: () => v.choosePackage(index),
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                           color: AppColors.white,
-                          border: Border.all(color: AppColors.borderColor.withOpacity(0.2)),
+                          border: Border.all(
+                              color: v.kmList[index].isSelected ?? false
+                                  ? AppColors.yellowDark
+                                  : AppColors.borderColor.withOpacity(0.2)),
                           borderRadius: BorderRadius.circular(6)),
-                      child: VerticalText(title: e.title, subTitle: e.subTitle),
+                      child: VerticalText(title: v.kmList[index].title, subTitle: v.kmList[index].subTitle),
                     ),
                   ),
-                )
-                .toList(),
+                ),
+              ),
+            ),
           ),
         ),
       ],

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/common_widget/payment_methods_widget.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
+import 'package:flutter_easy_ride/utils/eve.dart';
+import 'package:flutter_easy_ride/utils/indicator.dart';
+import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_easy_ride/view/car_selection/provider/car_selection_provider.dart';
 import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:flutter_easy_ride/view/components/common_tile_view.dart';
@@ -25,11 +29,17 @@ class CarSelectionScreen extends StatelessWidget {
             height: MediaQuery.of(context).size.height - 480,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(color: AppColors.white),
-            child: GoogleMap(
-              zoomControlsEnabled: false,
-              initialCameraPosition: CameraPosition(
-                target: LatLng(18.512457, 73.843106),
-              ),
+            child: Consumer<BookNowProvider>(
+              builder: (context, v, child) => v.isLoading
+                  ? Indicator()
+                  : GoogleMap(
+                      markers: v.markers,
+                      polylines: v.polyLines,
+                      zoomControlsEnabled: false,
+                      // onMapCreated: (c) => _mapController = c,
+                      // onTap: (l) => v.addLocationMarkers(l),
+                      initialCameraPosition: CameraPosition(target: v.currentLocation ?? LatLng(0, 0), zoom: 15),
+                    ),
             ),
           ),
           SafeArea(
@@ -87,7 +97,8 @@ class CarSelectionScreen extends StatelessWidget {
                           ? ListView.separated(
                               shrinkWrap: true,
                               padding: EdgeInsets.all(20),
-                              itemCount: 4, // Show 5 shimmer items
+                              itemCount: 4,
+                              // Show 5 shimmer items
                               separatorBuilder: (context, index) => SizedBox(height: 10),
                               itemBuilder: (context, index) => Shimmer.fromColors(
                                 baseColor: Colors.grey[300]!,
@@ -117,10 +128,7 @@ class CarSelectionScreen extends StatelessWidget {
                                   itemCount: context.read<CarSelectionProvider>().vehicleList.length,
                                   separatorBuilder: (context, index) => SizedBox(height: 10),
                                   itemBuilder: (context, index) => CommonTileView(
-                                      onTap: () {
-                                        v.vehicleList.forEach((e) => e.isSelected = false);
-                                        v.vehicleList[index].isSelected = true;
-                                      },
+                                      onTap: () => v.carSelection(index),
                                       isSelected: context.read<CarSelectionProvider>().vehicleList[index].isSelected,
                                       image: context.read<CarSelectionProvider>().vehicleList[index].image,
                                       // time: context.read<CarSelectionProvider>().vehicleList[index].time,
@@ -151,27 +159,49 @@ class CarSelectionScreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              children: [
-                SvgPicture.asset(AppImage.wallet),
-                SizedBox(width: 5),
-                Text("Wallet", style: TextStyle(fontSize: 16)),
-                Spacer(),
-                Icon(Icons.arrow_forward_ios_rounded, size: 20)
-              ],
+            InkWell(
+              onTap: () => _showPaymentMethodBottomSheet(context),
+              child: Row(
+                children: [
+                  SvgPicture.asset(AppImage.wallet),
+                  SizedBox(width: 5),
+                  Consumer<BookNowProvider>(
+                      builder: (context, value, child) => Text(selectedBank, style: TextStyle(fontSize: 16))),
+                  Spacer(),
+                  Icon(Icons.arrow_forward_ios_rounded, size: 20)
+                ],
+              ),
             ),
             SizedBox(height: 10),
             CommonButton(
               label: "Confirm",
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => DriverDetailScreen(),
-                ),
-              ),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => DriverDetailScreen(),
+                  ),
+                );
+              },
             ),
           ],
         ),
       ),
     );
+  }
+
+  void _showPaymentMethodBottomSheet(BuildContext context) async {
+    final result = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return PaymentMethodBottomSheet(
+          onPaymentSelected: (selectedMethod) => Navigator.pop(context, selectedMethod),
+        );
+      },
+    );
+
+    if (result != null) {
+      context.read<BookNowProvider>().choosePaymentMode(result);
+    }
   }
 }

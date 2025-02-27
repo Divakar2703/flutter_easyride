@@ -18,6 +18,35 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class BookNowProvider with ChangeNotifier {
+  DateTime selectedDate = DateTime.now();
+  String? bookType = "";
+
+  chooseDate(DateTime date) {
+    selectedDate = date;
+    notifyListeners();
+  }
+
+  final kmList = [
+    CommonModel(title: "1 Hr", subTitle: "10 km", isSelected: false),
+    CommonModel(title: "2 Hr", subTitle: "20 km", isSelected: false),
+    CommonModel(title: "3 Hr", subTitle: "30 km", isSelected: false),
+    CommonModel(title: "4 Hr", subTitle: "40 km", isSelected: false),
+    CommonModel(title: "5 Hr", subTitle: "50 km", isSelected: false),
+    CommonModel(title: "6 Hr", subTitle: "60 km", isSelected: false),
+    CommonModel(title: "7 Hr", subTitle: "70 km", isSelected: false),
+  ];
+
+  choosePackage(int i) {
+    kmList.forEach((e) => e.isSelected = false);
+    kmList[i].isSelected = true;
+    notifyListeners();
+  }
+
+  choosePaymentMode(String bank) {
+    selectedBank = bank;
+    notifyListeners();
+  }
+
   final addList = [
     CommonModel(title: "Home", image: AppImage.home),
     CommonModel(title: "Office", image: AppImage.office),
@@ -295,7 +324,10 @@ class BookNowProvider with ChangeNotifier {
   resetAllData() {
     controllerList.forEach((e) => e.dispose);
     locationTextfieldList.clear();
-    historyResponse = null;
     nearByLocationList?.clear();
+    markerPositions.clear();
+    historyResponse = null;
+    polyLines.clear();
+    markers.clear();
   }
 }

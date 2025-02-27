@@ -1,4 +1,5 @@
 import 'package:flutter_easy_ride/model/vehicle_data.dart';
+import 'package:flutter_easy_ride/utils/constant.dart';
 
 double ALatitude = 24.854975080601193;
 double ALongitude = 74.61296919531905;
@@ -20,8 +21,8 @@ String fToken = "";
 String userID = "";
 
 final List<Map<String, dynamic>> banks = [
-  {'name': 'online', 'image': 'assets/images/gpay.jpg'},
-  {'name': 'COD', 'image': 'assets/images/paytem.png'},
-  {'name': 'phonepay', 'image': 'assets/images/phonepay.png'},
-  {'name': 'razorpay', 'image': 'assets/images/rojapay.png'},
+  {'name': 'COD', 'image': ''},
+  {'name': 'Wallet', 'image': ''},
+  {'name': 'Phone Pay', 'image': AppImage.phonePay},
+  {'name': 'Razor pay', 'image': AppImage.razorPay},
 ];

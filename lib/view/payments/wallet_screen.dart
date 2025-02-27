@@ -146,7 +146,6 @@ class WalletScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 30),
-                SizedBox(height: 30),
                 Container(
                   padding: EdgeInsets.symmetric(vertical: 14, horizontal: 18),
                   decoration: BoxDecoration(

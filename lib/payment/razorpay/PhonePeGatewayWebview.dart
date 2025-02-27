@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
-import 'dart:io';
 
 import '../../utils/eve.dart';
 import '../dialog/payment_success_dialog.dart';
@@ -39,22 +40,18 @@ class _PhonePeGatewayWebViewState extends State<PhonePeGatewayWebView> {
       params = const PlatformWebViewControllerCreationParams();
     }
 
-
     _controller = WebViewController.fromPlatformCreationParams(params)
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0x00000000))
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (int progress) {},
-
           onPageStarted: (String url) {},
-
           onPageFinished: (String url) {
             print('Page>>>> finished loading: $url');
 
             // Check if the URL changes to the desired callback URL
             if (url.contains('paymentInfo')) {
-
               // Extract the 'info' parameter.
               final uri = Uri.parse(url);
               final info = uri.queryParameters['info'];
@@ -66,10 +63,8 @@ class _PhonePeGatewayWebViewState extends State<PhonePeGatewayWebView> {
                 print('Decoded info: $decodedInfo');
 
                 handlePaymentInfo(decodedInfo);
-
               }
             }
-
           },
           onWebResourceError: (WebResourceError error) {
             print('Page>>>> Failed to load page: ${error.description}');
@@ -79,12 +74,10 @@ class _PhonePeGatewayWebViewState extends State<PhonePeGatewayWebView> {
 
     if (_controller.platform is AndroidWebViewController) {
       AndroidWebViewController.enableDebugging(true);
-      (_controller.platform as AndroidWebViewController)
-          .setMediaPlaybackRequiresUserGesture(false);
+      (_controller.platform as AndroidWebViewController).setMediaPlaybackRequiresUserGesture(false);
     }
 
     _loadPaymentPage();
-
   }
 
   String generateTransactionId() {
@@ -95,8 +88,8 @@ class _PhonePeGatewayWebViewState extends State<PhonePeGatewayWebView> {
   }
 
   void _loadPaymentPage() async {
-
-    postData = 'order_id=${widget.orderId}&trans_id=$transId&user_id=$custId&TXN_AMOUNT=${widget.txnAmount}&callback=&payment_mode=UPI&used_for=app';
+    postData =
+        'order_id=${widget.orderId}&trans_id=$transId&user_id=$custId&TXN_AMOUNT=${widget.txnAmount}&callback=&payment_mode=UPI&used_for=app';
     print("Page>>>> $postData");
     const paymentPageUrl = 'https://gotejaga.com/Phonepe/pay';
 
@@ -104,11 +97,11 @@ class _PhonePeGatewayWebViewState extends State<PhonePeGatewayWebView> {
     String userAgent;
     if (Platform.isAndroid) {
       userAgent =
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
     } else {
       // For iOS or other platforms if needed
       userAgent =
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
     }
 
     _controller.setUserAgent(userAgent);
@@ -153,25 +146,27 @@ class _PhonePeGatewayWebViewState extends State<PhonePeGatewayWebView> {
         'code': code,
       };
       print("payment result====${paymentResult}");
-      transactionID=transactionId;
-      showPaymentSuccessDialog(context,response);
+      transactionID = transactionId;
+      showPaymentSuccessDialog(context, response);
 
       // Pop the current page and pass the result back
       Navigator.pop(context, paymentResult);
-
     } catch (e) {
       print('Failed to parse payment info: $e');
     }
   }
-  void showPaymentSuccessDialog(BuildContext context,  final Map<String, dynamic> req
-      ) {
+
+  void showPaymentSuccessDialog(BuildContext context, final Map<String, dynamic> req) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return PaymentSuccessDialog(req: req,);
+        return PaymentSuccessDialog(
+          req: req,
+        );
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -179,5 +174,4 @@ class _PhonePeGatewayWebViewState extends State<PhonePeGatewayWebView> {
       body: WebViewWidget(controller: _controller),
     );
   }
-
 }

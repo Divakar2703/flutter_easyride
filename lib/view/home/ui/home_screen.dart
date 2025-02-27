@@ -30,7 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
         .addPostFrameCallback((_) => Provider.of<BottomBarProvider>(context, listen: false).fetchCurrentLocation());
     Provider.of<ApiProvider>(context, listen: false).fetchAuth();
     Provider.of<DashboardProvider>(context, listen: false).fetchDashboard();
-    Provider.of<DashboardProvider>(context, listen: false).pendingBooking();
   }
 
   @override
@@ -160,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       )
                                       .toList(),
                                 )
-                              : SizedBox(),
+                              : Indicator(),
                         ),
                         SizedBox(height: 80),
                       ],

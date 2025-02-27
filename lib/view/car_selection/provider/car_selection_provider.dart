@@ -12,6 +12,12 @@ class CarSelectionProvider with ChangeNotifier {
 
   bool loading = false;
 
+  carSelection(int i) {
+    vehicleList.forEach((e) => e.isSelected = false);
+    vehicleList[i].isSelected = true;
+    notifyListeners();
+  }
+
   getVehicles({double? pickup_lat, double? pickup_long, double? drop_lat, double? drop_long}) async {
     try {
       loading = true;

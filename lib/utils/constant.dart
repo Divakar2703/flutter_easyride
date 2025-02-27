@@ -6,6 +6,8 @@ class Endpoints {
   static const String authApi = "$baseUrl/Api_auth/fetch_api_auth";
   static const String places = "https://places.googleapis.com/v1/places:autocomplete";
   static const String getVehicles = "$baseUrl/User/getvehicle";
+  static String nearbyVehicles = "$baseUrl/User/getvehicle_on_location";
+  static String dashboard = "$baseUrl/User/dashboard";
 
   /// Authentication
   static String registerUser = "https://www.bits.teamtest.co.in/Api/Login/GetUserDataForService";
@@ -75,4 +77,10 @@ class AppImage {
   static const String selectedProfile = '${assetSvg}selected_profile.svg';
   static const String box = '${assetSvg}box.svg';
   static const String remove = '${assetSvg}remove.svg';
+  static const String editSvg = '${assetSvg}edit.svg';
+  static const String call = '${assetSvg}call.svg';
+  static const String email = '${assetSvg}email.svg';
+  static const String officeSvg = '${assetSvg}office.svg';
+  static const String setting = '${assetSvg}setting.svg';
+  static const String logout = '${assetSvg}logout.svg';
 }

@@ -17,7 +17,6 @@ import 'package:flutter_easy_ride/view/authentication/provider/auth_provider.dar
 import 'package:flutter_easy_ride/view/authentication/ui/splash_screen.dart';
 import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_easy_ride/view/booking/provider/common_provider.dart';
-import 'package:flutter_easy_ride/view/booking/provider/rental_provider.dart';
 import 'package:flutter_easy_ride/view/car_selection/provider/car_selection_provider.dart';
 import 'package:flutter_easy_ride/view/driver_details/provider/driver_details_provider.dart';
 import 'package:flutter_easy_ride/view/home/provider/bottom_bar_provider.dart';
@@ -58,7 +57,6 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => DashboardProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => BookNowProvider()),
-        ChangeNotifierProvider(create: (_) => RentalProvider()),
         ChangeNotifierProvider(create: (_) => CommonProvider()),
         ChangeNotifierProvider(create: (_) => CarSelectionProvider()),
         ChangeNotifierProvider(create: (_) => DriverDetailsProvider()),

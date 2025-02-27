@@ -1,8 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_easy_ride/api/dio_client.dart';
+import 'package:flutter_easy_ride/api/service_locator.dart';
 import 'package:flutter_easy_ride/model/dashboard.dart';
 import 'package:flutter_easy_ride/service/network_utility.dart';
+import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/utils/eve.dart';
 
 import '../../../model/booking.dart';
@@ -17,24 +20,19 @@ class DashboardProvider extends ChangeNotifier {
   List<Booking> bookinglist = [];
   NearByVehicle? get vehicleData => vehicleResponse;
 
+  final dio = getIt.get<DioClient>();
+
   Future<void> fetchDashboard() async {
     loading = true;
-    final String url = ApiHelper.dashboard;
-
     try {
-      final response = await NetworkUtility.sendGetRequest(
-        url,
-      );
-      print('Response body: ${response.body}');
+      final response = await dio.get(Endpoints.dashboard);
 
-      if (response.statusCode == 200) {
+      if (response?.statusCode == 200) {
+        dashboardResponse = DashboardResponse.fromJson(response?.data);
         loading = false;
-        var jsondata = jsonDecode(response.body);
-        dashboardResponse = DashboardResponse.fromJson(jsondata);
         notifyListeners();
       } else {
         loading = false;
-        print('Error: ${response.statusCode}, ${response.body}');
       }
     } catch (e) {
       loading = false;
@@ -68,11 +66,9 @@ class DashboardProvider extends ChangeNotifier {
       } else {
         loading = false;
         bookinglist = [];
-        print('Error: ${response.statusCode}, ${response.body}');
       }
     } catch (e) {
       loading = false;
-      print('Error sending POST request: $e');
     }
   }
 
