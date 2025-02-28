@@ -59,4 +59,14 @@ class LocalStorage {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('userID') ?? "";
   }
+
+  static Future<void> saveId(int userId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('id', userId);
+  }
+
+  static Future<int> getId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('id') ?? 0;
+  }
 }

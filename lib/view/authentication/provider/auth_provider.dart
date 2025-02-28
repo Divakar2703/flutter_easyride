@@ -72,6 +72,7 @@ class AuthProvider with ChangeNotifier {
         _otp = otp;
         userID = resp.data?.userId ?? "";
         await LocalStorage.saveUserID(resp.data?.userId ?? "");
+        await LocalStorage.saveId(int.parse(resp.data?.id ?? "0"));
         Navigator.push(navigatorKey.currentContext!, MaterialPageRoute(builder: (context) => BottomBarScreen()));
         notifyListeners();
       }

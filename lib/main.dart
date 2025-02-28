@@ -22,6 +22,7 @@ import 'package:flutter_easy_ride/view/driver_details/provider/driver_details_pr
 import 'package:flutter_easy_ride/view/home/provider/bottom_bar_provider.dart';
 import 'package:flutter_easy_ride/view/home/provider/dashboard_provider.dart';
 import 'package:flutter_easy_ride/view/notification/services/notification_service.dart';
+import 'package:flutter_easy_ride/view/profile/provider/profile_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'Book_Now/provider/drive_looking_provider.dart';
@@ -61,6 +62,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => CarSelectionProvider()),
         ChangeNotifierProvider(create: (_) => DriverDetailsProvider()),
         ChangeNotifierProvider(create: (_) => BottomBarProvider()),
+        ChangeNotifierProvider(create: (_) => ProfileProvider()),
       ],
       child: MyApp(),
     ),

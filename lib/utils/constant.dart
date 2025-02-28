@@ -13,6 +13,13 @@ class Endpoints {
   static String registerUser = "https://www.bits.teamtest.co.in/Api/Login/GetUserDataForService";
   static String sendOtp = "https://asatvindia.in/cab/api/send-otp";
   static String verifyOtp = "https://asatvindia.in/cab/api/verify-otp";
+
+  /// Profile
+  static String getProfile = "https://asatvindia.in/cab/api/user/my-profile";
+  static String updateProfile = "https://asatvindia.in/cab/api/user/update-profile";
+  static String getSavedAddress = "https://asatvindia.in/cab/api/user/list-address";
+  static String addAddress = "https://asatvindia.in/cab/api/user/submit-address";
+  static String deleteAddress = "https://asatvindia.in/cab/api/user/delete-address";
 }
 
 class AppImage {
@@ -83,4 +90,5 @@ class AppImage {
   static const String officeSvg = '${assetSvg}office.svg';
   static const String setting = '${assetSvg}setting.svg';
   static const String logout = '${assetSvg}logout.svg';
+  static const String delete = '${assetSvg}delete.svg';
 }

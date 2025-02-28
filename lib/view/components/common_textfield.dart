@@ -67,11 +67,13 @@ class CommonTextField extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (headerLabel != null)
+        if (headerLabel != null) ...[
           Text(
             headerLabel ?? "",
             style: TextStyle(fontWeight: FontWeight.w700),
           ),
+          SizedBox(height: 5),
+        ],
         TextFormField(
           controller: con,
           keyboardType: keyBoardType,
