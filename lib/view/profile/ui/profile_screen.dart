@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
+import 'package:flutter_easy_ride/utils/local_storage.dart';
+import 'package:flutter_easy_ride/view/authentication/ui/login_screen.dart';
 import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:flutter_easy_ride/view/components/common_textfield.dart';
 import 'package:flutter_easy_ride/view/components/horizontal_image_text.dart';
@@ -448,12 +450,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  HorizontalImageText(
-                    title: "Logout",
-                    viewIcon: true,
-                    titleFontSize: 16,
-                    image: AppImage.logout,
-                    titleColor: AppColors.redColor,
+                  GestureDetector(
+                    onTap: () async {
+                      await LocalStorage.clearPref();
+                      Navigator.pushAndRemoveUntil(
+                          context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false);
+                    },
+                    child: HorizontalImageText(
+                      title: "Logout",
+                      viewIcon: true,
+                      titleFontSize: 16,
+                      image: AppImage.logout,
+                      titleColor: AppColors.redColor,
+                    ),
                   ),
                 ],
               ),

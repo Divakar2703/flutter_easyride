@@ -73,7 +73,11 @@ class AuthProvider with ChangeNotifier {
         userID = resp.data?.userId ?? "";
         await LocalStorage.saveUserID(resp.data?.userId ?? "");
         await LocalStorage.saveId(int.parse(resp.data?.id ?? "0"));
-        Navigator.push(navigatorKey.currentContext!, MaterialPageRoute(builder: (context) => BottomBarScreen()));
+        Navigator.pushAndRemoveUntil(
+          navigatorKey.currentContext!,
+          MaterialPageRoute(builder: (context) => BottomBarScreen()),
+          (route) => false,
+        );
         notifyListeners();
       }
     } catch (e) {}
