@@ -30,6 +30,8 @@ class CommonTextField extends StatelessWidget {
   final Color? borderColor;
   final InputBorder? border;
   final EdgeInsetsGeometry? contentPadding;
+  final double? height;
+  final double? cursorHeight;
   CommonTextField({
     super.key,
     this.keyBoardType,
@@ -59,6 +61,8 @@ class CommonTextField extends StatelessWidget {
     this.borderColor,
     this.border,
     this.contentPadding,
+    this.height,
+    this.cursorHeight,
   });
 
   @override
@@ -74,50 +78,54 @@ class CommonTextField extends StatelessWidget {
           ),
           SizedBox(height: 5),
         ],
-        TextFormField(
-          controller: con,
-          keyboardType: keyBoardType,
-          validator: validator,
-          readOnly: readOnly ?? false,
-          onTap: onTap,
-          enabled: true,
-          obscureText: obscureText ?? false,
-          inputFormatters: inputFormatters,
-          cursorColor: AppColors.yellow,
-          cursorErrorColor: Colors.red,
-          onEditingComplete: onEditingComplete,
-          onChanged: onChanged,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          style: style,
-          decoration: InputDecoration(
-            fillColor: fillColor,
-            contentPadding: contentPadding,
-            filled: fillColor != null ? true : false,
-            constraints: BoxConstraints(maxHeight: constraintHeight ?? double.infinity),
-            isDense: true,
-            hintText: hintText,
-            hintStyle: hintStyle,
-            labelStyle: labelStyle,
-            labelText: labelText,
-            prefixIcon: prefixIcon,
-            focusedBorder: border ??
-                OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.yellow),
-                  borderRadius: BorderRadius.circular(borderRadius ?? 10),
-                ),
-            enabledBorder: border ??
-                OutlineInputBorder(
-                  borderSide: BorderSide(color: borderColor ?? AppColors.black.withOpacity(0.1)),
-                  borderRadius: BorderRadius.circular(borderRadius ?? 10),
-                ),
-            focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(borderRadius ?? 10)),
-            errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(borderRadius ?? 10)),
-            suffixIcon: suffix != null
-                ? Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: InkWell(onTap: suffixOnTap, child: suffix),
-                  )
-                : null,
+        Container(
+          height: height,
+          child: TextFormField(
+            controller: con,
+            keyboardType: keyBoardType,
+            validator: validator,
+            readOnly: readOnly ?? false,
+            onTap: onTap,
+            enabled: true,
+            obscureText: obscureText ?? false,
+            inputFormatters: inputFormatters,
+            cursorColor: AppColors.yellow,
+            cursorErrorColor: Colors.red,
+            onEditingComplete: onEditingComplete,
+            onChanged: onChanged,
+            cursorHeight: cursorHeight,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            style: style,
+            decoration: InputDecoration(
+              fillColor: fillColor,
+              contentPadding: contentPadding,
+              filled: fillColor != null ? true : false,
+              constraints: BoxConstraints(maxHeight: constraintHeight ?? double.infinity),
+              isDense: true,
+              hintText: hintText,
+              hintStyle: hintStyle,
+              labelStyle: labelStyle,
+              labelText: labelText,
+              prefixIcon: prefixIcon,
+              focusedBorder: border ??
+                  OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.yellow),
+                    borderRadius: BorderRadius.circular(borderRadius ?? 10),
+                  ),
+              enabledBorder: border ??
+                  OutlineInputBorder(
+                    borderSide: BorderSide(color: borderColor ?? AppColors.black.withOpacity(0.1)),
+                    borderRadius: BorderRadius.circular(borderRadius ?? 10),
+                  ),
+              focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(borderRadius ?? 10)),
+              errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(borderRadius ?? 10)),
+              suffixIcon: suffix != null
+                  ? Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: InkWell(onTap: suffixOnTap, child: suffix),
+                    )
+                  : null,
+            ),
           ),
         ),
       ],

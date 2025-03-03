@@ -1,36 +1,57 @@
 class VehicleResponse {
-  List<Vehicle>? vehicle;
   String? status;
-  String? message;
   int? statusCode;
+  String? message;
+  VehicleDataModel? data;
 
-  VehicleResponse({this.vehicle, this.status, this.message, this.statusCode});
+  VehicleResponse({this.status, this.statusCode, this.message, this.data});
 
   VehicleResponse.fromJson(Map<String, dynamic> json) {
-    if (json['vehicle'] != null) {
-      vehicle = <Vehicle>[];
-      json['vehicle'].forEach((v) {
-        vehicle!.add(new Vehicle.fromJson(v));
-      });
-    }
     status = json['status'];
+    statusCode = json['status_code'];
     message = json['message'];
-    statusCode = json['statusCode'];
+    data = json['data'] != null ? new VehicleDataModel.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.vehicle != null) {
-      data['vehicle'] = this.vehicle!.map((v) => v.toJson()).toList();
-    }
     data['status'] = this.status;
+    data['status_code'] = this.statusCode;
     data['message'] = this.message;
-    data['statusCode'] = this.statusCode;
+    if (this.data != null) {
+      data['data'] = this.data!.toJson();
+    }
     return data;
   }
 }
 
-class Vehicle {
+class VehicleDataModel {
+  String? walletAmount;
+  List<VehicleList>? vehicleList;
+
+  VehicleDataModel({this.walletAmount, this.vehicleList});
+
+  VehicleDataModel.fromJson(Map<String, dynamic> json) {
+    walletAmount = json['wallet_amount'];
+    if (json['vehicle_list'] != null) {
+      vehicleList = <VehicleList>[];
+      json['vehicle_list'].forEach((v) {
+        vehicleList!.add(new VehicleList.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['wallet_amount'] = this.walletAmount;
+    if (this.vehicleList != null) {
+      data['vehicle_list'] = this.vehicleList!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class VehicleList {
   String? id;
   String? name;
   String? image;
@@ -38,12 +59,14 @@ class Vehicle {
   String? type;
   String? seat;
   String? promocodeStatus;
+  String? distance;
+  String? travelTime;
   double? fare;
   String? discount;
   double? netFare;
   bool isSelected = false;
 
-  Vehicle(
+  VehicleList(
       {this.id,
       this.name,
       this.image,
@@ -51,11 +74,13 @@ class Vehicle {
       this.type,
       this.seat,
       this.promocodeStatus,
+      this.distance,
+      this.travelTime,
       this.fare,
       this.discount,
       this.netFare});
 
-  Vehicle.fromJson(Map<String, dynamic> json) {
+  VehicleList.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     image = json['image'];
@@ -63,6 +88,8 @@ class Vehicle {
     type = json['type'];
     seat = json['seat'];
     promocodeStatus = json['promocode_status'];
+    distance = json['distance'];
+    travelTime = json['travel_time'];
     fare = json['fare'];
     discount = json['discount'];
     netFare = json['net_fare'];
@@ -77,6 +104,8 @@ class Vehicle {
     data['type'] = this.type;
     data['seat'] = this.seat;
     data['promocode_status'] = this.promocodeStatus;
+    data['distance'] = this.distance;
+    data['travel_time'] = this.travelTime;
     data['fare'] = this.fare;
     data['discount'] = this.discount;
     data['net_fare'] = this.netFare;

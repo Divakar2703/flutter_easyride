@@ -85,15 +85,15 @@ class _SelectVehicleState extends State<SelectVehicle> {
                             child: Consumer<CabBookProvider>(builder: (context, cabProvider, child) {
                               if (cabProvider.vehicleResponse == null) {
                                 return Center(child: Text("No vehicles available"));
-                              } else if (cabProvider.vehicleResponse!.vehicle == null ||
-                                  cabProvider.vehicleResponse!.vehicle!.isEmpty) {
+                              } else if (cabProvider.vehicleResponse!.data?.vehicleList == null ||
+                                  (cabProvider.vehicleResponse!.data?.vehicleList!.isEmpty ?? false)) {
                                 return Center(child: Text("No vehicles available"));
                               } else {
                                 return ListView.builder(
                                   shrinkWrap: true,
-                                  itemCount: cabProvider.vehicleResponse?.vehicle?.length,
+                                  itemCount: cabProvider.vehicleResponse?.data?.vehicleList?.length,
                                   itemBuilder: (BuildContext context, int index) {
-                                    var vehicle = cabProvider.vehicleResponse!.vehicle?[index];
+                                    var vehicle = cabProvider.vehicleResponse!.data?.vehicleList?[index];
 
                                     return VehicleListItem(
                                       title: vehicle?.name ?? "",
@@ -288,13 +288,7 @@ class _SelectVehicleState extends State<SelectVehicle> {
     final result = await showModalBottomSheet<String>(
       context: context,
       isScrollControlled: true,
-      builder: (BuildContext context) {
-        return PaymentMethodBottomSheet(
-          onPaymentSelected: (selectedMethod) {
-            Navigator.pop(context, selectedMethod);
-          },
-        );
-      },
+      builder: (BuildContext context) => PaymentMethodBottomSheet(),
     );
 
     if (result != null) {

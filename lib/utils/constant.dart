@@ -5,14 +5,13 @@ class Endpoints {
   static const String baseUrl = "https://asatvindia.in/cab/Api";
   static const String authApi = "$baseUrl/Api_auth/fetch_api_auth";
   static const String places = "https://places.googleapis.com/v1/places:autocomplete";
-  static const String getVehicles = "$baseUrl/User/getvehicle";
   static String nearbyVehicles = "$baseUrl/User/getvehicle_on_location";
   static String dashboard = "$baseUrl/User/dashboard";
 
   /// Authentication
   static String registerUser = "https://www.bits.teamtest.co.in/Api/Login/GetUserDataForService";
-  static String sendOtp = "https://asatvindia.in/cab/api/send-otp";
-  static String verifyOtp = "https://asatvindia.in/cab/api/verify-otp";
+  static String sendOtp = "https://asatvindia.in/cab/api/user/send-otp";
+  static String verifyOtp = "https://asatvindia.in/cab/api/user/verify-otp";
 
   /// Profile
   static String getProfile = "https://asatvindia.in/cab/api/user/my-profile";
@@ -20,6 +19,9 @@ class Endpoints {
   static String getSavedAddress = "https://asatvindia.in/cab/api/user/list-address";
   static String addAddress = "https://asatvindia.in/cab/api/user/submit-address";
   static String deleteAddress = "https://asatvindia.in/cab/api/user/delete-address";
+  static String getWalletHistory = "https://asatvindia.in/cab/api/user/wallet-history";
+  static String getPaymentGateways = "https://asatvindia.in/cab/api/user/get-payment-gateways";
+  static const String getVehicles = "https://asatvindia.in/cab/api/user/get-vehicle";
 }
 
 class AppImage {
@@ -91,4 +93,8 @@ class AppImage {
   static const String setting = '${assetSvg}setting.svg';
   static const String logout = '${assetSvg}logout.svg';
   static const String delete = '${assetSvg}delete.svg';
+  static const String sort = '${assetSvg}sort.svg';
+  static const String filter = '${assetSvg}filter.svg';
+  static const String sourceSvg = '${assetSvg}source.svg';
+  static const String destinationSvg = '${assetSvg}destination.svg';
 }

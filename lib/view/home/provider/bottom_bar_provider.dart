@@ -6,7 +6,7 @@ import 'package:flutter_easy_ride/utils/toast.dart';
 import 'package:flutter_easy_ride/view/home/service/home_service.dart';
 import 'package:flutter_easy_ride/view/home/ui/home_screen.dart';
 import 'package:flutter_easy_ride/view/notification/ui/notification_screen.dart';
-import 'package:flutter_easy_ride/view/payments/wallet_screen.dart';
+import 'package:flutter_easy_ride/view/payments/ui/wallet_screen.dart';
 import 'package:flutter_easy_ride/view/profile/ui/profile_screen.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';

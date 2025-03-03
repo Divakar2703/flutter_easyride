@@ -1,5 +1,4 @@
 import 'package:flutter_easy_ride/model/vehicle_data.dart';
-import 'package:flutter_easy_ride/utils/constant.dart';
 
 double ALatitude = 24.854975080601193;
 double ALongitude = 74.61296919531905;
@@ -12,17 +11,10 @@ String selectedVehicle = "";
 String bookingID = "";
 String orderID = "";
 String selectedBank = "COD";
-Vehicle? vehicleDetails;
+VehicleList? vehicleDetails;
 String BookingType = "book_now";
 double selectedFare = 0.0;
 String transactionID = "";
 bool requestStatus = false;
 String fToken = "";
 String userID = "";
-
-final List<Map<String, dynamic>> banks = [
-  {'name': 'COD', 'image': ''},
-  {'name': 'Wallet', 'image': ''},
-  {'name': 'Phone Pay', 'image': AppImage.phonePay},
-  {'name': 'Razor pay', 'image': AppImage.razorPay},
-];

@@ -1,16 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
+import 'package:flutter_easy_ride/utils/indicator.dart';
 import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:flutter_easy_ride/view/components/common_textfield.dart';
 import 'package:flutter_easy_ride/view/home/provider/bottom_bar_provider.dart';
-import 'package:flutter_easy_ride/view/payments/add_money_screen.dart';
+import 'package:flutter_easy_ride/view/payments/provider/payment_provider.dart';
+import 'package:flutter_easy_ride/view/payments/ui/add_money_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-class WalletScreen extends StatelessWidget {
+class WalletScreen extends StatefulWidget {
   final bool? backVisible;
   const WalletScreen({super.key, this.backVisible});
+
+  @override
+  State<WalletScreen> createState() => _WalletScreenState();
+}
+
+class _WalletScreenState extends State<WalletScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<PaymentProvider>().getWalletHistory();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +48,9 @@ class WalletScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   InkWell(
-                    onTap: () =>
-                        backVisible ?? false ? Navigator.pop(context) : context.read<BottomBarProvider>().changePage(0),
+                    onTap: () => widget.backVisible ?? false
+                        ? Navigator.pop(context)
+                        : context.read<BottomBarProvider>().changePage(0),
                     child: Icon(Icons.arrow_back_ios_new_rounded, size: 20),
                   ),
                   Text("Wallet", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
@@ -146,28 +160,55 @@ class WalletScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 30),
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 14, horizontal: 18),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    border: Border.all(color: AppColors.borderColor.withOpacity(0.1)),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(child: Text("Wallet History")),
-                      Icon(Icons.arrow_forward_ios_rounded, size: 16),
-                    ],
-                  ),
+                Text("Wallet History", style: TextStyle(fontSize: 18)),
+                SizedBox(height: 10),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: CommonTextField(
+                        height: 38,
+                        contentPadding: EdgeInsets.all(5),
+                        cursorHeight: 18,
+                        suffix: SvgPicture.asset(AppImage.search),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    SvgPicture.asset(AppImage.filter),
+                    SizedBox(width: 10),
+                    SvgPicture.asset(AppImage.sort),
+                  ],
                 ),
+                SizedBox(height: 10),
+                Consumer<PaymentProvider>(
+                  builder: (context, v, child) => v.load
+                      ? Indicator()
+                      : v.walletHistoryList.isEmpty
+                          ? Center(child: Text("Transaction not available."))
+                          : ListView.separated(
+                              itemCount: v.walletHistoryList.length,
+                              shrinkWrap: true,
+                              padding: EdgeInsets.zero,
+                              physics: NeverScrollableScrollPhysics(),
+                              separatorBuilder: (context, index) =>
+                                  Divider(height: 0, color: AppColors.black.withOpacity(0.1)),
+                              itemBuilder: (context, index) => ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                // leading: CircleAvatar(radius: 25),
+                                title: Text(v.walletHistoryList[index].description ?? ""),
+                                subtitle:
+                                    Text(v.walletHistoryList[index].createdAt ?? "", style: TextStyle(fontSize: 12)),
+                                trailing: Text(v.walletHistoryList[index].amount ?? "", style: TextStyle(fontSize: 18)),
+                              ),
+                            ),
+                )
               ],
             ),
           )
         ],
       ),
       bottomNavigationBar: Padding(
-        padding: EdgeInsets.only(right: 20, left: 20, bottom: backVisible ?? false ? 5 : 80),
+        padding: EdgeInsets.only(right: 20, left: 20, bottom: widget.backVisible ?? false ? 5 : 80),
         child: CommonButton(
           label: "Add Money Now",
           buttonBorderColor: AppColors.blue,

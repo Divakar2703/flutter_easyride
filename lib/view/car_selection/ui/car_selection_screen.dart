@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/common_widget/payment_methods_widget.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
-import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:flutter_easy_ride/utils/indicator.dart';
 import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_easy_ride/view/car_selection/provider/car_selection_provider.dart';
 import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:flutter_easy_ride/view/components/common_tile_view.dart';
+import 'package:flutter_easy_ride/view/payments/provider/payment_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -166,7 +166,8 @@ class CarSelectionScreen extends StatelessWidget {
                   SvgPicture.asset(AppImage.wallet),
                   SizedBox(width: 5),
                   Consumer<BookNowProvider>(
-                      builder: (context, value, child) => Text(selectedBank, style: TextStyle(fontSize: 16))),
+                      builder: (context, v, child) =>
+                          Text(context.watch<PaymentProvider>().selectedPaymentMethod, style: TextStyle(fontSize: 16))),
                   Spacer(),
                   Icon(Icons.arrow_forward_ios_rounded, size: 20)
                 ],
@@ -190,18 +191,10 @@ class CarSelectionScreen extends StatelessWidget {
   }
 
   void _showPaymentMethodBottomSheet(BuildContext context) async {
-    final result = await showModalBottomSheet<String>(
+    await showModalBottomSheet<String>(
       context: context,
       isScrollControlled: true,
-      builder: (BuildContext context) {
-        return PaymentMethodBottomSheet(
-          onPaymentSelected: (selectedMethod) => Navigator.pop(context, selectedMethod),
-        );
-      },
+      builder: (BuildContext context) => PaymentMethodBottomSheet(),
     );
-
-    if (result != null) {
-      context.read<BookNowProvider>().choosePaymentMode(result);
-    }
   }
 }

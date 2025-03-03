@@ -13,6 +13,7 @@ import 'package:flutter_easy_ride/view/car_selection/provider/car_selection_prov
 import 'package:flutter_easy_ride/view/car_selection/ui/car_selection_screen.dart';
 import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:flutter_easy_ride/view/components/image_text_widget.dart';
+import 'package:flutter_easy_ride/view/payments/provider/payment_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -183,12 +184,10 @@ class _BookingScreenState extends State<BookingScreen> {
                       if ((provider.locationTextfieldList.first.con?.text.isNotEmpty ?? false) &&
                           (provider.locationTextfieldList.last.con?.text.isNotEmpty ?? false)) {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => CarSelectionScreen()));
-                        context.read<CarSelectionProvider>().getVehicles(
-                              pickup_lat: provider.markerPositions.first.latitude,
-                              pickup_long: provider.markerPositions.first.longitude,
-                              drop_lat: provider.markerPositions.last.latitude,
-                              drop_long: provider.markerPositions.last.longitude,
-                            );
+                        context.read<PaymentProvider>().getPaymentGateways();
+                        context
+                            .read<CarSelectionProvider>()
+                            .getVehicles(context.read<BookNowProvider>().markerPositions);
                       } else {
                         AppUtils.show("Please select source & destination location");
                       }

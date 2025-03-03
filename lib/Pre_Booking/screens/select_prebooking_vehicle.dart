@@ -77,15 +77,15 @@ class _SelectPrebookingVehicleState extends State<SelectPrebookingVehicle> {
                       child: Consumer<CabBookProvider>(builder: (context, cabProvider, child) {
                         if (cabProvider.vehicleResponse == null) {
                           return Center(child: CircularProgressIndicator());
-                        } else if (cabProvider.vehicleResponse!.vehicle == null ||
-                            cabProvider.vehicleResponse!.vehicle!.isEmpty) {
+                        } else if (cabProvider.vehicleResponse!.data?.vehicleList == null ||
+                            (cabProvider.vehicleResponse!.data?.vehicleList!.isEmpty ?? false)) {
                           return Center(child: Text("No vehicles available"));
                         } else {
                           return ListView.builder(
                             shrinkWrap: true,
-                            itemCount: cabProvider.vehicleResponse?.vehicle?.length,
+                            itemCount: cabProvider.vehicleResponse?.data?.vehicleList?.length,
                             itemBuilder: (BuildContext context, int index) {
-                              var vehicle = cabProvider.vehicleResponse?.vehicle?[index];
+                              var vehicle = cabProvider.vehicleResponse?.data?.vehicleList?[index];
                               return VehicleListItem(
                                 title: vehicle?.name ?? "",
                                 subtitle: vehicle?.description ?? "",
@@ -97,7 +97,7 @@ class _SelectPrebookingVehicleState extends State<SelectPrebookingVehicle> {
                                   setState(() {
                                     selectedVehicle = vehicle?.id ?? "";
                                     selectedFare = vehicle?.fare ?? 0.0;
-                                    vehicleDetails = cabProvider.vehicleResponse?.vehicle?[index];
+                                    vehicleDetails = cabProvider.vehicleResponse?.data?.vehicleList?[index];
                                     setState(() {});
                                     // Toggle the selection state
                                     if (selectedRows.contains(index)) {

@@ -8,6 +8,7 @@ import 'package:flutter_easy_ride/view/components/common_textfield.dart';
 import 'package:flutter_easy_ride/view/components/horizontal_image_text.dart';
 import 'package:flutter_easy_ride/view/home/provider/bottom_bar_provider.dart';
 import 'package:flutter_easy_ride/view/profile/provider/profile_provider.dart';
+import 'package:flutter_easy_ride/view/profile/ui/ride_history_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
@@ -447,6 +448,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       title: "Account Setting",
                       titleColor: AppColors.borderColor,
                       titleFontSize: 16,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => RideHistoryScreen())),
+                    child: Container(
+                      padding: EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppColors.black.withOpacity(0.1)),
+                      ),
+                      child: HorizontalImageText(
+                        image: AppImage.setting,
+                        title: "Ride History",
+                        titleColor: AppColors.borderColor,
+                        titleFontSize: 16,
+                      ),
                     ),
                   ),
                   SizedBox(height: 20),

@@ -29,7 +29,7 @@ class CabBookProvider with ChangeNotifier {
   TextEditingController pickupController = TextEditingController();
   TextEditingController dropController = TextEditingController();
   List<Suggestions> suggetions = [];
-  final List<Vehicle> vehicle = [];
+  final List<VehicleList> vehicle = [];
   CouponData? couponData;
   Notes? notes;
   String? bookingStatus;
@@ -165,7 +165,7 @@ class CabBookProvider with ChangeNotifier {
         VehicleResponse vehicleResponse = VehicleResponse.fromJson(jsondataa);
         if (vehicleResponse.status == "success") {
           // Check if type is empty and filter accordingly
-          List<Vehicle> filteredVehicles = vehicleResponse.vehicle?.where((vehicle) {
+          List<VehicleList> filteredVehicles = vehicleResponse.data?.vehicleList?.where((vehicle) {
                 // If cabType is empty, include all vehicles; otherwise, filter by type
                 return cabType.isEmpty || vehicle.type == cabType;
               }).toList() ??
@@ -173,7 +173,7 @@ class CabBookProvider with ChangeNotifier {
 
           // Update the response with filtered data
           vehicleResponse = VehicleResponse(
-            vehicle: filteredVehicles,
+            data: VehicleDataModel(vehicleList: filteredVehicles),
             status: vehicleResponse.status,
             message: vehicleResponse.message,
             statusCode: vehicleResponse.statusCode,

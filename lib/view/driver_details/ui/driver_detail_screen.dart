@@ -8,7 +8,7 @@ import 'package:flutter_easy_ride/view/components/common_textfield.dart';
 import 'package:flutter_easy_ride/view/components/dotted_line.dart';
 import 'package:flutter_easy_ride/view/components/vertical_text.dart';
 import 'package:flutter_easy_ride/view/driver_details/provider/driver_details_provider.dart';
-import 'package:flutter_easy_ride/view/payments/wallet_screen.dart';
+import 'package:flutter_easy_ride/view/payments/ui/wallet_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';

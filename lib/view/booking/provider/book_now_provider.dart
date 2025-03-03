@@ -42,11 +42,6 @@ class BookNowProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  choosePaymentMode(String bank) {
-    selectedBank = bank;
-    notifyListeners();
-  }
-
   final addList = [
     CommonModel(title: "Home", image: AppImage.home),
     CommonModel(title: "Office", image: AppImage.office),
