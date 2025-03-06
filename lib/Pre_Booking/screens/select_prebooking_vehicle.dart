@@ -96,7 +96,7 @@ class _SelectPrebookingVehicleState extends State<SelectPrebookingVehicle> {
                                 onTap: () {
                                   setState(() {
                                     selectedVehicle = vehicle?.id ?? "";
-                                    selectedFare = vehicle?.fare ?? 0.0;
+                                    selectedFare = vehicle?.fare ?? "0.0";
                                     vehicleDetails = cabProvider.vehicleResponse?.data?.vehicleList?[index];
                                     setState(() {});
                                     // Toggle the selection state

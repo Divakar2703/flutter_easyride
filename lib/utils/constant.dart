@@ -22,6 +22,7 @@ class Endpoints {
   static String getWalletHistory = "https://asatvindia.in/cab/api/user/wallet-history";
   static String getPaymentGateways = "https://asatvindia.in/cab/api/user/get-payment-gateways";
   static const String getVehicles = "https://asatvindia.in/cab/api/user/get-vehicle";
+  static const String addMoneyToWallet = "https://asatvindia.in/cab/api/user/add-wallet-balance";
 }
 
 class AppImage {

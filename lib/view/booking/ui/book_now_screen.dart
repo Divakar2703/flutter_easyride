@@ -3,6 +3,7 @@ import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_easy_ride/view/components/common_location_textfield.dart';
+import 'package:flutter_easy_ride/view/profile/provider/profile_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -19,33 +20,38 @@ class BookNowScreen extends StatelessWidget {
         SizedBox(height: 12),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: Row(
-            children: context
-                .read<BookNowProvider>()
-                .addList
-                .map(
-                  (e) => Padding(
-                    padding: const EdgeInsets.only(right: 10.0),
-                    child: Container(
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                          color: AppColors.white,
-                          border: Border.all(color: AppColors.black.withOpacity(0.2)),
-                          borderRadius: BorderRadius.circular(12)),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          e.image?.contains(".svg") ?? false
-                              ? SvgPicture.asset(e.image ?? "")
-                              : Image.asset(height: 14, width: 14, e.image ?? ""),
-                          SizedBox(width: 5),
-                          Text(e.title ?? ""),
-                        ],
+          child: Consumer<ProfileProvider>(
+            builder: (context, v, child) => Row(
+              children: v.addressList
+                  .map(
+                    (e) => Padding(
+                      padding: const EdgeInsets.only(right: 10.0),
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                            color: AppColors.white,
+                            border: Border.all(color: AppColors.black.withOpacity(0.2)),
+                            borderRadius: BorderRadius.circular(12)),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SvgPicture.asset(
+                                e.type?.toLowerCase() == "home"
+                                    ? AppImage.homeSvg
+                                    : e.type?.toLowerCase() == "office"
+                                        ? AppImage.officeSvg
+                                        : AppImage.location,
+                                height: 20,
+                                width: 20),
+                            SizedBox(width: 5),
+                            Text(e.type ?? ""),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                )
-                .toList(),
+                  )
+                  .toList(),
+            ),
           ),
         ),
         SizedBox(height: 10),

@@ -4,10 +4,12 @@ import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/utils/indicator.dart';
 import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
+import 'package:flutter_easy_ride/view/booking/provider/common_provider.dart';
 import 'package:flutter_easy_ride/view/car_selection/provider/car_selection_provider.dart';
 import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:flutter_easy_ride/view/components/common_tile_view.dart';
 import 'package:flutter_easy_ride/view/payments/provider/payment_provider.dart';
+import 'package:flutter_easy_ride/view/payments/ui/wallet_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -131,7 +133,7 @@ class CarSelectionScreen extends StatelessWidget {
                                       onTap: () => v.carSelection(index),
                                       isSelected: context.read<CarSelectionProvider>().vehicleList[index].isSelected,
                                       image: context.read<CarSelectionProvider>().vehicleList[index].image,
-                                      // time: context.read<CarSelectionProvider>().vehicleList[index].time,
+                                      time: context.read<CarSelectionProvider>().vehicleList[index].travelTime,
                                       title: context.read<CarSelectionProvider>().vehicleList[index].name,
                                       price: "₹${context.read<CarSelectionProvider>().vehicleList[index].fare}",
                                       subTitle: context.read<CarSelectionProvider>().vehicleList[index].description),
@@ -177,11 +179,30 @@ class CarSelectionScreen extends StatelessWidget {
             CommonButton(
               label: "Confirm",
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => DriverDetailScreen(),
-                  ),
-                );
+                context.read<CarSelectionProvider>().saveRequestToDriver(
+                      context.read<BookNowProvider>().markerPositions,
+                      context.read<BookNowProvider>().locationTextfieldList,
+                      context.read<CommonProvider>().selectedIndex,
+                    );
+                if (context.read<PaymentProvider>().selectedPaymentMethod == "wallet") {
+                  final selectedItem = context.read<CarSelectionProvider>().vehicleList.firstWhere((e) => e.isSelected);
+                  if (double.parse(context.read<CarSelectionProvider>().vehicleModel?.data?.walletAmount ?? "0") >
+                      double.parse(selectedItem.fare ?? "0")) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => DriverDetailScreen(),
+                      ),
+                    );
+                  } else {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => WalletScreen()));
+                  }
+                } else {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => DriverDetailScreen(),
+                    ),
+                  );
+                }
               },
             ),
           ],

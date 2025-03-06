@@ -13,7 +13,7 @@ String orderID = "";
 String selectedBank = "COD";
 VehicleList? vehicleDetails;
 String BookingType = "book_now";
-double selectedFare = 0.0;
+String selectedFare = "0.0";
 String transactionID = "";
 bool requestStatus = false;
 String fToken = "";

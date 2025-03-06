@@ -42,12 +42,6 @@ class BookNowProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  final addList = [
-    CommonModel(title: "Home", image: AppImage.home),
-    CommonModel(title: "Office", image: AppImage.office),
-    CommonModel(title: "Add New", image: AppImage.pluse),
-  ];
-
   List<TextEditingController> controllerList = [];
 
   List<CommonTextField> locationTextfieldList = [];
@@ -144,7 +138,6 @@ class BookNowProvider with ChangeNotifier {
       if (locationTextfieldList[indexToRemove].con != con && indexToRemove < markerPositions.length) {
         markerPositions.removeAt(indexToRemove);
       }
-      print(markerPositions);
       markers.removeWhere((m) => m.markerId.value == removeMarkId);
       _drawPolyline();
       notifyListeners();

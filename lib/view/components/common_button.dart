@@ -19,6 +19,7 @@ class CommonButton extends StatelessWidget {
   final Color? imgColor;
   final bool? textShadow;
   final double? horizontalPadding;
+  final bool? load;
 
   const CommonButton({
     this.label,
@@ -37,6 +38,7 @@ class CommonButton extends StatelessWidget {
     this.imgColor,
     this.textShadow,
     this.horizontalPadding,
+    this.load,
   });
 
   @override
@@ -59,25 +61,27 @@ class CommonButton extends StatelessWidget {
           ),
           elevation: MaterialStateProperty.resolveWith((states) => 0.0),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            img != null ? SvgPicture.asset(img ?? "", fit: BoxFit.contain, color: imgColor) : const SizedBox(),
-            img != null ? const SizedBox(width: 10) : const SizedBox(),
-            Expanded(
-              child: Text(
-                label ?? "",
-                style: TextStyle(
-                    fontSize: labelSize ?? 16,
-                    color: labelColor ?? AppColors.yellow,
-                    fontWeight: labelWeight ?? FontWeight.w600,
-                    overflow: TextOverflow.ellipsis),
-                textAlign: TextAlign.center,
+        child: load ?? false
+            ? SizedBox(width: 25, height: 25, child: CircularProgressIndicator(color: AppColors.white))
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  img != null ? SvgPicture.asset(img ?? "", fit: BoxFit.contain, color: imgColor) : const SizedBox(),
+                  img != null ? const SizedBox(width: 10) : const SizedBox(),
+                  Expanded(
+                    child: Text(
+                      label ?? "",
+                      style: TextStyle(
+                          fontSize: labelSize ?? 16,
+                          color: labelColor ?? AppColors.yellow,
+                          fontWeight: labelWeight ?? FontWeight.w600,
+                          overflow: TextOverflow.ellipsis),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
       ),
     );
   }

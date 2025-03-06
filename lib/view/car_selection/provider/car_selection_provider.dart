@@ -1,16 +1,16 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easy_ride/api/dio_client.dart';
-import 'package:flutter_easy_ride/api/dio_exceptions.dart';
-import 'package:flutter_easy_ride/api/service_locator.dart';
 import 'package:flutter_easy_ride/model/vehicle_data.dart';
-import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/utils/local_storage.dart';
+import 'package:flutter_easy_ride/view/car_selection/models/save_ride_model.dart';
+import 'package:flutter_easy_ride/view/car_selection/service/car_selection_service.dart';
+import 'package:flutter_easy_ride/view/components/common_textfield.dart';
 import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
 
 class CarSelectionProvider with ChangeNotifier {
-  final dio = getIt.get<DioClient>();
+  final service = CarSelectionService();
   List<VehicleList> vehicleList = [];
+  VehicleResponse? vehicleModel;
+  SaveRideModel? saveRideModel;
 
   bool loading = false;
 
@@ -28,16 +28,60 @@ class CarSelectionProvider with ChangeNotifier {
       latLang.forEach((e) => list.add({"lat": e.latitude, "long": e.longitude}));
 
       final userId = await LocalStorage.getId();
-      final resp = await dio.post(Endpoints.getVehicles, data: {"waypoints": list, "user_id": userId});
-      final model = VehicleResponse.fromJson(resp.data);
-      vehicleList = model.data?.vehicleList ?? [];
+      final resp = await service.getVehicles({"waypoints": list, "user_id": userId});
+      if (resp != null) {
+        vehicleModel = resp;
+        vehicleList = resp.data?.vehicleList ?? [];
+      }
       loading = false;
       notifyListeners();
-    } on DioException catch (e) {
-      final errorMessage = DioExceptions.fromDioError(e).toString();
+    } catch (e) {
       loading = false;
       notifyListeners();
-      throw errorMessage;
+    }
+  }
+
+  bool load = false;
+
+  saveRequestToDriver(
+    List<LatLng> latLang,
+    List<CommonTextField> locationTextfieldList,
+    int selectedIndex,
+  ) async {
+    List<Map<String, dynamic>> list = [];
+    try {
+      load = true;
+      notifyListeners();
+      final userId = await LocalStorage.getId();
+
+      for (int i = 0; i < locationTextfieldList.length; i++) {
+        list.add({
+          "lat": latLang[i].latitude,
+          "long": latLang[i].longitude,
+          "address": locationTextfieldList[i].con?.text ?? ""
+        });
+      }
+      final selectedVehicle = vehicleList.firstWhere((e) => e.isSelected);
+      final request = {
+        "waypoints": list,
+        "user_id": userId,
+        "vehicle_type_id": selectedVehicle.id,
+        "booking_type": selectedIndex == 0
+            ? "book_now"
+            : selectedIndex == 1
+                ? "pre_booking"
+                : "rental",
+        "added_by_web": "http://www.bits.teamtest.co.in"
+      };
+      final resp = await service.saveRequestToDriver(request);
+      if (resp != null) {
+        saveRideModel = resp;
+      }
+      load = false;
+      notifyListeners();
+    } catch (e) {
+      load = false;
+      notifyListeners();
     }
   }
 }

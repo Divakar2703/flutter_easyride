@@ -14,6 +14,7 @@ import 'package:flutter_easy_ride/view/car_selection/ui/car_selection_screen.dar
 import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:flutter_easy_ride/view/components/image_text_widget.dart';
 import 'package:flutter_easy_ride/view/payments/provider/payment_provider.dart';
+import 'package:flutter_easy_ride/view/profile/provider/profile_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +37,7 @@ class _BookingScreenState extends State<BookingScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<BookNowProvider>().addLocationTextFields(sourceLocation, destination, address);
       Provider.of<BookNowProvider>(context, listen: false).fetchCurrentLocation();
+      Provider.of<ProfileProvider>(context, listen: false).getSavedAddress();
       // Provider.of<BookNowProvider>(context, listen: false).searchLocation(address);
     });
   }

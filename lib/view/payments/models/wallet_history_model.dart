@@ -2,7 +2,7 @@ class WalletHistoryModel {
   String? status;
   int? statusCode;
   String? message;
-  List<WalletHistoryDataModel>? data;
+  WalletHistoryDataModel? data;
 
   WalletHistoryModel({this.status, this.statusCode, this.message, this.data});
 
@@ -10,12 +10,7 @@ class WalletHistoryModel {
     status = json['status'];
     statusCode = json['status_code'];
     message = json['message'];
-    if (json['data'] != null) {
-      data = <WalletHistoryDataModel>[];
-      json['data'].forEach((v) {
-        data!.add(new WalletHistoryDataModel.fromJson(v));
-      });
-    }
+    data = json['data'] != null ? new WalletHistoryDataModel.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -24,15 +19,42 @@ class WalletHistoryModel {
     data['status_code'] = this.statusCode;
     data['message'] = this.message;
     if (this.data != null) {
-      data['data'] = this.data!.map((v) => v.toJson()).toList();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
 }
 
 class WalletHistoryDataModel {
+  String? walletAmount;
+  List<HistoryList>? historyList;
+
+  WalletHistoryDataModel({this.walletAmount, this.historyList});
+
+  WalletHistoryDataModel.fromJson(Map<String, dynamic> json) {
+    walletAmount = json['wallet_amount'];
+    if (json['history_list'] != null) {
+      historyList = <HistoryList>[];
+      json['history_list'].forEach((v) {
+        historyList!.add(new HistoryList.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['wallet_amount'] = this.walletAmount;
+    if (this.historyList != null) {
+      data['history_list'] = this.historyList!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class HistoryList {
   String? id;
   String? userId;
+  String? paymentId;
   String? transactionType;
   String? amount;
   String? openingBalance;
@@ -40,9 +62,10 @@ class WalletHistoryDataModel {
   String? description;
   String? createdAt;
 
-  WalletHistoryDataModel(
+  HistoryList(
       {this.id,
       this.userId,
+      this.paymentId,
       this.transactionType,
       this.amount,
       this.openingBalance,
@@ -50,9 +73,10 @@ class WalletHistoryDataModel {
       this.description,
       this.createdAt});
 
-  WalletHistoryDataModel.fromJson(Map<String, dynamic> json) {
+  HistoryList.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     userId = json['user_id'];
+    paymentId = json['payment_id'];
     transactionType = json['transaction_type'];
     amount = json['amount'];
     openingBalance = json['opening_balance'];
@@ -65,6 +89,7 @@ class WalletHistoryDataModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['user_id'] = this.userId;
+    data['payment_id'] = this.paymentId;
     data['transaction_type'] = this.transactionType;
     data['amount'] = this.amount;
     data['opening_balance'] = this.openingBalance;

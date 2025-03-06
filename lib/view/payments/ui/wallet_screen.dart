@@ -8,6 +8,7 @@ import 'package:flutter_easy_ride/view/home/provider/bottom_bar_provider.dart';
 import 'package:flutter_easy_ride/view/payments/provider/payment_provider.dart';
 import 'package:flutter_easy_ride/view/payments/ui/add_money_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 
 class WalletScreen extends StatefulWidget {
@@ -24,6 +25,9 @@ class _WalletScreenState extends State<WalletScreen> {
     super.initState();
     context.read<PaymentProvider>().getWalletHistory();
   }
+
+  TextEditingController moneyCon = TextEditingController();
+  final _key = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -89,26 +93,39 @@ class _WalletScreenState extends State<WalletScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text("Available Bal:", style: TextStyle(color: AppColors.borderColor.withOpacity(0.7))),
-                                Text("₹2290.0", style: TextStyle(fontSize: 24)),
+                                Text("₹${context.watch<PaymentProvider>().walletAmount}",
+                                    style: TextStyle(fontSize: 24)),
                               ],
                             ),
                           ),
                           SizedBox(width: 10),
                           Column(
                             children: [
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 15),
-                                decoration: BoxDecoration(
-                                  color: AppColors.white,
-                                  borderRadius: BorderRadius.circular(14),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    SvgPicture.asset(AppImage.pluse),
-                                    SizedBox(width: 5),
-                                    Text("Add Money"),
-                                  ],
+                              GestureDetector(
+                                onTap: () {
+                                  if (_key.currentState?.validate() ?? false) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => AddMoneyScreen(),
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 15),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.white,
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SvgPicture.asset(AppImage.pluse),
+                                      SizedBox(width: 5),
+                                      Text("Add Money"),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
@@ -126,37 +143,57 @@ class _WalletScreenState extends State<WalletScreen> {
                     border: Border.all(color: AppColors.borderColor.withOpacity(0.1)),
                     borderRadius: BorderRadius.circular(14),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CommonTextField(
-                        labelText: "Add Money",
-                        keyBoardType: TextInputType.number,
-                        labelStyle: TextStyle(color: AppColors.borderColor.withOpacity(0.8)),
-                        suffix: Icon(Icons.close),
-                        border: UnderlineInputBorder(
-                          borderSide: BorderSide(color: AppColors.borderColor.withOpacity(0.5)),
+                  child: Form(
+                    key: _key,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CommonTextField(
+                          con: moneyCon,
+                          labelText: "Add Money",
+                          validator: FormBuilderValidators.required(errorText: "Please enter amount"),
+                          keyBoardType: TextInputType.number,
+                          labelStyle: TextStyle(color: AppColors.borderColor.withOpacity(0.8)),
+                          suffix: context.watch<PaymentProvider>().moneyAmount != null &&
+                                  context.watch<PaymentProvider>().moneyAmount != ""
+                              ? GestureDetector(
+                                  onTap: () {
+                                    moneyCon.clear();
+                                    context.read<PaymentProvider>().changeAmount("");
+                                  },
+                                  child: Icon(Icons.close))
+                              : SizedBox.shrink(),
+                          onChanged: (v) => context.read<PaymentProvider>().changeAmount(v),
+                          border: UnderlineInputBorder(
+                            borderSide: BorderSide(color: AppColors.borderColor.withOpacity(0.5)),
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 15),
-                      Wrap(
-                          alignment: WrapAlignment.start,
-                          runSpacing: 10,
-                          spacing: 10,
-                          children: ["₹200", "₹500", "₹1000", "₹2000", "₹5000"]
-                              .map(
-                                (e) => Container(
-                                  padding: EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.white,
-                                    border: Border.all(color: AppColors.borderColor.withOpacity(0.1)),
-                                    borderRadius: BorderRadius.circular(8),
+                        SizedBox(height: 15),
+                        Wrap(
+                            alignment: WrapAlignment.start,
+                            runSpacing: 10,
+                            spacing: 10,
+                            children: ["200", "500", "1000", "2000", "5000"]
+                                .map(
+                                  (e) => GestureDetector(
+                                    onTap: () {
+                                      context.read<PaymentProvider>().changeAmount(e);
+                                      moneyCon.text = e;
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.white,
+                                        border: Border.all(color: AppColors.borderColor.withOpacity(0.1)),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text("₹${e}"),
+                                    ),
                                   ),
-                                  child: Text(e),
-                                ),
-                              )
-                              .toList())
-                    ],
+                                )
+                                .toList())
+                      ],
+                    ),
                   ),
                 ),
                 SizedBox(height: 30),
@@ -210,16 +247,25 @@ class _WalletScreenState extends State<WalletScreen> {
       bottomNavigationBar: Padding(
         padding: EdgeInsets.only(right: 20, left: 20, bottom: widget.backVisible ?? false ? 5 : 80),
         child: CommonButton(
+          load: context.watch<PaymentProvider>().addMoneyLoad,
           label: "Add Money Now",
           buttonBorderColor: AppColors.blue,
           buttonColor: AppColors.blue,
           labelColor: AppColors.white,
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddMoneyScreen(),
-            ),
-          ),
+          onPressed: () async {
+            if (_key.currentState?.validate() ?? false) {
+              final check = await context.read<PaymentProvider>().addMoneyToWallet(moneyCon.text);
+              if (check) {
+                context.read<PaymentProvider>().getPaymentGateways();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddMoneyScreen(),
+                  ),
+                );
+              }
+            }
+          },
         ),
       ),
     );

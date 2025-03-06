@@ -61,9 +61,9 @@ class VehicleList {
   String? promocodeStatus;
   String? distance;
   String? travelTime;
-  double? fare;
+  String? fare;
   String? discount;
-  double? netFare;
+  String? netFare;
   bool isSelected = false;
 
   VehicleList(

@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/local_storage.dart';
+import 'package:flutter_easy_ride/view/payments/models/add_money_model.dart';
 import 'package:flutter_easy_ride/view/payments/models/payment_gateway_model.dart';
 import 'package:flutter_easy_ride/view/payments/models/wallet_history_model.dart';
 import 'package:flutter_easy_ride/view/payments/services/payment_service.dart';
 
 class PaymentProvider with ChangeNotifier {
   final paymentService = PaymentService();
-  List<WalletHistoryDataModel> walletHistoryList = [];
+  List<HistoryList> walletHistoryList = [];
+  String walletAmount = "";
+
+  String? moneyAmount;
+
+  changeAmount(String v) {
+    moneyAmount = v;
+    notifyListeners();
+  }
+
   bool load = false;
   getWalletHistory() async {
     try {
@@ -15,7 +25,8 @@ class PaymentProvider with ChangeNotifier {
       final userId = await LocalStorage.getId();
       final resp = await paymentService.getWalletHistory(userId: userId);
       if (resp != null) {
-        walletHistoryList = resp.data ?? [];
+        walletAmount = resp.data?.walletAmount ?? "0";
+        walletHistoryList = resp.data?.historyList ?? [];
       }
       load = false;
       notifyListeners();
@@ -42,5 +53,28 @@ class PaymentProvider with ChangeNotifier {
       }
       notifyListeners();
     } catch (e) {}
+  }
+
+  bool addMoneyLoad = false;
+  AddMoneyModel? addMoneyModel;
+  Future<bool> addMoneyToWallet(String amount) async {
+    try {
+      addMoneyLoad = true;
+      notifyListeners();
+      final userId = await LocalStorage.getId();
+      final resp = await paymentService.addMoneyToWallet(userId: userId, amount: amount);
+      if (resp != null) {
+        if (resp.status == "success") {
+          addMoneyModel = resp;
+          return true;
+        }
+      }
+      addMoneyLoad = false;
+      notifyListeners();
+    } catch (e) {
+      addMoneyLoad = false;
+      notifyListeners();
+    }
+    return false;
   }
 }

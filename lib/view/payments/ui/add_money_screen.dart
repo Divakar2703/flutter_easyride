@@ -1,11 +1,69 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
+import 'package:flutter_easy_ride/utils/toast.dart';
 import 'package:flutter_easy_ride/view/components/common_button.dart';
+import 'package:flutter_easy_ride/view/payments/provider/payment_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class AddMoneyScreen extends StatelessWidget {
-  const AddMoneyScreen({super.key});
+  AddMoneyScreen({super.key});
+
+  Razorpay? _razorpay = Razorpay();
+
+  Map<String, dynamic> bin2hex(String hexData) {
+    List<int> bytes = [];
+    for (int i = 0; i < hexData.length; i += 2) {
+      bytes.add(int.parse(hexData.substring(i, i + 2), radix: 16));
+    }
+
+    String decodedString = utf8.decode(bytes);
+    Map<String, dynamic> dataMap = jsonDecode(decodedString);
+    return dataMap;
+  }
+
+  void handlePaymentFailure(PaymentFailureResponse paymentFailureResponse) {
+    AppUtils.show(paymentFailureResponse.message.toString());
+  }
+
+  void handlePaymentSuccess(PaymentSuccessResponse successResponse) {
+    AppUtils.show("Payment Successfully Done");
+
+    // verifySignature(successResponse.signature, successResponse.paymentId, successResponse.orderId);
+  }
+
+  void handleWalletResponse(ExternalWalletResponse externalWalletResponse) {
+    String chosenWallet = externalWalletResponse.walletName ?? "";
+    switch (chosenWallet) {
+      case 'paytm':
+        break;
+      case 'freecharge':
+        break;
+      default:
+    }
+  }
+
+  void openRazorPay(
+      int price, String productName, String productDescription, Map<String, dynamic> key, String orderId) {
+    try {
+      var options = {
+        'key': key["key"],
+        'amount': price,
+        'order_id': orderId,
+        'name': productName,
+        'currency': "INR",
+        'description': productDescription,
+        'prefill': {'contact': '+91000000000', 'email': 'shum@yopmail.com'}
+      };
+      _razorpay?.open(options);
+    } catch (error) {
+      print("error ==>$error");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +118,7 @@ class AddMoneyScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text("Add Money", style: TextStyle(color: AppColors.borderColor.withOpacity(0.7))),
-                      Text("₹290.0", style: TextStyle(fontSize: 24)),
+                      Text("₹${context.read<PaymentProvider>().moneyAmount}", style: TextStyle(fontSize: 24)),
                     ],
                   ),
                 ),
@@ -98,14 +156,35 @@ class AddMoneyScreen extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 15),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Image.asset(AppImage.a24, height: 40, width: 40),
-                          Image.asset(AppImage.razorPay, height: 40, width: 40),
-                          Image.asset(AppImage.phonePay, height: 40, width: 40),
-                        ],
-                      )
+                      Consumer<PaymentProvider>(
+                        builder: (context, v, child) => Container(
+                          width: double.infinity,
+                          child: Wrap(
+                            runAlignment: WrapAlignment.start,
+                            spacing: 20,
+                            runSpacing: 20,
+                            children: List.generate(
+                              v.paymentGateWayList.length,
+                              (index) => GestureDetector(
+                                  onTap: () {
+                                    Map<String, dynamic>? paymentKey;
+                                    if (v.paymentGateWayList[index].credentials != null &&
+                                        v.paymentGateWayList[index].credentials != "")
+                                      paymentKey = bin2hex(v.paymentGateWayList[index].credentials ?? "");
+                                    _razorpay?.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
+                                    _razorpay?.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentFailure);
+                                    _razorpay?.on(Razorpay.EVENT_EXTERNAL_WALLET, handleWalletResponse);
+                                    if (paymentKey != null) {
+                                      openRazorPay(100, "Car", "Test", paymentKey,
+                                          context.read<PaymentProvider>().addMoneyModel?.data?.orderId ?? "");
+                                    }
+                                  },
+                                  child: Image.network(v.paymentGateWayList[index].icon ?? "",
+                                      width: 45, height: 45, fit: BoxFit.cover)),
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

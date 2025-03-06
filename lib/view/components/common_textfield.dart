@@ -117,8 +117,8 @@ class CommonTextField extends StatelessWidget {
                     borderSide: BorderSide(color: borderColor ?? AppColors.black.withOpacity(0.1)),
                     borderRadius: BorderRadius.circular(borderRadius ?? 10),
                   ),
-              focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(borderRadius ?? 10)),
-              errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(borderRadius ?? 10)),
+              focusedErrorBorder: border ?? OutlineInputBorder(borderRadius: BorderRadius.circular(borderRadius ?? 10)),
+              errorBorder: border ?? OutlineInputBorder(borderRadius: BorderRadius.circular(borderRadius ?? 10)),
               suffixIcon: suffix != null
                   ? Padding(
                       padding: const EdgeInsets.all(10.0),
