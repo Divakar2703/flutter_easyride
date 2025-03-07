@@ -62,7 +62,7 @@ class CommonButton extends StatelessWidget {
           elevation: MaterialStateProperty.resolveWith((states) => 0.0),
         ),
         child: load ?? false
-            ? SizedBox(width: 25, height: 25, child: CircularProgressIndicator(color: AppColors.white))
+            ? SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: AppColors.white))
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,

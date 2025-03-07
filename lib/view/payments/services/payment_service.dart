@@ -48,4 +48,18 @@ class PaymentService {
     }
     return null;
   }
+
+  Future<AddMoneyModel?> verifyWalletPayment({int? userId, String? orderId, paymentId, signature}) async {
+    try {
+      final resp = await dio.post(Endpoints.verifyWalletPayment,
+          data: {"user_id": userId, "order_id": orderId, "payment_id": paymentId, "signature": signature});
+      if (resp.statusCode == 200) {
+        return AddMoneyModel.fromJson(resp.data);
+      }
+    } on DioException catch (e) {
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      throw errorMessage;
+    }
+    return null;
+  }
 }

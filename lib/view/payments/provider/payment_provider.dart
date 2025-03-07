@@ -66,15 +66,31 @@ class PaymentProvider with ChangeNotifier {
       if (resp != null) {
         if (resp.status == "success") {
           addMoneyModel = resp;
+          addMoneyLoad = false;
+          notifyListeners();
           return true;
         }
       }
-      addMoneyLoad = false;
-      notifyListeners();
     } catch (e) {
       addMoneyLoad = false;
       notifyListeners();
     }
+    return false;
+  }
+
+  Future<bool> verifyWalletPayment({String? orderId, paymentId, signature}) async {
+    try {
+      final userId = await LocalStorage.getId();
+
+      final resp = await paymentService.verifyWalletPayment(
+          userId: userId, orderId: orderId, paymentId: paymentId, signature: signature);
+      if (resp != null) {
+        if (resp.status == "success") {
+          addMoneyModel = resp;
+          return true;
+        }
+      }
+    } catch (e) {}
     return false;
   }
 }

@@ -4,15 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/utils/toast.dart';
-import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:flutter_easy_ride/view/payments/provider/payment_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
-class AddMoneyScreen extends StatelessWidget {
+class AddMoneyScreen extends StatefulWidget {
   AddMoneyScreen({super.key});
 
+  @override
+  State<AddMoneyScreen> createState() => _AddMoneyScreenState();
+}
+
+class _AddMoneyScreenState extends State<AddMoneyScreen> {
   Razorpay? _razorpay = Razorpay();
 
   Map<String, dynamic> bin2hex(String hexData) {
@@ -30,10 +34,11 @@ class AddMoneyScreen extends StatelessWidget {
     AppUtils.show(paymentFailureResponse.message.toString());
   }
 
-  void handlePaymentSuccess(PaymentSuccessResponse successResponse) {
+  void handlePaymentSuccess(PaymentSuccessResponse success) {
     AppUtils.show("Payment Successfully Done");
-
-    // verifySignature(successResponse.signature, successResponse.paymentId, successResponse.orderId);
+    context
+        .read<PaymentProvider>()
+        .verifyWalletPayment(orderId: success.orderId, paymentId: success.paymentId, signature: success.signature);
   }
 
   void handleWalletResponse(ExternalWalletResponse externalWalletResponse) {
@@ -248,15 +253,15 @@ class AddMoneyScreen extends StatelessWidget {
           )
         ],
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(right: 20, left: 20, bottom: 5),
-        child: CommonButton(
-          label: "Add Money Now",
-          buttonBorderColor: AppColors.blue,
-          buttonColor: AppColors.blue,
-          labelColor: AppColors.white,
-        ),
-      ),
+      // bottomNavigationBar: Padding(
+      //   padding: const EdgeInsets.only(right: 20, left: 20, bottom: 5),
+      //   child: CommonButton(
+      //     label: "Add Money Now",
+      //     buttonBorderColor: AppColors.blue,
+      //     buttonColor: AppColors.blue,
+      //     labelColor: AppColors.white,
+      //   ),
+      // ),
     );
   }
 }
