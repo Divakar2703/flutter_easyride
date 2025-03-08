@@ -34,11 +34,14 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
     AppUtils.show(paymentFailureResponse.message.toString());
   }
 
-  void handlePaymentSuccess(PaymentSuccessResponse success) {
+  Future<void> handlePaymentSuccess(PaymentSuccessResponse success) async {
     AppUtils.show("Payment Successfully Done");
-    context
+    final check = await context
         .read<PaymentProvider>()
         .verifyWalletPayment(orderId: success.orderId, paymentId: success.paymentId, signature: success.signature);
+    if (check) {
+      Navigator.pop(context);
+    }
   }
 
   void handleWalletResponse(ExternalWalletResponse externalWalletResponse) {

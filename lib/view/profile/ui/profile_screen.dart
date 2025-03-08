@@ -31,8 +31,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<ProfileProvider>().getProfile();
-    context.read<ProfileProvider>().getSavedAddress();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ProfileProvider>().getProfile();
+      context.read<ProfileProvider>().getSavedAddress();
+    });
   }
 
   @override

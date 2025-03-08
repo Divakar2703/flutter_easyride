@@ -87,9 +87,11 @@ class PaymentProvider with ChangeNotifier {
       if (resp != null) {
         if (resp.status == "success") {
           addMoneyModel = resp;
+          getWalletHistory();
           return true;
         }
       }
+      return false;
     } catch (e) {}
     return false;
   }

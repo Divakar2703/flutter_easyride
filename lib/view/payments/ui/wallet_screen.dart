@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
+import 'package:flutter_easy_ride/utils/date_formates.dart';
 import 'package:flutter_easy_ride/utils/indicator.dart';
 import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:flutter_easy_ride/view/components/common_textfield.dart';
@@ -23,7 +24,7 @@ class _WalletScreenState extends State<WalletScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<PaymentProvider>().getWalletHistory();
+    WidgetsBinding.instance.addPostFrameCallback((_) => context.read<PaymentProvider>().getWalletHistory());
   }
 
   TextEditingController moneyCon = TextEditingController();
@@ -102,14 +103,18 @@ class _WalletScreenState extends State<WalletScreen> {
                           Column(
                             children: [
                               GestureDetector(
-                                onTap: () {
+                                onTap: () async {
                                   if (_key.currentState?.validate() ?? false) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => AddMoneyScreen(),
-                                      ),
-                                    );
+                                    final check = await context.read<PaymentProvider>().addMoneyToWallet(moneyCon.text);
+                                    if (check) {
+                                      context.read<PaymentProvider>().getPaymentGateways();
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => AddMoneyScreen(),
+                                        ),
+                                      );
+                                    }
                                   }
                                 },
                                 child: Container(
@@ -233,9 +238,17 @@ class _WalletScreenState extends State<WalletScreen> {
                                 contentPadding: EdgeInsets.zero,
                                 // leading: CircleAvatar(radius: 25),
                                 title: Text(v.walletHistoryList[index].description ?? ""),
-                                subtitle:
-                                    Text(v.walletHistoryList[index].createdAt ?? "", style: TextStyle(fontSize: 12)),
-                                trailing: Text(v.walletHistoryList[index].amount ?? "", style: TextStyle(fontSize: 18)),
+                                subtitle: v.walletHistoryList[index].createdAt != null
+                                    ? Text(DateFormats.formatDateTime(v.walletHistoryList[index].createdAt ?? ""),
+                                        style: TextStyle(fontSize: 12))
+                                    : SizedBox.shrink(),
+                                trailing: Text(
+                                    "${v.walletHistoryList[index].transactionType == "credit" ? "+" : "-"}₹${v.walletHistoryList[index].amount ?? "0"}",
+                                    style: TextStyle(
+                                        color: v.walletHistoryList[index].transactionType == "credit"
+                                            ? AppColors.green
+                                            : AppColors.black,
+                                        fontSize: 18)),
                               ),
                             ),
                 )

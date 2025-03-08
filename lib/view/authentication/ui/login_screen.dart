@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
+import 'package:flutter_easy_ride/utils/toast.dart';
 import 'package:flutter_easy_ride/view/authentication/provider/auth_provider.dart';
 import 'package:flutter_easy_ride/view/authentication/ui/verify_otp_screen.dart';
 import 'package:flutter_easy_ride/view/components/common_button.dart';
@@ -86,9 +87,7 @@ class LoginScreen extends StatelessWidget {
                                   MaterialPageRoute(builder: (_) => VerifyScreen()),
                                 );
                               } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Failed to send OTP')),
-                                );
+                                AppUtils.show("Failed to send OTP");
                               }
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
