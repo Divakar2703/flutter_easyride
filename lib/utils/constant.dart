@@ -1,7 +1,7 @@
 class Endpoints {
   Endpoints._();
-  static const int connectionTimeout = 15000;
-  static const int receiveTimeout = 15000;
+  static const int connectionTimeout = 50000;
+  static const int receiveTimeout = 50000;
   static const String baseUrl = "https://asatvindia.in/cab/Api";
   static const String authApi = "$baseUrl/Api_auth/fetch_api_auth";
   static const String places = "https://places.googleapis.com/v1/places:autocomplete";

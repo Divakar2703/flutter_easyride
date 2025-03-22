@@ -75,7 +75,7 @@ class AuthProvider with ChangeNotifier {
         await LocalStorage.saveId(int.parse(resp.data?.id ?? "0"));
         Navigator.pushAndRemoveUntil(
           navigatorKey.currentContext!,
-          MaterialPageRoute(builder: (context) => BottomBarScreen()),
+          MaterialPageRoute(builder: (context) => BottomBarScreen(userID: userID)),
           (route) => false,
         );
         notifyListeners();

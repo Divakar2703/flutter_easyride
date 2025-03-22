@@ -20,8 +20,10 @@ class _SplashScreenState extends State<SplashScreen> {
         () => userID == ""
             ? Navigator.pushAndRemoveUntil(
                 context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false)
-            : Navigator.pushAndRemoveUntil(context,
-                MaterialPageRoute(builder: (context) => BottomBarScreen() /*DashboardMap()*/), (route) => false));
+            : Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => BottomBarScreen(userID: userID) /*DashboardMap()*/),
+                (route) => false));
   }
 
   @override

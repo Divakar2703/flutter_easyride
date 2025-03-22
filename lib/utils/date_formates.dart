@@ -13,4 +13,8 @@ class DateFormats {
       return DateFormat("dd MMM yyyy 'at' hh:mm a").format(inputDate); // Fallback format
     }
   }
+
+  static String formatDateYYYYMMDD(DateTime date) {
+    return DateFormat("yyyy-MM-dd").format(date);
+  }
 }

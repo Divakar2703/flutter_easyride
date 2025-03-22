@@ -11,9 +11,11 @@ import 'package:flutter_easy_ride/view/payments/ui/add_money_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 class WalletScreen extends StatefulWidget {
   final bool? backVisible;
+
   const WalletScreen({super.key, this.backVisible});
 
   @override
@@ -29,6 +31,34 @@ class _WalletScreenState extends State<WalletScreen> {
 
   TextEditingController moneyCon = TextEditingController();
   final _key = GlobalKey<FormState>();
+  RefreshController refreshController = RefreshController(initialRefresh: false);
+  ScrollController scrollController = ScrollController();
+
+  void onLoading() async {
+    context.read<PaymentProvider>().page += 1;
+    await context.read<PaymentProvider>().getWalletHistory();
+    refreshController.loadComplete();
+  }
+
+  late PaymentProvider paymentProvider;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    paymentProvider = context.read<PaymentProvider>();
+  }
+
+  @override
+  void dispose() {
+    paymentProvider.type = "";
+    paymentProvider.page = 1;
+    paymentProvider.pullUp = true;
+    paymentProvider.startCon.clear();
+    paymentProvider.endCon.clear();
+    scrollController.dispose();
+    refreshController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -216,7 +246,12 @@ class _WalletScreenState extends State<WalletScreen> {
                       ),
                     ),
                     SizedBox(width: 10),
-                    SvgPicture.asset(AppImage.filter),
+                    InkWell(
+                        onTap: () => showModalBottomSheet(
+                              context: context,
+                              builder: (context) => filterWidget(),
+                            ),
+                        child: SvgPicture.asset(AppImage.filter)),
                     SizedBox(width: 10),
                     SvgPicture.asset(AppImage.sort),
                   ],
@@ -227,28 +262,39 @@ class _WalletScreenState extends State<WalletScreen> {
                       ? Indicator()
                       : v.walletHistoryList.isEmpty
                           ? Center(child: Text("Transaction not available."))
-                          : ListView.separated(
-                              itemCount: v.walletHistoryList.length,
-                              shrinkWrap: true,
-                              padding: EdgeInsets.zero,
-                              physics: NeverScrollableScrollPhysics(),
-                              separatorBuilder: (context, index) =>
-                                  Divider(height: 0, color: AppColors.black.withOpacity(0.1)),
-                              itemBuilder: (context, index) => ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                // leading: CircleAvatar(radius: 25),
-                                title: Text(v.walletHistoryList[index].description ?? ""),
-                                subtitle: v.walletHistoryList[index].createdAt != null
-                                    ? Text(DateFormats.formatDateTime(v.walletHistoryList[index].createdAt ?? ""),
-                                        style: TextStyle(fontSize: 12))
-                                    : SizedBox.shrink(),
-                                trailing: Text(
-                                    "${v.walletHistoryList[index].transactionType == "credit" ? "+" : "-"}₹${v.walletHistoryList[index].amount ?? "0"}",
-                                    style: TextStyle(
-                                        color: v.walletHistoryList[index].transactionType == "credit"
-                                            ? AppColors.green
-                                            : AppColors.black,
-                                        fontSize: 18)),
+                          : SizedBox(
+                              height: MediaQuery.of(context).size.height / 2.5,
+                              child: SmartRefresher(
+                                enablePullUp: v.pullUp,
+                                enablePullDown: false,
+                                onLoading: onLoading,
+                                controller: refreshController,
+                                scrollController: scrollController,
+                                physics: BouncingScrollPhysics(),
+                                child: ListView.separated(
+                                  // shrinkWrap: true,
+                                  controller: scrollController,
+                                  itemCount: v.walletHistoryList.length,
+                                  padding: EdgeInsets.zero,
+                                  physics: BouncingScrollPhysics(),
+                                  separatorBuilder: (context, index) =>
+                                      Divider(height: 0, color: AppColors.black.withOpacity(0.1)),
+                                  itemBuilder: (context, index) => ListTile(
+                                    contentPadding: EdgeInsets.zero,
+                                    title: Text(v.walletHistoryList[index].description ?? ""),
+                                    subtitle: v.walletHistoryList[index].createdAt != null
+                                        ? Text(DateFormats.formatDateTime(v.walletHistoryList[index].createdAt ?? ""),
+                                            style: TextStyle(fontSize: 12))
+                                        : SizedBox.shrink(),
+                                    trailing: Text(
+                                        "${v.walletHistoryList[index].transactionType == "credit" ? "+" : "-"}₹${v.walletHistoryList[index].amount ?? "0"}",
+                                        style: TextStyle(
+                                            color: v.walletHistoryList[index].transactionType == "credit"
+                                                ? AppColors.green
+                                                : AppColors.black,
+                                            fontSize: 18)),
+                                  ),
+                                ),
                               ),
                             ),
                 )
@@ -280,6 +326,134 @@ class _WalletScreenState extends State<WalletScreen> {
             }
           },
         ),
+      ),
+    );
+  }
+
+  Widget filterWidget() {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: 3,
+                width: 90,
+                decoration: BoxDecoration(
+                  color: AppColors.black.withOpacity(0.4),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 15),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  final provider = context.read<PaymentProvider>();
+                  provider.startCon.clear();
+                  provider.endCon.clear();
+                  provider.type = "";
+                  provider.page = 1;
+                  provider.typeList.forEach((e) => e.isSelected = false);
+                  provider.getWalletHistory();
+
+                  Navigator.pop(context);
+                },
+                child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                        color: AppColors.white,
+                        border: Border.all(color: AppColors.yellowDark),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Text("Reset", style: TextStyle(fontSize: 12, color: AppColors.yellowDark))),
+              ),
+              SizedBox(width: 10),
+              GestureDetector(
+                onTap: () {
+                  context.read<PaymentProvider>().page = 1;
+                  context.read<PaymentProvider>().getWalletHistory();
+                  Navigator.pop(context);
+                },
+                child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(color: AppColors.yellowDark, borderRadius: BorderRadius.circular(10)),
+                    child: Text("Apply", style: TextStyle(fontSize: 12, color: AppColors.white))),
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          Consumer<PaymentProvider>(
+            builder: (context, v, child) => Row(
+              children: [
+                Expanded(
+                  child: CommonTextField(
+                    con: v.startCon,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                    hintStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                    hintText: "Start Date",
+                    readOnly: true,
+                    onTap: () => v.selectStartDate(context, "start"),
+                    suffix: Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: SvgPicture.asset(AppImage.calender),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 5),
+                Text("To"),
+                SizedBox(width: 5),
+                Expanded(
+                  child: CommonTextField(
+                    con: v.endCon,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                    hintStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                    hintText: "End Date",
+                    readOnly: true,
+                    onTap: () => v.selectStartDate(context, "end"),
+                    suffix: Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: SvgPicture.asset(AppImage.calender),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 15),
+          Text(
+            "Transaction Type",
+            style: TextStyle(color: AppColors.black.withOpacity(0.8)),
+          ),
+          SizedBox(height: 15),
+          Consumer<PaymentProvider>(
+            builder: (context, v, child) => Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: List.generate(
+                v.typeList.length,
+                (index) => GestureDetector(
+                  onTap: () => v.selectFilter(index),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: v.typeList[index].isSelected ?? false ? AppColors.yellow : Colors.transparent),
+                      borderRadius: BorderRadius.circular(12),
+                      color: AppColors.black.withOpacity(0.03),
+                    ),
+                    child: Text(v.typeList[index].title ?? ""),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

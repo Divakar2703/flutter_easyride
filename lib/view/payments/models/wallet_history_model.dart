@@ -27,12 +27,19 @@ class WalletHistoryModel {
 
 class WalletHistoryDataModel {
   String? walletAmount;
+  List<Filters>? filters;
   List<HistoryList>? historyList;
 
   WalletHistoryDataModel({this.walletAmount, this.historyList});
 
   WalletHistoryDataModel.fromJson(Map<String, dynamic> json) {
     walletAmount = json['wallet_amount'];
+    if (json['filters'] != null) {
+      filters = <Filters>[];
+      json['filters'].forEach((v) {
+        filters!.add(new Filters.fromJson(v));
+      });
+    }
     if (json['history_list'] != null) {
       historyList = <HistoryList>[];
       json['history_list'].forEach((v) {
@@ -43,10 +50,62 @@ class WalletHistoryDataModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.filters != null) {
+      data['filters'] = this.filters!.map((v) => v.toJson()).toList();
+    }
     data['wallet_amount'] = this.walletAmount;
     if (this.historyList != null) {
       data['history_list'] = this.historyList!.map((v) => v.toJson()).toList();
     }
+    return data;
+  }
+}
+
+class Filters {
+  String? title;
+  String? value;
+  List<FilterModel>? data;
+
+  Filters({this.title, this.value, this.data});
+
+  Filters.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
+    value = json['value'];
+    if (json['data'] != null) {
+      data = <FilterModel>[];
+      json['data'].forEach((v) {
+        data!.add(new FilterModel.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['title'] = this.title;
+    data['value'] = this.value;
+    if (this.data != null) {
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class FilterModel {
+  String? value;
+  String? title;
+  bool isSelected = false;
+
+  FilterModel({this.value, this.title});
+
+  FilterModel.fromJson(Map<String, dynamic> json) {
+    value = json['value'];
+    title = json['title'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['value'] = this.value;
+    data['title'] = this.title;
     return data;
   }
 }

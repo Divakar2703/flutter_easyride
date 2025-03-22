@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/utils/date_formates.dart';
 import 'package:flutter_easy_ride/utils/local_storage.dart';
+import 'package:flutter_easy_ride/utils/toast.dart';
+import 'package:flutter_easy_ride/view/booking/models/common_model.dart';
 import 'package:flutter_easy_ride/view/payments/models/add_money_model.dart';
 import 'package:flutter_easy_ride/view/payments/models/payment_gateway_model.dart';
 import 'package:flutter_easy_ride/view/payments/models/wallet_history_model.dart';
@@ -12,21 +15,60 @@ class PaymentProvider with ChangeNotifier {
 
   String? moneyAmount;
 
+  selectFilter(int index) {
+    typeList.forEach((e) => e.isSelected = false);
+    typeList[index].isSelected = true;
+    type = typeList[index].subTitle;
+    notifyListeners();
+  }
+
   changeAmount(String v) {
     moneyAmount = v;
     notifyListeners();
   }
 
   bool load = false;
+  bool pullUp = true;
+  int page = 1;
+  String? type;
+
+  final startCon = TextEditingController();
+  final endCon = TextEditingController();
+
+  List<CommonModel> typeList = [
+    CommonModel(title: "Credit", subTitle: "credit", isSelected: false),
+    CommonModel(title: "Debit", subTitle: "debit", isSelected: false),
+  ];
+
+  selectStartDate(BuildContext context, String? title) async {
+    final date = await AppUtils.pickDate(context);
+    if (date != null) {
+      if (title?.toLowerCase().contains("start") ?? false) {
+        startCon.text = DateFormats.formatDateYYYYMMDD(date);
+      } else {
+        endCon.text = DateFormats.formatDateYYYYMMDD(date);
+      }
+      notifyListeners();
+    }
+  }
+
   getWalletHistory() async {
     try {
-      load = true;
+      if (page == 1) {
+        load = true;
+        walletHistoryList.clear();
+      }
       notifyListeners();
       final userId = await LocalStorage.getId();
-      final resp = await paymentService.getWalletHistory(userId: userId);
+      final resp = await paymentService.getWalletHistory(
+          userId: userId, page: page, type: type, startDate: startCon.text, endDate: endCon.text);
       if (resp != null) {
-        walletAmount = resp.data?.walletAmount ?? "0";
-        walletHistoryList = resp.data?.historyList ?? [];
+        if (resp.data?.historyList != null && (resp.data?.historyList?.isNotEmpty ?? false)) {
+          walletAmount = resp.data?.walletAmount ?? "0";
+          walletHistoryList.addAll(resp.data?.historyList ?? []);
+        } else {
+          pullUp = false;
+        }
       }
       load = false;
       notifyListeners();

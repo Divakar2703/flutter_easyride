@@ -20,12 +20,6 @@ class _VerifyScreenState extends State<VerifyScreen> {
   }
 
   @override
-  void dispose() {
-    _otpController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
 

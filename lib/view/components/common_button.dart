@@ -73,7 +73,7 @@ class CommonButton extends StatelessWidget {
                     child: Text(
                       label ?? "",
                       style: TextStyle(
-                          fontSize: labelSize ?? 16,
+                          fontSize: labelSize ?? 14,
                           color: labelColor ?? AppColors.yellow,
                           fontWeight: labelWeight ?? FontWeight.w600,
                           overflow: TextOverflow.ellipsis),

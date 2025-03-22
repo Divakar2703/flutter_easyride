@@ -10,9 +10,17 @@ import 'package:flutter_easy_ride/view/payments/models/wallet_history_model.dart
 class PaymentService {
   final dio = getIt.get<DioClient>();
 
-  Future<WalletHistoryModel?> getWalletHistory({int? userId}) async {
+  Future<WalletHistoryModel?> getWalletHistory(
+      {int? userId, int? page, String? type, String? startDate, String? endDate}) async {
     try {
-      final resp = await dio.post(Endpoints.getWalletHistory, data: {"user_id": userId});
+      final resp = await dio.post(Endpoints.getWalletHistory, data: {
+        "user_id": userId,
+        "page": page,
+        "limit": 15,
+        "transaction_type": type,
+        "start_date": startDate,
+        "end_date": endDate
+      });
       if (resp.statusCode == 200) {
         return WalletHistoryModel.fromJson(resp.data);
       }

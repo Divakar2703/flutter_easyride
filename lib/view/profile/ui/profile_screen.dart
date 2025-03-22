@@ -484,6 +484,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       titleColor: AppColors.redColor,
                     ),
                   ),
+                  SizedBox(height: 60),
                 ],
               ),
             ),

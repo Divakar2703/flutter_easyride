@@ -4,6 +4,8 @@ import 'package:flutter_easy_ride/provider/api_provider.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/utils/indicator.dart';
+import 'package:flutter_easy_ride/utils/local_storage.dart';
+import 'package:flutter_easy_ride/view/audio_call/call_screen.dart';
 import 'package:flutter_easy_ride/view/booking/provider/common_provider.dart';
 import 'package:flutter_easy_ride/view/booking/ui/booking_screen.dart';
 import 'package:flutter_easy_ride/view/components/common_textfield.dart';
@@ -60,24 +62,36 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  padding: EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(99),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.black.withOpacity(0.2),
-                        offset: Offset(0, 4),
-                        blurRadius: 12,
-                      )
-                    ],
+                GestureDetector(
+                  onTap: () async {
+                    final userId = await LocalStorage.getUserID();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CallScreen(userId: userId, peerId: "10"),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(99),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.black.withOpacity(0.2),
+                          offset: Offset(0, 4),
+                          blurRadius: 12,
+                        )
+                      ],
+                    ),
+                    child: Image.asset(AppImage.appLogo, width: 40, height: 40),
                   ),
-                  child: Image.asset(AppImage.appLogo, width: 40, height: 40),
                 ),
                 SizedBox(width: 10),
                 Expanded(
                   child: CommonTextField(
+                    readOnly: true,
                     borderRadius: 12,
                     hintText: "Your Location",
                     onTap: () {
