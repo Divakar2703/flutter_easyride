@@ -26,26 +26,32 @@ class BookNowScreen extends StatelessWidget {
                   .map(
                     (e) => Padding(
                       padding: const EdgeInsets.only(right: 10.0),
-                      child: Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                            color: AppColors.white,
-                            border: Border.all(color: AppColors.black.withOpacity(0.2)),
-                            borderRadius: BorderRadius.circular(12)),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SvgPicture.asset(
-                                e.type?.toLowerCase() == "home"
-                                    ? AppImage.homeSvg
-                                    : e.type?.toLowerCase() == "office"
-                                        ? AppImage.officeSvg
-                                        : AppImage.location,
-                                height: 20,
-                                width: 20),
-                            SizedBox(width: 5),
-                            Text(e.type ?? ""),
-                          ],
+                      child: GestureDetector(
+                        onTap: () {
+                          context.read<BookNowProvider>().updateSelectedTextField(e.address ?? "",
+                              isSource: false, isDestination: true, fromAddress: true);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                              color: AppColors.white,
+                              border: Border.all(color: AppColors.black.withOpacity(0.2)),
+                              borderRadius: BorderRadius.circular(12)),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SvgPicture.asset(
+                                  e.type?.toLowerCase() == "home"
+                                      ? AppImage.homeSvg
+                                      : e.type?.toLowerCase() == "office"
+                                          ? AppImage.officeSvg
+                                          : AppImage.location,
+                                  height: 20,
+                                  width: 20),
+                              SizedBox(width: 5),
+                              Text(e.type ?? ""),
+                            ],
+                          ),
                         ),
                       ),
                     ),

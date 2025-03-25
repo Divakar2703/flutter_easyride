@@ -20,9 +20,45 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class BookNowProvider with ChangeNotifier {
   DateTime selectedDate = DateTime.now();
   String? bookType = "";
+  GoogleMapController? mapController;
 
   chooseDate(DateTime date) {
     selectedDate = date;
+    notifyListeners();
+  }
+
+  void updateCameraView() {
+    if (markerPositions.length >= 2 && mapController != null) {
+      LatLngBounds bounds = LatLngBounds(
+        southwest: LatLng(
+          markerPositions[0].latitude < markerPositions[1].latitude
+              ? markerPositions[0].latitude
+              : markerPositions[1].latitude,
+          markerPositions[0].longitude < markerPositions[1].longitude
+              ? markerPositions[0].longitude
+              : markerPositions[1].longitude,
+        ),
+        northeast: LatLng(
+          markerPositions[0].latitude > markerPositions[1].latitude
+              ? markerPositions[0].latitude
+              : markerPositions[1].latitude,
+          markerPositions[0].longitude > markerPositions[1].longitude
+              ? markerPositions[0].longitude
+              : markerPositions[1].longitude,
+        ),
+      );
+
+      mapController!.animateCamera(
+        CameraUpdate.newLatLngBounds(bounds, 100), // 100 is padding
+      );
+    }
+  }
+
+  _onLocationChange(LatLng l) {
+    if (mapController != null) {
+      mapController?.animateCamera(CameraUpdate.newLatLng(l));
+    }
+    updateCameraView();
     notifyListeners();
   }
 
@@ -61,7 +97,7 @@ class BookNowProvider with ChangeNotifier {
         contentPadding: EdgeInsets.all(10),
         onTap: () => setSelectedController(con),
         onChanged: (v) => searchLocation(v),
-        suffixOnTap: () => removeLocation(con), // Assign remove function
+        suffixOnTap: () => removeLocation(con),
       ),
     );
     notifyListeners();
@@ -116,6 +152,7 @@ class BookNowProvider with ChangeNotifier {
             infoWindow: InfoWindow(title: address)),
       );
 
+      _onLocationChange(l);
       if (markerPositions.length >= 2) {
         _drawPolyline();
       }
@@ -144,6 +181,7 @@ class BookNowProvider with ChangeNotifier {
       }
       markers.removeWhere((m) => m.markerId.value == removeMarkId);
       _drawPolyline();
+      updateCameraView();
       notifyListeners();
     }
   }
@@ -214,10 +252,15 @@ class BookNowProvider with ChangeNotifier {
   setSelectedController(TextEditingController con) => selectedController = con;
 
   /// Update textfield value
-  Future<void> updateSelectedTextField(String text, {bool isSource = true, bool isDestination = false}) async {
+  Future<void> updateSelectedTextField(String text,
+      {bool isSource = true, bool isDestination = false, bool? fromAddress}) async {
     if (selectedController != null) {
       selectedController!.text = text;
       placesList.clear();
+      notifyListeners();
+    }
+    if (fromAddress ?? false) {
+      controllerList.last.text = text;
       notifyListeners();
     }
     final resp = await locationFromAddress(text);

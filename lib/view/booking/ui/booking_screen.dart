@@ -28,7 +28,6 @@ class BookingScreen extends StatefulWidget {
 class _BookingScreenState extends State<BookingScreen> {
   TextEditingController sourceLocation = TextEditingController();
   TextEditingController destination = TextEditingController();
-  GoogleMapController? _mapController;
 
   @override
   void initState() {
@@ -65,9 +64,8 @@ class _BookingScreenState extends State<BookingScreen> {
                           markers: v.markers,
                           polylines: v.polyLines,
                           zoomControlsEnabled: false,
-                          onMapCreated: (c) => _mapController = c,
-                          // onTap: (l) => v.addLocationMarkers(l),
-                          initialCameraPosition: CameraPosition(target: v.currentLocation ?? LatLng(0, 0), zoom: 15),
+                          onMapCreated: (c) => v.mapController = c,
+                          initialCameraPosition: CameraPosition(target: v.currentLocation ?? LatLng(0, 0), zoom: 18),
                         ),
                 ),
               ),
