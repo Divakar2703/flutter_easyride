@@ -3,6 +3,7 @@ import 'package:flutter_easy_ride/model/nearby_vehicle.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:flutter_easy_ride/utils/toast.dart';
+import 'package:flutter_easy_ride/view/home/models/booking_type_model.dart';
 import 'package:flutter_easy_ride/view/home/service/home_service.dart';
 import 'package:flutter_easy_ride/view/home/ui/home_screen.dart';
 import 'package:flutter_easy_ride/view/notification/ui/notification_screen.dart';
@@ -20,6 +21,13 @@ class BottomBarProvider extends ChangeNotifier {
 
   changePage(int index) {
     if (index != selectedIndex) selectedIndex = index;
+    notifyListeners();
+  }
+
+  int bookingTypeIndex = 0;
+
+  changeBooking(int index) {
+    bookingTypeIndex = index;
     notifyListeners();
   }
 
@@ -147,6 +155,25 @@ class BottomBarProvider extends ChangeNotifier {
       }
     } catch (e) {
       loading = false;
+    }
+  }
+
+  bool loadBooking = false;
+  List<BookingTypeDataModel> bookingTypeList = [];
+  Future<void> bookingType() async {
+    loadBooking = true;
+    try {
+      final resp = await homeService.bookingType();
+      if (resp != null) {
+        bookingTypeList = resp.data ?? [];
+        loadBooking = false;
+      } else {
+        loadBooking = false;
+      }
+      notifyListeners();
+    } catch (e) {
+      loadBooking = false;
+      notifyListeners();
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/utils/date_formates.dart';
 import 'package:flutter_easy_ride/utils/local_storage.dart';
 import 'package:flutter_easy_ride/utils/toast.dart';
@@ -86,6 +87,10 @@ class PaymentProvider with ChangeNotifier {
   }
 
   List<PaymentGatewayDataModel> paymentGateWayList = [];
+  List<PaymentGatewayDataModel> paymentTypeList = [
+    PaymentGatewayDataModel(name: "COD", value: "cod", icon: AppImage.wallet),
+    PaymentGatewayDataModel(name: "Wallet", value: "wallet", icon: AppImage.wallet),
+  ];
   getPaymentGateways() async {
     try {
       final userId = await LocalStorage.getId();

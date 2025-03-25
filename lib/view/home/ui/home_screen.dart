@@ -6,7 +6,6 @@ import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/utils/indicator.dart';
 import 'package:flutter_easy_ride/utils/local_storage.dart';
 import 'package:flutter_easy_ride/view/audio_call/call_screen.dart';
-import 'package:flutter_easy_ride/view/booking/provider/common_provider.dart';
 import 'package:flutter_easy_ride/view/booking/ui/booking_screen.dart';
 import 'package:flutter_easy_ride/view/components/common_textfield.dart';
 import 'package:flutter_easy_ride/view/components/image_text_widget.dart';
@@ -28,10 +27,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => Provider.of<BottomBarProvider>(context, listen: false).fetchCurrentLocation());
-    Provider.of<ApiProvider>(context, listen: false).fetchAuth();
-    Provider.of<DashboardProvider>(context, listen: false).fetchDashboard();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<BottomBarProvider>(context, listen: false).fetchCurrentLocation();
+      Provider.of<ApiProvider>(context, listen: false).fetchAuth();
+      Provider.of<DashboardProvider>(context, listen: false).fetchDashboard();
+      Provider.of<BottomBarProvider>(context, listen: false).bookingType();
+    });
   }
 
   @override
@@ -97,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     borderRadius: 12,
                     hintText: "Your Location",
                     onTap: () {
-                      context.read<CommonProvider>().changeBooking(0);
+                      context.read<BottomBarProvider>().changeBooking(0);
                       Navigator.push(context, MaterialPageRoute(builder: (context) => BookingScreen()));
                     },
                     con: context.watch<BottomBarProvider>().homeSearchCon,
@@ -189,44 +190,25 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: MediaQuery.of(context).size.width,
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: ImageTextWidget(
-                            title: "Book Now",
-                            image: AppImage.bookNow,
-                            subImage: AppImage.bookNowIcon,
-                            onTap: () {
-                              context.read<CommonProvider>().changeBooking(0);
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => BookingScreen()));
-                            },
+                    child: Consumer<BottomBarProvider>(
+                      builder: (context, v, child) => Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: List.generate(
+                          v.bookingTypeList.length,
+                          (index) => Expanded(
+                            child: ImageTextWidget(
+                              isLastIndex: index == v.bookingTypeList.length - 1,
+                              title: v.bookingTypeList[index].name,
+                              image: v.bookingTypeList[index].image ?? AppImage.bookNow,
+                              subImage: v.bookingTypeList[index].icon ?? AppImage.bookNowIcon,
+                              onTap: () {
+                                context.read<BottomBarProvider>().changeBooking(index);
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => BookingScreen()));
+                              },
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 5),
-                        Expanded(
-                          child: ImageTextWidget(
-                            title: "Per-Booking",
-                            image: AppImage.preBooking,
-                            subImage: AppImage.preBookingIcon,
-                            onTap: () {
-                              context.read<CommonProvider>().changeBooking(1);
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => BookingScreen()));
-                            },
-                          ),
-                        ),
-                        SizedBox(width: 5),
-                        Expanded(
-                          child: ImageTextWidget(
-                            title: "Rental",
-                            image: AppImage.rental,
-                            subImage: AppImage.rentalIcon,
-                            onTap: () {
-                              context.read<CommonProvider>().changeBooking(2);
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => BookingScreen()));
-                            },
-                          ),
-                        ),
-                      ],
+                        ).toList(),
+                      ),
                     ),
                   ),
                 ),

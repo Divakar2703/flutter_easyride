@@ -5,7 +5,6 @@ import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:flutter_easy_ride/utils/indicator.dart';
 import 'package:flutter_easy_ride/utils/toast.dart';
 import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
-import 'package:flutter_easy_ride/view/booking/provider/common_provider.dart';
 import 'package:flutter_easy_ride/view/booking/ui/book_now_screen.dart';
 import 'package:flutter_easy_ride/view/booking/ui/pre_booking_screen.dart';
 import 'package:flutter_easy_ride/view/booking/ui/rental_screen.dart';
@@ -13,6 +12,7 @@ import 'package:flutter_easy_ride/view/car_selection/provider/car_selection_prov
 import 'package:flutter_easy_ride/view/car_selection/ui/car_selection_screen.dart';
 import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:flutter_easy_ride/view/components/image_text_widget.dart';
+import 'package:flutter_easy_ride/view/home/provider/bottom_bar_provider.dart';
 import 'package:flutter_easy_ride/view/payments/provider/payment_provider.dart';
 import 'package:flutter_easy_ride/view/profile/provider/profile_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -36,9 +36,9 @@ class _BookingScreenState extends State<BookingScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<BookNowProvider>().addLocationTextFields(sourceLocation, destination, address);
-      Provider.of<BookNowProvider>(context, listen: false).fetchCurrentLocation();
+      Provider.of<BookNowProvider>(context, listen: false)
+          .fetchCurrentLocation(context.read<BottomBarProvider>().currentLocation);
       Provider.of<ProfileProvider>(context, listen: false).getSavedAddress();
-      // Provider.of<BookNowProvider>(context, listen: false).searchLocation(address);
     });
   }
 
@@ -54,7 +54,7 @@ class _BookingScreenState extends State<BookingScreen> {
             clipBehavior: Clip.none,
             children: [
               Container(
-                height: context.watch<CommonProvider>().selectedIndex == 2
+                height: context.watch<BottomBarProvider>().bookingTypeIndex == 2
                     ? MediaQuery.of(context).size.height - 400
                     : MediaQuery.of(context).size.height - 500,
                 width: MediaQuery.of(context).size.width,
@@ -97,7 +97,7 @@ class _BookingScreenState extends State<BookingScreen> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  height: context.watch<CommonProvider>().selectedIndex == 2
+                  height: context.watch<BottomBarProvider>().bookingTypeIndex == 2
                       ? MediaQuery.of(context).size.height / 1.7
                       : MediaQuery.of(context).size.height - 200,
                   width: MediaQuery.of(context).size.width,
@@ -119,7 +119,7 @@ class _BookingScreenState extends State<BookingScreen> {
                   child: SingleChildScrollView(
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
-                      child: Consumer<CommonProvider>(
+                      child: Consumer<BottomBarProvider>(
                         builder: (context, v, child) => Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -129,7 +129,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                   child: ImageTextWidget(
                                     title: "Book Now",
                                     isBorderView: true,
-                                    isSelected: v.selectedIndex == 0,
+                                    isSelected: v.bookingTypeIndex == 0,
                                     image: AppImage.bookNow,
                                     subImage: AppImage.bookNowIcon,
                                     mainAxisSize: MainAxisSize.min,
@@ -144,8 +144,8 @@ class _BookingScreenState extends State<BookingScreen> {
                                     mainAxisSize: MainAxisSize.min,
                                     image: AppImage.preBooking,
                                     subImage: AppImage.preBookingIcon,
-                                    isSelected: v.selectedIndex == 1,
-                                    onTap: () => v..changeBooking(1),
+                                    isSelected: v.bookingTypeIndex == 1,
+                                    onTap: () => v.changeBooking(1),
                                   ),
                                 ),
                                 SizedBox(width: 5),
@@ -156,16 +156,16 @@ class _BookingScreenState extends State<BookingScreen> {
                                     mainAxisSize: MainAxisSize.min,
                                     image: AppImage.rental,
                                     subImage: AppImage.rentalIcon,
-                                    isSelected: v.selectedIndex == 2,
-                                    onTap: () => v..changeBooking(2),
+                                    isSelected: v.bookingTypeIndex == 2,
+                                    onTap: () => v.changeBooking(2),
                                   ),
                                 ),
                               ],
                             ),
                             SizedBox(height: 12),
-                            v.selectedIndex == 0
+                            v.bookingTypeIndex == 0
                                 ? BookNowScreen()
-                                : v.selectedIndex == 1
+                                : v.bookingTypeIndex == 1
                                     ? PreBookingScreen()
                                     : RentalScreen()
                           ],

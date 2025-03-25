@@ -1,5 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
+import 'package:flutter_easy_ride/utils/indicator.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ImageTextWidget extends StatelessWidget {
   final String image;
@@ -9,6 +12,7 @@ class ImageTextWidget extends StatelessWidget {
   final MainAxisSize? mainAxisSize;
   final bool? isBorderView;
   final bool? isSelected;
+  final bool? isLastIndex;
   const ImageTextWidget({
     super.key,
     required this.image,
@@ -18,6 +22,7 @@ class ImageTextWidget extends StatelessWidget {
     this.mainAxisSize,
     this.isBorderView,
     this.isSelected,
+    this.isLastIndex,
   });
 
   @override
@@ -25,6 +30,7 @@ class ImageTextWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        margin: EdgeInsets.only(right: isLastIndex ?? false ? 0 : 5),
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -43,12 +49,23 @@ class ImageTextWidget extends StatelessWidget {
         child: Column(
           mainAxisSize: mainAxisSize ?? MainAxisSize.max,
           children: [
-            Image.asset(height: 53, width: 80, image),
+            CachedNetworkImage(
+              imageUrl: image,
+              height: 53,
+              width: 80,
+              placeholder: (context, url) => Indicator(),
+              errorWidget: (context, url, error) => Image.asset(image),
+            ),
             SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                subImage != null ? Image.asset(height: 18, width: 18, subImage ?? "") : SizedBox(),
+                CachedNetworkImage(
+                  height: 18,
+                  width: 18,
+                  imageUrl: subImage ?? "",
+                  errorWidget: (context, url, error) => SvgPicture.asset(subImage ?? ""),
+                ),
                 SizedBox(width: 6),
                 Expanded(
                   child: Text(

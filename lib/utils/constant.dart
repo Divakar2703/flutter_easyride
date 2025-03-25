@@ -3,6 +3,7 @@ class Endpoints {
   static const int connectionTimeout = 50000;
   static const int receiveTimeout = 50000;
   static const String baseUrl = "https://asatvindia.in/cab/Api";
+  static const String newBaseUrl = "https://asatvindia.in/cab/api/user";
   static const String authApi = "$baseUrl/Api_auth/fetch_api_auth";
   static const String places = "https://places.googleapis.com/v1/places:autocomplete";
   static String nearbyVehicles = "$baseUrl/User/getvehicle_on_location";
@@ -10,20 +11,21 @@ class Endpoints {
 
   /// Authentication
   static String registerUser = "https://www.bits.teamtest.co.in/Api/Login/GetUserDataForService";
-  static String sendOtp = "https://asatvindia.in/cab/api/user/send-otp";
-  static String verifyOtp = "https://asatvindia.in/cab/api/user/verify-otp";
+  static String sendOtp = "$newBaseUrl/send-otp";
+  static String verifyOtp = "$newBaseUrl/verify-otp";
 
   /// Profile
-  static String getProfile = "https://asatvindia.in/cab/api/user/my-profile";
-  static String updateProfile = "https://asatvindia.in/cab/api/user/update-profile";
-  static String getSavedAddress = "https://asatvindia.in/cab/api/user/list-address";
-  static String addAddress = "https://asatvindia.in/cab/api/user/submit-address";
-  static String deleteAddress = "https://asatvindia.in/cab/api/user/delete-address";
-  static String getWalletHistory = "https://asatvindia.in/cab/api/user/wallet-history";
-  static String getPaymentGateways = "https://asatvindia.in/cab/api/user/get-payment-gateways";
-  static const String getVehicles = "https://asatvindia.in/cab/api/user/get-vehicle";
-  static const String addMoneyToWallet = "https://asatvindia.in/cab/api/user/add-wallet-balance";
-  static const String verifyWalletPayment = "https://asatvindia.in/cab/api/user/verify-wallet-payment";
+  static String getBookingType = "$newBaseUrl/get-booking-type";
+  static String getProfile = "$newBaseUrl/my-profile";
+  static String updateProfile = "$newBaseUrl/update-profile";
+  static String getSavedAddress = "$newBaseUrl/list-address";
+  static String addAddress = "$newBaseUrl/submit-address";
+  static String deleteAddress = "$newBaseUrl/delete-address";
+  static String getWalletHistory = "$newBaseUrl/wallet-history";
+  static String getPaymentGateways = "$newBaseUrl/get-payment-gateways";
+  static const String getVehicles = "$newBaseUrl/get-vehicle";
+  static const String addMoneyToWallet = "$newBaseUrl/add-wallet-balance";
+  static const String verifyWalletPayment = "$newBaseUrl/verify-wallet-payment";
 }
 
 class AppImage {

@@ -54,6 +54,7 @@ class RentalScreen extends StatelessWidget {
             ),
           ),
         ),
+        SizedBox(height: 60),
       ],
     );
   }

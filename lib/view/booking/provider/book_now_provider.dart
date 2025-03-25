@@ -70,56 +70,60 @@ class BookNowProvider with ChangeNotifier {
   /// On Map Tap & add marker
   Set<Marker> markers = {};
   Future<void> addLocationMarkers(LatLng l, String address, {bool isSource = false, bool isDestination = false}) async {
-    final markerId = MarkerId(isSource
-            ? 'source_marker'
-            : isDestination
-                ? 'destination_marker'
-                : 'marker_${markers.length}' // Unique ID for other markers
-        );
+    try {
+      final markerId = MarkerId(isSource
+              ? 'source_marker'
+              : isDestination
+                  ? 'destination_marker'
+                  : 'marker_${markers.length}' // Unique ID for other markers
+          );
 
-    final BitmapDescriptor icon = await BitmapDescriptor.asset(
-      ImageConfiguration(size: Size(10, 10)),
-      isDestination ? AppImage.destination : AppImage.source,
-    );
+      final BitmapDescriptor icon = await BitmapDescriptor.asset(
+        ImageConfiguration(size: Size(10, 10)),
+        isDestination ? AppImage.destination : AppImage.source,
+      );
+      await Future.delayed(Duration(milliseconds: 500));
+      if (isSource) {
+        markers.removeWhere((m) => m.markerId.value == 'source_marker');
 
-    if (isSource) {
-      markers.removeWhere((m) => m.markerId.value == 'source_marker');
+        if (markerPositions.isNotEmpty) {
+          markerPositions[0] = l;
+        } else {
+          markerPositions.insert(0, l);
+        }
+      } else if (isDestination) {
+        markers.removeWhere((m) => m.markerId.value == 'destination_marker');
 
-      if (markerPositions.isNotEmpty) {
-        markerPositions[0] = l;
+        if (markerPositions.length > 1) {
+          markerPositions[markerPositions.length - 1] = l;
+        } else {
+          markerPositions.add(l);
+        }
       } else {
-        markerPositions.insert(0, l);
+        if (markerPositions.length > 1) {
+          markerPositions.insert(markerPositions.length - 1, l);
+        } else {
+          markerPositions.add(l);
+        }
       }
-    } else if (isDestination) {
-      markers.removeWhere((m) => m.markerId.value == 'destination_marker');
 
-      if (markerPositions.length > 1) {
-        markerPositions[markerPositions.length - 1] = l;
-      } else {
-        markerPositions.add(l);
+      markers.add(
+        Marker(
+            markerId: markerId,
+            position: l,
+            icon: icon,
+            anchor: Offset(0.5, 0.5),
+            infoWindow: InfoWindow(title: address)),
+      );
+
+      if (markerPositions.length >= 2) {
+        _drawPolyline();
       }
-    } else {
-      if (markerPositions.length > 1) {
-        markerPositions.insert(markerPositions.length - 1, l);
-      } else {
-        markerPositions.add(l);
-      }
+
+      notifyListeners();
+    } catch (e) {
+      print(e);
     }
-
-    markers.add(
-      Marker(
-          markerId: markerId,
-          position: l,
-          icon: icon,
-          anchor: Offset(0.5, 0.5),
-          infoWindow: InfoWindow(title: address)),
-    );
-
-    if (markerPositions.length >= 2) {
-      _drawPolyline();
-    }
-
-    notifyListeners();
   }
 
   /// Remove Location Textfield
@@ -240,44 +244,38 @@ class BookNowProvider with ChangeNotifier {
 
   LatLng? get currentLocation => _currentLocation;
   bool get isLoading => _isLoading;
-  Future<void> fetchCurrentLocation() async {
-    _isLoading = true;
-    notifyListeners();
-
+  Future<void> fetchCurrentLocation(LatLng? currentLocation) async {
     try {
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        throw Exception('Location services are disabled.');
-      }
+      _isLoading = true;
+      notifyListeners();
 
-      // Check for location permissions
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          throw Exception('Location permissions are denied.');
+      try {
+        bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+        if (!serviceEnabled) {
+          throw Exception('Location services are disabled.');
         }
-      }
 
-      if (permission == LocationPermission.deniedForever) {
-        throw Exception('Location permissions are permanently denied.');
-      }
+        // Check for location permissions
+        LocationPermission permission = await Geolocator.checkPermission();
+        if (permission == LocationPermission.denied) {
+          permission = await Geolocator.requestPermission();
+          if (permission == LocationPermission.denied) {
+            throw Exception('Location permissions are denied.');
+          }
+        }
 
-      Position position =
-          await Geolocator.getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
-
-      // Update the current location
-      _currentLocation = LatLng(position.latitude, position.longitude);
-      List<Placemark> placeMarks = await placemarkFromCoordinates(position.latitude, position.longitude);
-      ALatitude = position.latitude;
-      ALongitude = position.longitude;
-      address =
-          '${placeMarks[0].thoroughfare}, ${placeMarks[0].subLocality}, ${placeMarks[0].locality}, ${placeMarks[0].administrativeArea}, ${placeMarks[0].postalCode}';
-      if (_currentLocation != null) {
-        addLocationMarkers(_currentLocation!, address, isSource: true);
+        if (permission == LocationPermission.deniedForever) {
+          throw Exception('Location permissions are permanently denied.');
+        }
+        _currentLocation = currentLocation;
+        if (_currentLocation != null) {
+          await addLocationMarkers(_currentLocation!, address, isSource: true);
+        }
+        _isLoading = false;
+        notifyListeners();
+      } catch (e) {
+        print('Error fetching location: $e');
       }
-    } catch (e) {
-      print('Error fetching location: $e');
     } finally {
       _isLoading = false;
       notifyListeners();

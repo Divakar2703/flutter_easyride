@@ -4,10 +4,10 @@ import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/utils/indicator.dart';
 import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
-import 'package:flutter_easy_ride/view/booking/provider/common_provider.dart';
 import 'package:flutter_easy_ride/view/car_selection/provider/car_selection_provider.dart';
 import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:flutter_easy_ride/view/components/common_tile_view.dart';
+import 'package:flutter_easy_ride/view/home/provider/bottom_bar_provider.dart';
 import 'package:flutter_easy_ride/view/payments/provider/payment_provider.dart';
 import 'package:flutter_easy_ride/view/payments/ui/wallet_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -182,7 +182,7 @@ class CarSelectionScreen extends StatelessWidget {
                 context.read<CarSelectionProvider>().saveRequestToDriver(
                       context.read<BookNowProvider>().markerPositions,
                       context.read<BookNowProvider>().locationTextfieldList,
-                      context.read<CommonProvider>().selectedIndex,
+                      context.read<BottomBarProvider>().bookingTypeIndex,
                     );
                 if (context.read<PaymentProvider>().selectedPaymentMethod == "wallet") {
                   final selectedItem = context.read<CarSelectionProvider>().vehicleList.firstWhere((e) => e.isSelected);

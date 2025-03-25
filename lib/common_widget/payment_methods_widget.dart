@@ -34,22 +34,20 @@ class PaymentMethodBottomSheet extends StatelessWidget {
               child: Consumer<PaymentProvider>(
                 builder: (context, v, child) => ListView.separated(
                   controller: controller,
-                  itemCount: v.paymentGateWayList.length,
+                  itemCount: v.paymentTypeList.length,
                   itemBuilder: (context, index) => Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: GestureDetector(
                       onTap: () {
-                        v.changePaymentMode(v.paymentGateWayList[index].name ?? "");
+                        v.changePaymentMode(v.paymentTypeList[index].name ?? "");
                         Navigator.pop(context);
                       },
                       child: Row(
                         children: [
-                          Image.network(
-                              width: 30, height: 30, fit: BoxFit.cover, v.paymentGateWayList[index].icon ?? ""),
+                          Image.network(width: 30, height: 30, fit: BoxFit.cover, v.paymentTypeList[index].icon ?? ""),
                           const SizedBox(width: 10),
                           Expanded(
-                              child:
-                                  Text(v.paymentGateWayList[index].name ?? "", style: const TextStyle(fontSize: 16))),
+                              child: Text(v.paymentTypeList[index].name ?? "", style: const TextStyle(fontSize: 16))),
                           const Icon(Icons.arrow_forward_ios_rounded, color: Colors.black, size: 18),
                         ],
                       ),
