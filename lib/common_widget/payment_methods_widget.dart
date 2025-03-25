@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easy_ride/view/payments/provider/payment_provider.dart';
+import 'package:flutter_easy_ride/view/car_selection/provider/car_selection_provider.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class PaymentMethodBottomSheet extends StatelessWidget {
@@ -31,7 +32,7 @@ class PaymentMethodBottomSheet extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Expanded(
-              child: Consumer<PaymentProvider>(
+              child: Consumer<CarSelectionProvider>(
                 builder: (context, v, child) => ListView.separated(
                   controller: controller,
                   itemCount: v.paymentTypeList.length,
@@ -39,12 +40,13 @@ class PaymentMethodBottomSheet extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: GestureDetector(
                       onTap: () {
-                        v.changePaymentMode(v.paymentTypeList[index].name ?? "");
+                        v.changePaymentMode(v.paymentTypeList[index]);
                         Navigator.pop(context);
                       },
                       child: Row(
                         children: [
-                          Image.network(width: 30, height: 30, fit: BoxFit.cover, v.paymentTypeList[index].icon ?? ""),
+                          SvgPicture.asset(
+                              width: 30, height: 30, fit: BoxFit.cover, v.paymentTypeList[index].icon ?? ""),
                           const SizedBox(width: 10),
                           Expanded(
                               child: Text(v.paymentTypeList[index].name ?? "", style: const TextStyle(fontSize: 16))),

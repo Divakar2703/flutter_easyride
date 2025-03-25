@@ -3,19 +3,18 @@ import 'package:flutter_easy_ride/common_widget/payment_methods_widget.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/utils/indicator.dart';
+import 'package:flutter_easy_ride/utils/toast.dart';
 import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_easy_ride/view/car_selection/provider/car_selection_provider.dart';
 import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:flutter_easy_ride/view/components/common_tile_view.dart';
+import 'package:flutter_easy_ride/view/driver_details/ui/driver_detail_screen.dart';
 import 'package:flutter_easy_ride/view/home/provider/bottom_bar_provider.dart';
-import 'package:flutter_easy_ride/view/payments/provider/payment_provider.dart';
 import 'package:flutter_easy_ride/view/payments/ui/wallet_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../driver_details/ui/driver_detail_screen.dart';
 
 class CarSelectionScreen extends StatelessWidget {
   const CarSelectionScreen({super.key});
@@ -38,8 +37,6 @@ class CarSelectionScreen extends StatelessWidget {
                       markers: v.markers,
                       polylines: v.polyLines,
                       zoomControlsEnabled: false,
-                      // onMapCreated: (c) => _mapController = c,
-                      // onTap: (l) => v.addLocationMarkers(l),
                       initialCameraPosition: CameraPosition(target: v.currentLocation ?? LatLng(0, 0), zoom: 15),
                     ),
             ),
@@ -168,8 +165,9 @@ class CarSelectionScreen extends StatelessWidget {
                   SvgPicture.asset(AppImage.wallet),
                   SizedBox(width: 5),
                   Consumer<BookNowProvider>(
-                      builder: (context, v, child) =>
-                          Text(context.watch<PaymentProvider>().selectedPaymentMethod, style: TextStyle(fontSize: 16))),
+                      builder: (context, v, child) => Text(
+                          context.watch<CarSelectionProvider>().selectedPaymentMethod?.name ?? "COD",
+                          style: TextStyle(fontSize: 16))),
                   Spacer(),
                   Icon(Icons.arrow_forward_ios_rounded, size: 20)
                 ],
@@ -178,30 +176,34 @@ class CarSelectionScreen extends StatelessWidget {
             SizedBox(height: 10),
             CommonButton(
               label: "Confirm",
+              load: context.watch<CarSelectionProvider>().load,
               onPressed: () {
-                context.read<CarSelectionProvider>().saveRequestToDriver(
-                      context.read<BookNowProvider>().markerPositions,
-                      context.read<BookNowProvider>().locationTextfieldList,
-                      context.read<BottomBarProvider>().bookingTypeIndex,
-                    );
-                if (context.read<PaymentProvider>().selectedPaymentMethod == "wallet") {
-                  final selectedItem = context.read<CarSelectionProvider>().vehicleList.firstWhere((e) => e.isSelected);
-                  if (double.parse(context.read<CarSelectionProvider>().vehicleModel?.data?.walletAmount ?? "0") >
-                      double.parse(selectedItem.fare ?? "0")) {
+                if (context.read<CarSelectionProvider>().vehicleList.any((e) => e.isSelected)) {
+                  if (context.read<CarSelectionProvider>().selectedPaymentMethod?.value == "wallet") {
+                    final selectedItem =
+                        context.read<CarSelectionProvider>().vehicleList.firstWhere((e) => e.isSelected);
+                    if (double.parse(context.read<CarSelectionProvider>().vehicleModel?.data?.walletAmount ?? "0") >
+                        double.parse(selectedItem.fare ?? "0")) {
+                      context.read<CarSelectionProvider>().bookNow(
+                            context.read<BookNowProvider>().markerPositions,
+                            context.read<BookNowProvider>().locationTextfieldList,
+                            context.read<BottomBarProvider>().bookingTypeIndex,
+                          );
+                    } else {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => WalletScreen(backVisible: true, fromCarSelectionScreen: true)));
+                    }
+                  } else {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => DriverDetailScreen(),
                       ),
                     );
-                  } else {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => WalletScreen()));
                   }
                 } else {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => DriverDetailScreen(),
-                    ),
-                  );
+                  AppUtils.show("Please Select vehicle");
                 }
               },
             ),

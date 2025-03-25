@@ -13,7 +13,6 @@ import 'package:flutter_easy_ride/view/car_selection/ui/car_selection_screen.dar
 import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:flutter_easy_ride/view/components/image_text_widget.dart';
 import 'package:flutter_easy_ride/view/home/provider/bottom_bar_provider.dart';
-import 'package:flutter_easy_ride/view/payments/provider/payment_provider.dart';
 import 'package:flutter_easy_ride/view/profile/provider/profile_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -124,43 +123,22 @@ class _BookingScreenState extends State<BookingScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              children: [
-                                Expanded(
+                              mainAxisSize: MainAxisSize.min,
+                              children: List.generate(
+                                v.bookingTypeList.length,
+                                (index) => Expanded(
                                   child: ImageTextWidget(
-                                    title: "Book Now",
-                                    isBorderView: true,
-                                    isSelected: v.bookingTypeIndex == 0,
-                                    image: AppImage.bookNow,
-                                    subImage: AppImage.bookNowIcon,
-                                    mainAxisSize: MainAxisSize.min,
-                                    onTap: () => v.changeBooking(0),
-                                  ),
-                                ),
-                                SizedBox(width: 5),
-                                Expanded(
-                                  child: ImageTextWidget(
-                                    title: "Per-Booking",
                                     isBorderView: true,
                                     mainAxisSize: MainAxisSize.min,
-                                    image: AppImage.preBooking,
-                                    subImage: AppImage.preBookingIcon,
-                                    isSelected: v.bookingTypeIndex == 1,
-                                    onTap: () => v.changeBooking(1),
+                                    isSelected: v.bookingTypeIndex == index,
+                                    isLastIndex: index == v.bookingTypeList.length - 1,
+                                    title: v.bookingTypeList[index].name,
+                                    image: v.bookingTypeList[index].image ?? AppImage.bookNow,
+                                    subImage: v.bookingTypeList[index].icon ?? AppImage.bookNowIcon,
+                                    onTap: () => v.changeBooking(index),
                                   ),
                                 ),
-                                SizedBox(width: 5),
-                                Expanded(
-                                  child: ImageTextWidget(
-                                    title: "Rental",
-                                    isBorderView: true,
-                                    mainAxisSize: MainAxisSize.min,
-                                    image: AppImage.rental,
-                                    subImage: AppImage.rentalIcon,
-                                    isSelected: v.bookingTypeIndex == 2,
-                                    onTap: () => v.changeBooking(2),
-                                  ),
-                                ),
-                              ],
+                              ).toList(),
                             ),
                             SizedBox(height: 12),
                             v.bookingTypeIndex == 0
@@ -186,7 +164,6 @@ class _BookingScreenState extends State<BookingScreen> {
                       if ((provider.locationTextfieldList.first.con?.text.isNotEmpty ?? false) &&
                           (provider.locationTextfieldList.last.con?.text.isNotEmpty ?? false)) {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => CarSelectionScreen()));
-                        context.read<PaymentProvider>().getPaymentGateways();
                         context
                             .read<CarSelectionProvider>()
                             .getVehicles(context.read<BookNowProvider>().markerPositions);

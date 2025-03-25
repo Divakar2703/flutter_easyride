@@ -79,13 +79,6 @@ class PaymentProvider with ChangeNotifier {
     }
   }
 
-  String selectedPaymentMethod = "COD";
-
-  changePaymentMode(String value) {
-    selectedPaymentMethod = value;
-    notifyListeners();
-  }
-
   List<PaymentGatewayDataModel> paymentGateWayList = [];
   List<PaymentGatewayDataModel> paymentTypeList = [
     PaymentGatewayDataModel(name: "COD", value: "cod", icon: AppImage.wallet),

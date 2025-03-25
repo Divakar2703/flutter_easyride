@@ -22,9 +22,9 @@ class CarSelectionService {
     return null;
   }
 
-  Future<SaveRideModel?> saveRequestToDriver(Map<String, Object?> req) async {
+  Future<SaveRideModel?> bookNow(Map<String, Object?> req) async {
     try {
-      final response = await dio.post(Endpoints.getVehicles, data: req);
+      final response = await dio.post(Endpoints.bookNow, data: req);
       if (response.statusCode == 200) {
         return SaveRideModel.fromJson(response.data);
       }

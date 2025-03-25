@@ -24,6 +24,7 @@ class Endpoints {
   static String getWalletHistory = "$newBaseUrl/wallet-history";
   static String getPaymentGateways = "$newBaseUrl/get-payment-gateways";
   static const String getVehicles = "$newBaseUrl/get-vehicle";
+  static const String bookNow = "$newBaseUrl/book-cab";
   static const String addMoneyToWallet = "$newBaseUrl/add-wallet-balance";
   static const String verifyWalletPayment = "$newBaseUrl/verify-wallet-payment";
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/model/vehicle_data.dart';
+import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/utils/local_storage.dart';
 import 'package:flutter_easy_ride/view/car_selection/models/save_ride_model.dart';
 import 'package:flutter_easy_ride/view/car_selection/service/car_selection_service.dart';
 import 'package:flutter_easy_ride/view/components/common_textfield.dart';
+import 'package:flutter_easy_ride/view/payments/models/payment_gateway_model.dart';
 import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
 
 class CarSelectionProvider with ChangeNotifier {
@@ -41,9 +43,21 @@ class CarSelectionProvider with ChangeNotifier {
     }
   }
 
+  PaymentGatewayDataModel? selectedPaymentMethod;
+
+  changePaymentMode(PaymentGatewayDataModel value) {
+    selectedPaymentMethod = value;
+    notifyListeners();
+  }
+
+  List<PaymentGatewayDataModel> paymentTypeList = [
+    PaymentGatewayDataModel(name: "COD", value: "cod", icon: AppImage.wallet),
+    PaymentGatewayDataModel(name: "Wallet", value: "wallet", icon: AppImage.wallet),
+  ];
+
   bool load = false;
 
-  saveRequestToDriver(
+  bookNow(
     List<LatLng> latLang,
     List<CommonTextField> locationTextfieldList,
     int selectedIndex,
@@ -65,6 +79,7 @@ class CarSelectionProvider with ChangeNotifier {
       final request = {
         "waypoints": list,
         "user_id": userId,
+        "payment_mode": selectedPaymentMethod?.value ?? "cod",
         "vehicle_type_id": selectedVehicle.id,
         "booking_type": selectedIndex == 0
             ? "book_now"
@@ -73,7 +88,7 @@ class CarSelectionProvider with ChangeNotifier {
                 : "rental",
         "added_by_web": "http://www.bits.teamtest.co.in"
       };
-      final resp = await service.saveRequestToDriver(request);
+      final resp = await service.bookNow(request);
       if (resp != null) {
         saveRideModel = resp;
       }
