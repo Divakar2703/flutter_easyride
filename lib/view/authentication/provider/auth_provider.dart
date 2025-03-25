@@ -49,30 +49,41 @@ class AuthProvider with ChangeNotifier {
   }
 
   /// Send Otp Api
+  bool loadOtp = false;
   Future<bool> sendOtp(String mobileNumber) async {
     try {
+      loadOtp = true;
+      notifyListeners();
       final resp = await authService.sendOtp(phone: mobileNumber);
       if (resp == 200) {
         _mobileNumber = mobileNumber;
+        loadOtp = false;
         notifyListeners();
         return true;
       }
+      loadOtp = false;
+      notifyListeners();
       return false;
     } catch (e) {
+      loadOtp = false;
+      notifyListeners();
       return false;
     }
   }
 
   /// Verify Otp Api
+  bool loadVerifyOtp = false;
   Future<void> verifyOtp(String otp) async {
     try {
+      loadVerifyOtp = true;
+      notifyListeners();
       final resp = await authService.verifyOtp(phone: mobileNumber, otp: otp);
-
       if (resp != null && resp.status == "success") {
         _otp = otp;
         userID = resp.data?.userId ?? "";
         await LocalStorage.saveUserID(resp.data?.userId ?? "");
         await LocalStorage.saveId(int.parse(resp.data?.id ?? "0"));
+        loadVerifyOtp = false;
         Navigator.pushAndRemoveUntil(
           navigatorKey.currentContext!,
           MaterialPageRoute(builder: (context) => BottomBarScreen(userID: userID)),
@@ -80,6 +91,11 @@ class AuthProvider with ChangeNotifier {
         );
         notifyListeners();
       }
-    } catch (e) {}
+      loadVerifyOtp = false;
+      notifyListeners();
+    } catch (e) {
+      loadVerifyOtp = false;
+      notifyListeners();
+    }
   }
 }

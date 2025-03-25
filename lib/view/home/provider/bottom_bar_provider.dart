@@ -24,7 +24,10 @@ class BottomBarProvider extends ChangeNotifier {
   }
 
   Set<Marker> markers = {};
-  addLocationMarkers(LatLng l, {NearbyCab? e}) async {
+  addLocationMarkers(LatLng l, {NearbyCab? e, bool? isClear}) async {
+    if (isClear ?? false) {
+      markers.clear();
+    }
     final markerId = MarkerId('marker_${markers.length}');
     final marker = Marker(
       markerId: markerId,
@@ -48,11 +51,27 @@ class BottomBarProvider extends ChangeNotifier {
 
   /// Get Current Location
   TextEditingController homeSearchCon = TextEditingController();
-  LatLng? _currentLocation;
+  LatLng? currentLocation;
   bool _isLoading = false;
 
-  LatLng? get currentLocation => _currentLocation;
   bool get isLoading => _isLoading;
+
+  onCameraIdle() async {
+    List<Placemark> placeMarks =
+        await placemarkFromCoordinates(currentLocation?.latitude ?? 0.0, currentLocation?.longitude ?? 0.0);
+    address =
+        '${placeMarks[0].thoroughfare}, ${placeMarks[0].subLocality}, ${placeMarks[0].locality}, ${placeMarks[0].administrativeArea}, ${placeMarks[0].postalCode}';
+    homeSearchCon.text = address;
+    if (currentLocation != null) {
+      await getLocationVehicles();
+    }
+  }
+
+  changeMapPosition(CameraPosition p) async {
+    currentLocation = p.target;
+    addLocationMarkers(currentLocation!, isClear: true);
+  }
+
   Future<void> fetchCurrentLocation() async {
     _isLoading = true;
     notifyListeners();
@@ -80,15 +99,15 @@ class BottomBarProvider extends ChangeNotifier {
           await Geolocator.getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
 
       // Update the current location
-      _currentLocation = LatLng(position.latitude, position.longitude);
+      currentLocation = LatLng(position.latitude, position.longitude);
       List<Placemark> placeMarks = await placemarkFromCoordinates(position.latitude, position.longitude);
       ALatitude = position.latitude;
       ALongitude = position.longitude;
       address =
           '${placeMarks[0].thoroughfare}, ${placeMarks[0].subLocality}, ${placeMarks[0].locality}, ${placeMarks[0].administrativeArea}, ${placeMarks[0].postalCode}';
       homeSearchCon.text = address;
-      if (_currentLocation != null) {
-        addLocationMarkers(_currentLocation!);
+      if (currentLocation != null) {
+        addLocationMarkers(currentLocation!);
       }
       await getLocationVehicles();
       notifyListeners();
@@ -107,7 +126,8 @@ class BottomBarProvider extends ChangeNotifier {
   Future<void> getLocationVehicles() async {
     loading = true;
     try {
-      final resp = await homeService.getLocationVehicles(lat: ALatitude, long: ALongitude);
+      final resp =
+          await homeService.getLocationVehicles(lat: currentLocation?.latitude, long: currentLocation?.longitude);
       if (resp != null) {
         loading = false;
         vehicleList = resp.vehicle ?? [];

@@ -13,6 +13,7 @@ import 'package:flutter_easy_ride/rental/get_rental_vehical_provider.dart';
 import 'package:flutter_easy_ride/rental/recurring/recurringbooking_provider.dart';
 import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:flutter_easy_ride/utils/local_storage.dart';
+import 'package:flutter_easy_ride/view/audio_call/web_rtc_service_provider.dart';
 import 'package:flutter_easy_ride/view/authentication/provider/auth_provider.dart';
 import 'package:flutter_easy_ride/view/authentication/ui/splash_screen.dart';
 import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
@@ -65,6 +66,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => BottomBarProvider()),
         ChangeNotifierProvider(create: (_) => ProfileProvider()),
         ChangeNotifierProvider(create: (_) => PaymentProvider()),
+        ChangeNotifierProvider(create: (_) => WebRTCProvider("10")),
       ],
       child: MyApp(),
     ),

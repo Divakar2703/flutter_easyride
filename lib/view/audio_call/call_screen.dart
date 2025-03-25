@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/view/audio_call/call_ui.dart';
 import 'package:flutter_easy_ride/view/audio_call/web_rtc_service_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +17,14 @@ class CallScreen extends StatelessWidget {
           ? SizedBox()
           : Center(
               child: ElevatedButton(
-                onPressed: () => context.read<WebRTCProvider>().callUser(peerId!),
+                onPressed: () {
+                  context.read<WebRTCProvider>().callUser(peerId!);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CallUi(),
+                      ));
+                },
                 child: Text("Start Call"),
               ),
             ),

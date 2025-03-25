@@ -36,7 +36,7 @@ class _MapPageState extends State<DashboardMap> {
     Provider.of<BottomBarProvider>(context, listen: false).fetchCurrentLocation();
     Provider.of<ApiProvider>(context, listen: false).fetchAuth();
     Provider.of<DashboardProvider>(context, listen: false).fetchDashboard();
-    Provider.of<BottomBarProvider>(context, listen: false).getLocationVehicles();
+    // Provider.of<BottomBarProvider>(context, listen: false).getLocationVehicles();
     Provider.of<DashboardProvider>(context, listen: false).pendingBooking();
   }
 

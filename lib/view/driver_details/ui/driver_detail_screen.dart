@@ -3,16 +3,12 @@ import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/utils/indicator.dart';
 import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
-import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:flutter_easy_ride/view/components/common_textfield.dart';
 import 'package:flutter_easy_ride/view/components/dotted_line.dart';
-import 'package:flutter_easy_ride/view/components/vertical_text.dart';
 import 'package:flutter_easy_ride/view/driver_details/provider/driver_details_provider.dart';
-import 'package:flutter_easy_ride/view/payments/ui/wallet_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:slidable_button/slidable_button.dart';
 
 class DriverDetailScreen extends StatelessWidget {
   const DriverDetailScreen({super.key});
@@ -413,126 +409,6 @@ class DriverDetailScreen extends StatelessWidget {
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.black.withOpacity(0.08),
-              offset: Offset(0, -4),
-              blurRadius: 14,
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (!context.watch<DriverDetailsProvider>().isConfirmed) ...[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  VerticalText(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    title: "Your Ride is Ready!",
-                    subTitle: "Confirm before your ride gets canceled",
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                  ),
-                  Spacer(),
-                  Text(
-                    "0:60",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: AppColors.blue),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-            ],
-            Row(
-              children: [
-                Expanded(
-                  flex: 7,
-                  child: CommonButton(
-                    labelSize: 14,
-                    onPressed: () {},
-                    img: AppImage.close,
-                    label: "Cancel Ride",
-                    horizontalPadding: 10,
-                    labelColor: AppColors.redColor.withOpacity(0.7),
-                    buttonColor: AppColors.white,
-                    buttonBorderColor: AppColors.redColor.withOpacity(0.7),
-                  ),
-                ),
-                SizedBox(width: 10),
-                context.watch<DriverDetailsProvider>().isConfirmed
-                    ? Expanded(
-                        flex: 12,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(99),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(99),
-                              border: Border.all(color: AppColors.borderColor.withOpacity(0.8)),
-                            ),
-                            child: HorizontalSlidableButton(
-                              width: MediaQuery.of(context).size.width,
-                              height: 52,
-                              buttonWidth: 52,
-                              color: AppColors.borderColor.withOpacity(0.8),
-                              buttonColor: AppColors.white,
-                              dismissible: false,
-                              label: Icon(Icons.phone),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const SizedBox(),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(Icons.arrow_forward_ios_outlined, color: AppColors.white, size: 18),
-                                      Icon(Icons.arrow_forward_ios_rounded,
-                                          color: AppColors.white.withOpacity(0.7), size: 18),
-                                      Icon(Icons.arrow_forward_ios_rounded,
-                                          color: AppColors.white.withOpacity(0.3), size: 18),
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 20.0),
-                                    child: Text(
-                                      "Call",
-                                      style:
-                                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: AppColors.white),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              onChanged: (position) {
-                                if (position == SlidableButtonPosition.end) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => WalletScreen(backVisible: true)),
-                                  );
-                                }
-                              },
-                            ),
-                          ),
-                        ),
-                      )
-                    : Expanded(
-                        flex: 12,
-                        child: CommonButton(
-                          labelSize: 14,
-                          horizontalPadding: 10,
-                          label: "Confirm Booking",
-                          onPressed: () => context.read<DriverDetailsProvider>().confirmRide(),
-                        ),
-                      ),
-              ],
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -51,6 +51,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       target: v.currentLocation ?? LatLng(0, 0),
                       zoom: 15,
                     ),
+                    onCameraIdle: () => v.onCameraIdle(),
+                    onCameraMove: (p) => v.changeMapPosition(p),
                     onMapCreated: (c) => _mapController = c,
                     markers: v.markers,
                   ),
@@ -68,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CallScreen(userId: userId, peerId: "10"),
+                        builder: (context) => CallScreen(userId: userId, peerId: "15"),
                       ),
                     );
                   },

@@ -76,6 +76,7 @@ class LoginScreen extends StatelessWidget {
                         SizedBox(height: 20),
                         CommonButton(
                           label: "Send OTP",
+                          load: authProvider.loadOtp,
                           width: MediaQuery.of(context).size.width / 2,
                           onPressed: () async {
                             final mobileNumber = _mobileController.text;

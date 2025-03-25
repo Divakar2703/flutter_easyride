@@ -5,19 +5,8 @@ import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 
-class VerifyScreen extends StatefulWidget {
-  @override
-  _VerifyScreenState createState() => _VerifyScreenState();
-}
-
-class _VerifyScreenState extends State<VerifyScreen> {
-  TextEditingController _otpController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _otpController = TextEditingController(); // Initialize controller
-  }
+class VerifyScreen extends StatelessWidget {
+  final _otpController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -102,6 +91,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                     SizedBox(height: 20),
                     CommonButton(
                       label: "Verify OTP",
+                      load: authProvider.loadVerifyOtp,
                       width: MediaQuery.of(context).size.width / 2,
                       onPressed: () async {
                         final otp = _otpController.text;
