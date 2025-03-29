@@ -1,10 +1,19 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/main.dart';
 import 'package:flutter_easy_ride/view/audio_call/call_ui.dart';
+import 'package:flutter_easy_ride/view/driver_details/ui/driver_detail_screen.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart' as getX;
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+
+import '../driver_details/model/driver_details.dart';
 
 class WebRTCProvider with ChangeNotifier {
   late IO.Socket socket;
@@ -21,7 +30,11 @@ class WebRTCProvider with ChangeNotifier {
   void initSocket(String id) {
     socket = IO.io(
       'https://cabsocket.asatvindia.in:5005',
-      IO.OptionBuilder().setTransports(['websocket']).disableAutoConnect().setReconnectionAttempts(5).build(),
+      IO.OptionBuilder()
+          .setTransports(['websocket'])
+          .disableAutoConnect()
+          .setReconnectionAttempts(5)
+          .build(),
     );
     userId = id;
     socket.connect();
@@ -164,7 +177,8 @@ class WebRTCProvider with ChangeNotifier {
 
   Future<void> _initializePeerConnection() async {
     await requestPermissions();
-    _localStream = await navigator.mediaDevices.getUserMedia({'audio': true, 'video': false});
+    _localStream = await navigator.mediaDevices
+        .getUserMedia({'audio': true, 'video': false});
     _remoteStream = await createLocalMediaStream('remoteStream');
 
     _peerConnection = await createPeerConnection({
@@ -204,7 +218,8 @@ class WebRTCProvider with ChangeNotifier {
     if (incomingCallerId == null) return;
     RTCSessionDescription answer = await _peerConnection!.createAnswer();
     await _peerConnection!.setLocalDescription(answer);
-    socket.emit('answer_call', {'toUserId': incomingCallerId, 'answer': answer.toMap()});
+    socket.emit('answer_call',
+        {'toUserId': incomingCallerId, 'answer': answer.toMap()});
     isCallActive = true;
     incomingCallerId = null;
     notifyListeners();
@@ -221,5 +236,86 @@ class WebRTCProvider with ChangeNotifier {
   /// For Booking
   findDriver(String bookingId) {
     socket.emit("find_driver", {"booking_id": bookingId});
+  }
+
+  ///driver details listening
+  DriverDetailsModel? driverDetailsModel;
+  rideAccept() {
+    socket.on('ride_accepted', (data) {
+      // final decodedData = data is Map<String, dynamic> ? data : json.decode(data);
+      driverDetailsModel = DriverDetailsModel.fromJson(jsonDecode(data));
+      loadMapData(
+          pickupLat: driverDetailsModel?.waypoints?.first.latitude ?? 0.0,
+          pickupLong: driverDetailsModel?.waypoints?.first.latitude ?? 0.0,
+          destLat: driverDetailsModel?.waypoints?.first.latitude ?? 0.0,
+          destLng: driverDetailsModel?.waypoints?.first.longitude ?? 0.0);
+      getPolyPoints(
+          pickupLat: driverDetailsModel?.waypoints?.first.latitude ?? 0.0,
+          pickupLong: driverDetailsModel?.waypoints?.first.latitude ?? 0.0,
+          destLat: driverDetailsModel?.waypoints?.first.latitude ?? 0.0,
+          destLng: driverDetailsModel?.waypoints?.first.longitude ?? 0.0);
+
+      Navigator.push(navigatorKey.currentContext!,
+          MaterialPageRoute(builder: (context) => DriverDetailScreen()));
+    });
+
+    notifyListeners();
+  }
+
+  ///marker and polyline for driver details
+  Set<Marker> markers = {};
+  PolylinePoints polylinePoints = PolylinePoints();
+  LatLng? currentLocation;
+  List<LatLng> polylineCoordinates = [];
+
+  final String googleApiKey = "AIzaSyCqOtn--DWaSee5PMjb1J1zkPe7gw5XMWQ";
+
+  Future<void> getPolyPoints(
+      {double? pickupLat,
+      double? pickupLong,
+      double? destLat,
+      double? destLng}) async {
+    try {
+      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+          googleApiKey: googleApiKey,
+          request: PolylineRequest(
+              origin: PointLatLng(pickupLat ?? 0.0, pickupLong ?? 0.0),
+              destination: PointLatLng(destLat ?? 0.0, destLng ?? 0.0),
+              mode: TravelMode.driving));
+
+      if (result.points.isNotEmpty) {
+        polylineCoordinates = result.points
+            .map((point) => LatLng(point.latitude, point.longitude))
+            .toList();
+        notifyListeners();
+      }
+    } catch (error) {
+      print("Error getting route: $error");
+    }
+  }
+
+  void loadMapData(
+      {double? pickupLat,
+      double? pickupLong,
+      double? destLat,
+      double? destLng}) async {
+    // Simulate a delay to fetch map data
+    await Future.delayed(Duration(seconds: 2));
+    markers.add(
+      Marker(
+        markerId: MarkerId("pickup"),
+        position:
+            LatLng(pickupLat ?? 0.0, pickupLong ?? 0.0), // Pickup Location
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+      ),
+    );
+    markers.add(
+      Marker(
+        markerId: MarkerId("dropoff"),
+        position: LatLng(destLat ?? 0.0, destLng ?? 0.0), // Drop Location
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+      ),
+    );
+    notifyListeners();
   }
 }
