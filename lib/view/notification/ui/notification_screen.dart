@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/utils/indicator.dart';
+import 'package:flutter_easy_ride/view/notification/models/notification_response.dart';
+import 'package:flutter_easy_ride/view/notification/services/notification_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import '../models/notification_response.dart';
-import '../services/notification_service.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});

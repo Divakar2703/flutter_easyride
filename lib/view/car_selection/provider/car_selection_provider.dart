@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/model/vehicle_data.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/utils/local_storage.dart';
-import 'package:flutter_easy_ride/view/car_selection/models/save_ride_model.dart';
+import 'package:flutter_easy_ride/utils/toast.dart';
+import 'package:flutter_easy_ride/view/booking/models/booking_model.dart';
 import 'package:flutter_easy_ride/view/car_selection/service/car_selection_service.dart';
 import 'package:flutter_easy_ride/view/components/common_textfield.dart';
 import 'package:flutter_easy_ride/view/payments/models/payment_gateway_model.dart';
@@ -12,7 +13,7 @@ class CarSelectionProvider with ChangeNotifier {
   final service = CarSelectionService();
   List<VehicleList> vehicleList = [];
   VehicleResponse? vehicleModel;
-  SaveRideModel? saveRideModel;
+  BookingModel? saveRideModel;
 
   bool loading = false;
 
@@ -57,7 +58,7 @@ class CarSelectionProvider with ChangeNotifier {
 
   bool load = false;
 
-  bookNow(
+  Future<bool> bookNow(
     List<LatLng> latLang,
     List<CommonTextField> locationTextfieldList,
     int selectedIndex,
@@ -89,14 +90,19 @@ class CarSelectionProvider with ChangeNotifier {
         "added_by_web": "http://www.bits.teamtest.co.in"
       };
       final resp = await service.bookNow(request);
-      if (resp != null) {
+      if (resp != null && resp.status == "success") {
         saveRideModel = resp;
+        return true;
+      } else {
+        AppUtils.show(resp?.message ?? "");
       }
       load = false;
       notifyListeners();
+      return false;
     } catch (e) {
       load = false;
       notifyListeners();
+      return false;
     }
   }
 }

@@ -129,6 +129,8 @@ class PaymentProvider with ChangeNotifier {
           addMoneyModel = resp;
           getWalletHistory();
           return true;
+        } else {
+          AppUtils.show(resp.message ?? "");
         }
       }
       return false;

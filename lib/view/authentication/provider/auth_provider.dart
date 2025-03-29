@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/main.dart';
 import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:flutter_easy_ride/utils/local_storage.dart';
+import 'package:flutter_easy_ride/view/audio_call/web_rtc_service_provider.dart';
 import 'package:flutter_easy_ride/view/authentication/services/auth_service.dart';
 import 'package:flutter_easy_ride/view/authentication/ui/login_screen.dart';
 import 'package:flutter_easy_ride/view/home/ui/bottom_bar_screen.dart';
+import 'package:provider/provider.dart';
 
 class AuthProvider with ChangeNotifier {
   final TextEditingController nameController = TextEditingController();
@@ -86,7 +88,10 @@ class AuthProvider with ChangeNotifier {
         loadVerifyOtp = false;
         Navigator.pushAndRemoveUntil(
           navigatorKey.currentContext!,
-          MaterialPageRoute(builder: (context) => BottomBarScreen(userID: userID)),
+          MaterialPageRoute(builder: (context) {
+            context.read<WebRTCProvider>().initSocket(userID);
+            return BottomBarScreen();
+          }),
           (route) => false,
         );
         notifyListeners();

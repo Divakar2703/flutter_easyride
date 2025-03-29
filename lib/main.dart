@@ -67,7 +67,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => BottomBarProvider()),
         ChangeNotifierProvider(create: (_) => ProfileProvider()),
         ChangeNotifierProvider(create: (_) => PaymentProvider()),
-        ChangeNotifierProvider(create: (_) => WebRTCProvider("10")),
+        ChangeNotifierProvider(create: (_) => WebRTCProvider()),
       ],
       child: MyApp(),
     ),

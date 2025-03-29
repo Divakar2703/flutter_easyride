@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/view/audio_call/call_ui.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart' as getX;
+import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -12,26 +13,25 @@ class WebRTCProvider with ChangeNotifier {
   MediaStream? _remoteStream;
   bool isCallActive = false;
   String? incomingCallerId;
-  final String userId;
+  String? userId;
   bool isMicMuted = false;
   bool isSpeakerOn = false;
+  Logger logger = Logger();
 
-  WebRTCProvider(this.userId) {
-    _initSocket();
-    _initializePeerConnection();
-  }
-
-  void _initSocket() {
+  void initSocket(String id) {
     socket = IO.io(
       'https://cabsocket.asatvindia.in:5005',
       IO.OptionBuilder().setTransports(['websocket']).disableAutoConnect().setReconnectionAttempts(5).build(),
     );
+    userId = id;
     socket.connect();
 
     socket.onConnect((_) {
       print('✅ Connected to signaling server');
       socket.emit('register', userId);
     });
+
+    socket.onDisconnect((_) => logger.i("Socket Disconnected"));
 
     socket.on('incoming_call', (data) async {
       print("📞 Incoming call from: ${data['fromUserId']}");
@@ -101,6 +101,11 @@ class WebRTCProvider with ChangeNotifier {
         }
       }
     });
+    _initializePeerConnection();
+  }
+
+  disConnectSocket() {
+    socket.disconnect();
   }
 
   Future<void> callUser(String toUserId) async {
@@ -211,6 +216,10 @@ class WebRTCProvider with ChangeNotifier {
     _peerConnection?.close();
     _localStream?.dispose();
     _remoteStream?.dispose();
-    super.dispose();
+  }
+
+  /// For Booking
+  findDriver(String bookingId) {
+    socket.emit("find_driver", {"booking_id": bookingId});
   }
 }

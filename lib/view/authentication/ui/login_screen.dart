@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easy_ride/provider/api_provider.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/toast.dart';
 import 'package:flutter_easy_ride/view/authentication/provider/auth_provider.dart';
@@ -7,8 +8,19 @@ import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:flutter_easy_ride/view/components/common_textfield.dart';
 import 'package:provider/provider.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _mobileController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<ApiProvider>().fetchAuth();
+  }
 
   @override
   Widget build(BuildContext context) {

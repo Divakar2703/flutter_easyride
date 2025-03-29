@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/utils/local_storage.dart';
+import 'package:flutter_easy_ride/view/audio_call/web_rtc_service_provider.dart';
 import 'package:flutter_easy_ride/view/authentication/ui/login_screen.dart';
 import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:flutter_easy_ride/view/components/common_textfield.dart';
@@ -473,6 +474,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   GestureDetector(
                     onTap: () async {
                       await LocalStorage.clearPref();
+                      context.read<WebRTCProvider>().disposeService();
+                      context.read<BottomBarProvider>().selectedIndex = 0;
                       Navigator.pushAndRemoveUntil(
                           context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false);
                     },

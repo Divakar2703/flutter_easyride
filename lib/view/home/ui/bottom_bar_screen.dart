@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
-import 'package:flutter_easy_ride/view/audio_call/web_rtc_service_provider.dart';
 import 'package:flutter_easy_ride/view/home/provider/bottom_bar_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class BottomBarScreen extends StatelessWidget {
-  final String userID;
-  BottomBarScreen({super.key, required this.userID});
-
   @override
   Widget build(BuildContext context) {
-    Provider.of<WebRTCProvider>(context, listen: false);
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(

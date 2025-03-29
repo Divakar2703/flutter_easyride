@@ -4,7 +4,7 @@ import 'package:flutter_easy_ride/api/dio_exceptions.dart';
 import 'package:flutter_easy_ride/api/service_locator.dart';
 import 'package:flutter_easy_ride/model/vehicle_data.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
-import 'package:flutter_easy_ride/view/car_selection/models/save_ride_model.dart';
+import 'package:flutter_easy_ride/view/booking/models/booking_model.dart';
 
 class CarSelectionService {
   final dio = getIt.get<DioClient>();
@@ -22,11 +22,11 @@ class CarSelectionService {
     return null;
   }
 
-  Future<SaveRideModel?> bookNow(Map<String, Object?> req) async {
+  Future<BookingModel?> bookNow(Map<String, Object?> req) async {
     try {
       final response = await dio.post(Endpoints.bookNow, data: req);
       if (response.statusCode == 200) {
-        return SaveRideModel.fromJson(response.data);
+        return BookingModel.fromJson(response.data);
       }
     } on DioException catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();

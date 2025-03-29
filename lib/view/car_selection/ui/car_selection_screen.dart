@@ -4,6 +4,7 @@ import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/utils/indicator.dart';
 import 'package:flutter_easy_ride/utils/toast.dart';
+import 'package:flutter_easy_ride/view/audio_call/web_rtc_service_provider.dart';
 import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_easy_ride/view/car_selection/provider/car_selection_provider.dart';
 import 'package:flutter_easy_ride/view/components/common_button.dart';
@@ -177,18 +178,23 @@ class CarSelectionScreen extends StatelessWidget {
             CommonButton(
               label: "Confirm",
               load: context.watch<CarSelectionProvider>().load,
-              onPressed: () {
-                if (context.read<CarSelectionProvider>().vehicleList.any((e) => e.isSelected)) {
-                  if (context.read<CarSelectionProvider>().selectedPaymentMethod?.value == "wallet") {
-                    final selectedItem =
-                        context.read<CarSelectionProvider>().vehicleList.firstWhere((e) => e.isSelected);
-                    if (double.parse(context.read<CarSelectionProvider>().vehicleModel?.data?.walletAmount ?? "0") >
+              onPressed: () async {
+                final webRtcProvider = context.read<WebRTCProvider>();
+                final carProvider = context.read<CarSelectionProvider>();
+                final bookProvider = context.read<BookNowProvider>();
+                if (carProvider.vehicleList.any((e) => e.isSelected)) {
+                  if (carProvider.selectedPaymentMethod?.value == "wallet") {
+                    final selectedItem = carProvider.vehicleList.firstWhere((e) => e.isSelected);
+                    if (double.parse(carProvider.vehicleModel?.data?.walletAmount ?? "0") >
                         double.parse(selectedItem.fare ?? "0")) {
-                      context.read<CarSelectionProvider>().bookNow(
-                            context.read<BookNowProvider>().markerPositions,
-                            context.read<BookNowProvider>().locationTextfieldList,
-                            context.read<BottomBarProvider>().bookingTypeIndex,
-                          );
+                      final resp = await carProvider.bookNow(
+                        bookProvider.markerPositions,
+                        bookProvider.locationTextfieldList,
+                        context.read<BottomBarProvider>().bookingTypeIndex,
+                      );
+                      if (resp) {
+                        webRtcProvider.findDriver(carProvider.saveRideModel?.data?.bookingId ?? "");
+                      }
                     } else {
                       Navigator.push(
                           context,
