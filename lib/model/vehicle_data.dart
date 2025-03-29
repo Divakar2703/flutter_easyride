@@ -64,21 +64,24 @@ class VehicleList {
   String? fare;
   String? discount;
   String? netFare;
+  String? grandTotal;
   bool isSelected = false;
 
-  VehicleList(
-      {this.id,
-      this.name,
-      this.image,
-      this.description,
-      this.type,
-      this.seat,
-      this.promocodeStatus,
-      this.distance,
-      this.travelTime,
-      this.fare,
-      this.discount,
-      this.netFare});
+  VehicleList({
+    this.id,
+    this.name,
+    this.image,
+    this.description,
+    this.type,
+    this.seat,
+    this.promocodeStatus,
+    this.distance,
+    this.travelTime,
+    this.fare,
+    this.discount,
+    this.netFare,
+    this.grandTotal,
+  });
 
   VehicleList.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -93,6 +96,7 @@ class VehicleList {
     fare = json['fare'];
     discount = json['discount'];
     netFare = json['net_fare'];
+    grandTotal = json['grand_total'];
   }
 
   Map<String, dynamic> toJson() {
@@ -109,6 +113,7 @@ class VehicleList {
     data['fare'] = this.fare;
     data['discount'] = this.discount;
     data['net_fare'] = this.netFare;
+    data['grand_total'] = this.grandTotal;
     return data;
   }
 }

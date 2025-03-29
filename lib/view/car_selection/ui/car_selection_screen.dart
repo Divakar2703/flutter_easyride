@@ -133,7 +133,7 @@ class CarSelectionScreen extends StatelessWidget {
                                       image: context.read<CarSelectionProvider>().vehicleList[index].image,
                                       time: context.read<CarSelectionProvider>().vehicleList[index].travelTime,
                                       title: context.read<CarSelectionProvider>().vehicleList[index].name,
-                                      price: "₹${context.read<CarSelectionProvider>().vehicleList[index].fare}",
+                                      price: "₹${context.read<CarSelectionProvider>().vehicleList[index].grandTotal}",
                                       subTitle: context.read<CarSelectionProvider>().vehicleList[index].description),
                                 ),
                     ),
@@ -186,7 +186,7 @@ class CarSelectionScreen extends StatelessWidget {
                   if (carProvider.selectedPaymentMethod?.value == "wallet") {
                     final selectedItem = carProvider.vehicleList.firstWhere((e) => e.isSelected);
                     if (double.parse(carProvider.vehicleModel?.data?.walletAmount ?? "0") >
-                        double.parse(selectedItem.fare ?? "0")) {
+                        double.parse(selectedItem.grandTotal ?? "0")) {
                       final resp = await carProvider.bookNow(
                         bookProvider.markerPositions,
                         bookProvider.locationTextfieldList,
