@@ -242,8 +242,7 @@ class WebRTCProvider with ChangeNotifier {
   DriverDetailsModel? driverDetailsModel;
   rideAccept() {
     socket.on('ride_accepted', (data) {
-      // final decodedData = data is Map<String, dynamic> ? data : json.decode(data);
-      driverDetailsModel = DriverDetailsModel.fromJson(jsonDecode(data));
+      driverDetailsModel = DriverDetailsModel.fromJson(data);
       loadMapData(
           pickupLat: driverDetailsModel?.waypoints?.first.latitude ?? 0.0,
           pickupLong: driverDetailsModel?.waypoints?.first.latitude ?? 0.0,
