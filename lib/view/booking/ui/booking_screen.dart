@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
-import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:flutter_easy_ride/utils/indicator.dart';
 import 'package:flutter_easy_ride/utils/toast.dart';
 import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
@@ -33,9 +32,11 @@ class _BookingScreenState extends State<BookingScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<BookNowProvider>().addLocationTextFields(sourceLocation, destination, address);
-      Provider.of<BookNowProvider>(context, listen: false)
-          .fetchCurrentLocation(context.read<BottomBarProvider>().currentLocation);
+      final bookProvider = context.read<BookNowProvider>();
+      bookProvider.addLocationTextFields(sourceLocation, destination,
+          context.read<BottomBarProvider>().homeSearchCon.text);
+      bookProvider.fetchCurrentLocation(
+          context.read<BottomBarProvider>().currentLocation);
       Provider.of<ProfileProvider>(context, listen: false).getSavedAddress();
     });
   }
@@ -43,7 +44,8 @@ class _BookingScreenState extends State<BookingScreen> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      onPopInvokedWithResult: (d, r) => context.read<BookNowProvider>().resetAllData(),
+      onPopInvokedWithResult: (d, r) =>
+          context.read<BookNowProvider>().resetAllData(),
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
@@ -65,7 +67,9 @@ class _BookingScreenState extends State<BookingScreen> {
                           polylines: v.polyLines,
                           zoomControlsEnabled: false,
                           onMapCreated: (c) => v.mapController = c,
-                          initialCameraPosition: CameraPosition(target: v.currentLocation ?? LatLng(0, 0), zoom: 18),
+                          initialCameraPosition: CameraPosition(
+                              target: v.currentLocation ?? LatLng(0, 0),
+                              zoom: 18),
                         ),
                 ),
               ),
@@ -94,13 +98,15 @@ class _BookingScreenState extends State<BookingScreen> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  height: context.watch<BottomBarProvider>().bookingTypeIndex == 2
-                      ? MediaQuery.of(context).size.height / 1.7
-                      : MediaQuery.of(context).size.height - 200,
+                  height:
+                      context.watch<BottomBarProvider>().bookingTypeIndex == 2
+                          ? MediaQuery.of(context).size.height / 1.7
+                          : MediaQuery.of(context).size.height - 200,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                     color: AppColors.white,
-                    border: BorderDirectional(top: BorderSide(color: AppColors.yellow)),
+                    border: BorderDirectional(
+                        top: BorderSide(color: AppColors.yellow)),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(28),
                       topRight: Radius.circular(28),
@@ -129,10 +135,13 @@ class _BookingScreenState extends State<BookingScreen> {
                                     isBorderView: true,
                                     mainAxisSize: MainAxisSize.min,
                                     isSelected: v.bookingTypeIndex == index,
-                                    isLastIndex: index == v.bookingTypeList.length - 1,
+                                    isLastIndex:
+                                        index == v.bookingTypeList.length - 1,
                                     title: v.bookingTypeList[index].name,
-                                    image: v.bookingTypeList[index].image ?? AppImage.bookNow,
-                                    subImage: v.bookingTypeList[index].icon ?? AppImage.bookNowIcon,
+                                    image: v.bookingTypeList[index].image ??
+                                        AppImage.bookNow,
+                                    subImage: v.bookingTypeList[index].icon ??
+                                        AppImage.bookNowIcon,
                                     onTap: () => v.changeBooking(index),
                                   ),
                                 ),
@@ -154,19 +163,27 @@ class _BookingScreenState extends State<BookingScreen> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                   child: CommonButton(
                     label: "Confirm",
                     onPressed: () async {
                       final provider = context.read<BookNowProvider>();
-                      if ((provider.locationTextfieldList.first.con?.text.isNotEmpty ?? false) &&
-                          (provider.locationTextfieldList.last.con?.text.isNotEmpty ?? false)) {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => CarSelectionScreen()));
-                        context
-                            .read<CarSelectionProvider>()
-                            .getVehicles(context.read<BookNowProvider>().markerPositions);
+                      if ((provider.locationTextfieldList.first.con?.text
+                                  .isNotEmpty ??
+                              false) &&
+                          (provider.locationTextfieldList.last.con?.text
+                                  .isNotEmpty ??
+                              false)) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CarSelectionScreen()));
+                        context.read<CarSelectionProvider>().getVehicles(
+                            context.read<BookNowProvider>().markerPositions);
                       } else {
-                        AppUtils.show("Please select source & destination location");
+                        AppUtils.show(
+                            "Please select source & destination location");
                       }
                     },
                   ),

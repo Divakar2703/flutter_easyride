@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/model/nearby_vehicle.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
-import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:flutter_easy_ride/utils/toast.dart';
 import 'package:flutter_easy_ride/view/home/models/booking_type_model.dart';
 import 'package:flutter_easy_ride/view/home/service/home_service.dart';
@@ -15,7 +14,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class BottomBarProvider extends ChangeNotifier {
   int selectedIndex = 0;
-  List pages = [HomeScreen(), WalletScreen(), NotificationScreen(), ProfileScreen()];
+  List pages = [
+    HomeScreen(),
+    WalletScreen(),
+    NotificationScreen(),
+    ProfileScreen()
+  ];
 
   final homeService = HomeService();
 
@@ -65,11 +69,11 @@ class BottomBarProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   onCameraIdle() async {
-    List<Placemark> placeMarks =
-        await placemarkFromCoordinates(currentLocation?.latitude ?? 0.0, currentLocation?.longitude ?? 0.0);
-    address =
+    List<Placemark> placeMarks = await placemarkFromCoordinates(
+        currentLocation?.latitude ?? 0.0, currentLocation?.longitude ?? 0.0);
+
+    homeSearchCon.text =
         '${placeMarks[0].thoroughfare}, ${placeMarks[0].subLocality}, ${placeMarks[0].locality}, ${placeMarks[0].administrativeArea}, ${placeMarks[0].postalCode}';
-    homeSearchCon.text = address;
     if (currentLocation != null) {
       await getLocationVehicles();
     }
@@ -103,17 +107,16 @@ class BottomBarProvider extends ChangeNotifier {
         throw Exception('Location permissions are permanently denied.');
       }
 
-      Position position =
-          await Geolocator.getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
+      Position position = await Geolocator.getCurrentPosition(
+          locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
 
       // Update the current location
       currentLocation = LatLng(position.latitude, position.longitude);
-      List<Placemark> placeMarks = await placemarkFromCoordinates(position.latitude, position.longitude);
-      ALatitude = position.latitude;
-      ALongitude = position.longitude;
-      address =
+      List<Placemark> placeMarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+
+      homeSearchCon.text =
           '${placeMarks[0].thoroughfare}, ${placeMarks[0].subLocality}, ${placeMarks[0].locality}, ${placeMarks[0].administrativeArea}, ${placeMarks[0].postalCode}';
-      homeSearchCon.text = address;
       if (currentLocation != null) {
         addLocationMarkers(currentLocation!);
       }
@@ -134,15 +137,16 @@ class BottomBarProvider extends ChangeNotifier {
   Future<void> getLocationVehicles() async {
     loading = true;
     try {
-      final resp =
-          await homeService.getLocationVehicles(lat: currentLocation?.latitude, long: currentLocation?.longitude);
+      final resp = await homeService.getLocationVehicles(
+          lat: currentLocation?.latitude, long: currentLocation?.longitude);
       if (resp != null) {
         loading = false;
         vehicleList = resp.vehicle ?? [];
         if (vehicleList.isNotEmpty) {
           vehicleList.forEach(
             (e) => addLocationMarkers(
-              LatLng(double.parse(e.currLat ?? "0.0"), double.parse(e.currLong ?? "0.0")),
+              LatLng(double.parse(e.currLat ?? "0.0"),
+                  double.parse(e.currLong ?? "0.0")),
               e: e,
             ),
           );

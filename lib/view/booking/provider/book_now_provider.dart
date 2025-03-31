@@ -1,15 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/api/dio_client.dart';
 import 'package:flutter_easy_ride/api/service_locator.dart';
-import 'package:flutter_easy_ride/model/drop_location_history.dart';
 import 'package:flutter_easy_ride/model/location_suggetions.dart';
-import 'package:flutter_easy_ride/service/api_helper.dart';
-import 'package:flutter_easy_ride/service/network_utility.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
-import 'package:flutter_easy_ride/utils/eve.dart';
 import 'package:flutter_easy_ride/view/booking/models/common_model.dart';
 import 'package:flutter_easy_ride/view/components/common_textfield.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -105,7 +99,8 @@ class BookNowProvider with ChangeNotifier {
 
   /// On Map Tap & add marker
   Set<Marker> markers = {};
-  Future<void> addLocationMarkers(LatLng l, String address, {bool isSource = false, bool isDestination = false}) async {
+  Future<void> addLocationMarkers(LatLng l, String address,
+      {bool isSource = false, bool isDestination = false}) async {
     try {
       final markerId = MarkerId(isSource
               ? 'source_marker'
@@ -171,12 +166,14 @@ class BookNowProvider with ChangeNotifier {
     if (indexToRemove != -1) {
       controllerList.removeAt(indexToRemove);
       markers.forEach((m) {
-        if (m.infoWindow.title == locationTextfieldList[indexToRemove].con?.text) {
+        if (m.infoWindow.title ==
+            locationTextfieldList[indexToRemove].con?.text) {
           removeMarkId = m.markerId.value;
         }
       });
       locationTextfieldList.removeAt(indexToRemove);
-      if (locationTextfieldList[indexToRemove].con != con && indexToRemove < markerPositions.length) {
+      if (locationTextfieldList[indexToRemove].con != con &&
+          indexToRemove < markerPositions.length) {
         markerPositions.removeAt(indexToRemove);
       }
       markers.removeWhere((m) => m.markerId.value == removeMarkId);
@@ -203,7 +200,8 @@ class BookNowProvider with ChangeNotifier {
   }
 
   /// Add Source and Destination Location
-  addLocationTextFields(TextEditingController sourceLocation, TextEditingController destination, String address) {
+  addLocationTextFields(TextEditingController sourceLocation,
+      TextEditingController destination, String address) {
     controllerList.add(sourceLocation);
     controllerList.add(destination);
     sourceLocation.text = address;
@@ -253,7 +251,9 @@ class BookNowProvider with ChangeNotifier {
 
   /// Update textfield value
   Future<void> updateSelectedTextField(String text,
-      {bool isSource = true, bool isDestination = false, bool? fromAddress}) async {
+      {bool isSource = true,
+      bool isDestination = false,
+      bool? fromAddress}) async {
     if (selectedController != null) {
       selectedController!.text = text;
       placesList.clear();
@@ -270,15 +270,24 @@ class BookNowProvider with ChangeNotifier {
 
   ///Search Places
   List<Suggestions> placesList = [];
+  bool loadPlace = false;
   searchLocation(String v) async {
+    loadPlace = true;
     placesList.clear();
+    notifyListeners();
     try {
-      final resp = await dio
-          .post(Endpoints.places, queryParameters: {"input": v, "key": "AIzaSyCqOtn--DWaSee5PMjb1J1zkPe7gw5XMWQ"});
+      final resp = await dio.post(Endpoints.places, queryParameters: {
+        "input": v,
+        "key": "AIzaSyCqOtn--DWaSee5PMjb1J1zkPe7gw5XMWQ"
+      });
       final model = SuggestionsResponse.fromJson(resp.data);
       placesList = model.suggestions ?? [];
+      loadPlace = false;
       notifyListeners();
-    } catch (e) {}
+    } catch (e) {
+      loadPlace = false;
+      notifyListeners();
+    }
   }
 
   /// Get Current Location
@@ -311,6 +320,10 @@ class BookNowProvider with ChangeNotifier {
           throw Exception('Location permissions are permanently denied.');
         }
         _currentLocation = currentLocation;
+        List<Placemark> placeMarks = await placemarkFromCoordinates(
+            _currentLocation?.latitude ?? 0, _currentLocation?.longitude ?? 0);
+        final address =
+            '${placeMarks[0].thoroughfare}, ${placeMarks[0].subLocality}, ${placeMarks[0].locality}, ${placeMarks[0].administrativeArea}, ${placeMarks[0].postalCode}';
         if (_currentLocation != null) {
           await addLocationMarkers(_currentLocation!, address, isSource: true);
         }
@@ -325,37 +338,10 @@ class BookNowProvider with ChangeNotifier {
     }
   }
 
-  HistoryResponse? historyResponse;
-  List<DropLocation>? get nearByLocationList => historyResponse?.list ?? [];
-  bool loadDropLocation = false;
-
-  Future<void> getDropHistoryList() async {
-    try {
-      loadDropLocation = true;
-      notifyListeners();
-      final response = await NetworkUtility.sendGetRequest(ApiHelper.dropLocationHistory);
-      Map<String, dynamic> jsonData = jsonDecode(response.body);
-
-      if (response.statusCode == 200) {
-        historyResponse = HistoryResponse.fromJson(jsonData);
-        loadDropLocation = false;
-        notifyListeners();
-      } else {
-        loadDropLocation = false;
-        notifyListeners();
-      }
-    } catch (e) {
-      loadDropLocation = false;
-      notifyListeners();
-    }
-  }
-
   resetAllData() {
     controllerList.forEach((e) => e.dispose);
     locationTextfieldList.clear();
-    nearByLocationList?.clear();
     markerPositions.clear();
-    historyResponse = null;
     polyLines.clear();
     markers.clear();
   }
