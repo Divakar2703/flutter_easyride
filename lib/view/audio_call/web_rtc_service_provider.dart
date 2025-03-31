@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -126,37 +127,88 @@ class WebRTCProvider with ChangeNotifier {
     ///driver details listening
     socket.on('ride_accepted', (data) {
       driverDetailsModel = DriverDetailsModel.fromJson(data);
-
       Navigator.push(navigatorKey.currentContext!,
           MaterialPageRoute(builder: (context) => DriverDetailScreen()));
     });
 
-    socket.on("update_location", (data) {
-      driverLat = data["latitude"];
-      driverLong = data["longitude"];
-      loadMapData(
-          pickupLat: driverLat ?? 0.0,
-          pickupLong: driverDetailsModel?.waypoints?.first.long ?? 0.0,
-          destLat: driverDetailsModel?.waypoints?.last.lat ?? 0.0,
-          destLng: driverDetailsModel?.waypoints?.last.long ?? 0.0);
-      getPolyPoints(
-          pickupLat: driverDetailsModel?.waypoints?.first.lat ?? 0.0,
-          pickupLong: driverDetailsModel?.waypoints?.first.long ?? 0.0,
-          destLat: driverDetailsModel?.waypoints?.last.lat ?? 0.0,
-          destLng: driverDetailsModel?.waypoints?.last.long ?? 0.0);
-    });
+    socket.on("update_location", (data) => _updateDriverLocation(data));
     _initializePeerConnection();
   }
 
-  addMarkers() {
-    markers.add(
-      Marker(
-          markerId: markerId,
-          position: l,
-          icon: icon,
-          anchor: Offset(0.5, 0.5),
-          infoWindow: InfoWindow(title: address)),
-    );
+  _updateDriverLocation(data) {
+    driverLat = data["latitude"];
+    driverLong = data["longitude"];
+
+    addPolyLine(driverLat: driverLat, driverLong: driverLong, isPickup: true);
+    addMarkers(
+        driverLat: driverLat,
+        driverLong: driverLong,
+        waypoints: driverDetailsModel?.waypoints,
+        isPickup: true);
+    notifyListeners();
+  }
+
+  addPolyLine({double? driverLat, double? driverLong, bool? isPickup}) async {
+    if (isPickup ?? false) {
+      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+          googleApiKey: googleApiKey,
+          request: PolylineRequest(
+              origin: PointLatLng(driverLat ?? 0.0, driverLong ?? 0.0),
+              destination: PointLatLng(
+                  driverDetailsModel?.waypoints?.first.lat ?? 0.0,
+                  driverDetailsModel?.waypoints?.first.long ?? 0.0),
+              mode: TravelMode.driving));
+
+      if (result.points.isNotEmpty) {
+        polylineCoordinates = result.points
+            .map((point) => LatLng(point.latitude, point.longitude))
+            .toList();
+        notifyListeners();
+      }
+    }
+  }
+
+  addMarkers(
+      {double? driverLat,
+      double? driverLong,
+      List<Waypoints>? waypoints,
+      bool? isPickup}) async {
+    if (isPickup ?? false) {
+      for (int i = 0; i < polylineCoordinates.length - 1; i++) {
+        LatLng nextPosition = polylineCoordinates[i + 1];
+        double bearing = calculateBearing(polylineCoordinates[i], nextPosition);
+
+        markers.add(
+          Marker(
+              markerId: MarkerId("driver_id"),
+              position: LatLng(driverLat ?? 0.0, driverLong ?? 0.0),
+              icon: await BitmapDescriptor.asset(
+                  ImageConfiguration(size: Size(40, 40)),
+                  driverDetailsModel?.type?.toLowerCase() == "car"
+                      ? AppImage.carMap
+                      : driverDetailsModel?.type?.toLowerCase() == "auto"
+                          ? AppImage.autoMap
+                          : driverDetailsModel?.type?.toLowerCase() == "bike"
+                              ? AppImage.bikeMap
+                              : ""),
+              rotation: bearing),
+        );
+        markers.add(
+          Marker(
+              markerId: MarkerId("source"),
+              position: LatLng(
+                  waypoints?.first.lat ?? 0.0, waypoints?.first.long ?? 0.0),
+              icon: await BitmapDescriptor.asset(
+                ImageConfiguration(size: Size(10, 10)),
+                AppImage.source,
+              ),
+              anchor: Offset(0.5, 0.5),
+              infoWindow: InfoWindow(title: waypoints?.first.address)),
+        );
+
+        await Future.delayed(Duration(seconds: 2)); // Simulate movement delay
+      }
+    }
   }
 
   disConnectSocket() {
@@ -308,36 +360,19 @@ class WebRTCProvider with ChangeNotifier {
     }
   }
 
-  void loadMapData(
-      {double? pickupLat,
-      double? pickupLong,
-      double? destLat,
-      double? destLng}) async {
-    // Simulate a delay to fetch map data
-    await Future.delayed(Duration(seconds: 2));
-    final BitmapDescriptor pickupIcon = await BitmapDescriptor.asset(
-      ImageConfiguration(size: Size(10, 10)),
-      AppImage.source,
-    );
-    final BitmapDescriptor driverIcon = await BitmapDescriptor.asset(
-      ImageConfiguration(size: Size(10, 10)),
-      AppImage.carMap,
-    );
-    markers.add(
-      Marker(
-        markerId: MarkerId("pickup"),
-        position:
-            LatLng(pickupLat ?? 0.0, pickupLong ?? 0.0), // Pickup Location
-        icon: driverIcon,
-      ),
-    );
-    markers.add(
-      Marker(
-        markerId: MarkerId("Driver"),
-        position: LatLng(destLat ?? 0.0, destLng ?? 0.0), // Drop Location
-        icon: pickupIcon,
-      ),
-    );
-    notifyListeners();
+  double calculateBearing(LatLng start, LatLng end) {
+    double lat1 = start.latitude * pi / 180;
+    double lat2 = end.latitude * pi / 180;
+    double lon1 = start.longitude * pi / 180;
+    double lon2 = end.longitude * pi / 180;
+
+    double deltaLon = lon2 - lon1;
+    double y = sin(deltaLon) * cos(lat2);
+    double x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(deltaLon);
+
+    double bearing = atan2(y, x) * 180 / pi;
+    return (bearing + 360) % 360; // Normalize angle
   }
+
+  void updateMarkerPosition() async {}
 }

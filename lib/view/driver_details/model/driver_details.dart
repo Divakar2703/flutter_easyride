@@ -19,6 +19,7 @@ class DriverDetailsModel {
   String? userId;
   String? walletAmount;
   String? bookingId;
+  String? type;
 
   DriverDetailsModel(
       {this.driverId,
@@ -40,7 +41,8 @@ class DriverDetailsModel {
       this.grandTotal,
       this.userId,
       this.walletAmount,
-      this.bookingId});
+      this.bookingId,
+      this.type});
 
   DriverDetailsModel.fromJson(Map<String, dynamic> json) {
     driverId = json['driver_id'];
@@ -68,8 +70,8 @@ class DriverDetailsModel {
     userId = json['user_id'];
     walletAmount = json['wallet_amount'];
     bookingId = json['booking_id'];
+    type = json["vehicle_type"];
   }
-
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['driver_id'] = this.driverId;
@@ -94,6 +96,7 @@ class DriverDetailsModel {
     data['user_id'] = this.userId;
     data['wallet_amount'] = this.walletAmount;
     data['booking_id'] = this.bookingId;
+    data["vehicle_type"] = this.type;
     return data;
   }
 }
