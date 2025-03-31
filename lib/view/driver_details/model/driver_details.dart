@@ -1,118 +1,121 @@
-import 'dart:convert';
-
 class DriverDetailsModel {
-  final String? driverId;
-  final String? arrivingTime;
-  final String? rating;
-  final String? driverName;
-  final String? driverMobile;
-  final String? driverProfile;
-  final String? vehicleImage;
-  final String? vehicleMake;
-  final String? vehicleModel;
-  final String? vehicleNo;
-  final String? vehicleColour;
-  final String? vehicleRegYear;
-  final List<WayPointModel>? waypoints;
-  final String? userJourneyDistance;
-  final String? totalFare;
-  final String? convCharge;
-  final String? grandTotal;
-  final String? userId;
-  final String? walletAmount;
-  final String? bookingId;
+  String? driverId;
+  String? arrivingTime;
+  String? rating;
+  String? driverName;
+  String? driverMobile;
+  String? driverProfile;
+  String? vehicleImage;
+  String? vehicleMake;
+  String? vehicleModel;
+  String? vehicleNo;
+  String? vehicleColour;
+  String? vehicleRegYear;
+  List<Waypoints>? waypoints;
+  String? userJourneyDistance;
+  String? totalFare;
+  String? convCharge;
+  String? grandTotal;
+  String? userId;
+  String? walletAmount;
+  String? bookingId;
 
-  DriverDetailsModel({
-    this.driverId,
-    this.arrivingTime,
-    this.rating,
-    this.driverName,
-    this.driverMobile,
-    this.driverProfile,
-    this.vehicleImage,
-    this.vehicleMake,
-    this.vehicleModel,
-    this.vehicleNo,
-    this.vehicleColour,
-    this.vehicleRegYear,
-    this.waypoints,
-    this.userJourneyDistance,
-    this.totalFare,
-    this.convCharge,
-    this.grandTotal,
-    this.userId,
-    this.walletAmount,
-    this.bookingId,
-  });
+  DriverDetailsModel(
+      {this.driverId,
+      this.arrivingTime,
+      this.rating,
+      this.driverName,
+      this.driverMobile,
+      this.driverProfile,
+      this.vehicleImage,
+      this.vehicleMake,
+      this.vehicleModel,
+      this.vehicleNo,
+      this.vehicleColour,
+      this.vehicleRegYear,
+      this.waypoints,
+      this.userJourneyDistance,
+      this.totalFare,
+      this.convCharge,
+      this.grandTotal,
+      this.userId,
+      this.walletAmount,
+      this.bookingId});
 
-  factory DriverDetailsModel.fromJson(Map<String, dynamic> json) {
-    List<dynamic> jsonData = jsonDecode(json["waypoints"]);
-    return DriverDetailsModel(
-      driverId: json['driver_id'],
-      arrivingTime: json['arriving_time'],
-      rating: json['rating'],
-      driverName: json['driver_name'],
-      driverMobile: json['driver_mobile'],
-      driverProfile: json['driver_profile'],
-      vehicleImage: json['vehicle_image'],
-      vehicleMake: json['vehicle_make'],
-      vehicleModel: json['vehicle_model'],
-      vehicleNo: json['vehicle_no'],
-      vehicleColour: json['vehicle_colour'],
-      vehicleRegYear: json['vehicle_reg_year'],
-      waypoints: (json['waypoints'] != null)
-          ? jsonData.map((e) => WayPointModel.fromJson(e)).toList()
-          : null,
-      userJourneyDistance: json['user_journey_distance'],
-      totalFare: json['total_fare'],
-      convCharge: json['conv_charge'],
-      grandTotal: json['grand_total'],
-      userId: json['user_id'],
-      walletAmount: json['wallet_amount'],
-      bookingId: json['booking_id'],
-    );
+  DriverDetailsModel.fromJson(Map<String, dynamic> json) {
+    driverId = json['driver_id'];
+    arrivingTime = json['arriving_time'];
+    rating = json['rating'];
+    driverName = json['driver_name'];
+    driverMobile = json['driver_mobile'];
+    driverProfile = json['driver_profile'];
+    vehicleImage = json['vehicle_image'];
+    vehicleMake = json['vehicle_make'];
+    vehicleModel = json['vehicle_model'];
+    vehicleNo = json['vehicle_no'];
+    vehicleColour = json['vehicle_colour'];
+    vehicleRegYear = json['vehicle_reg_year'];
+    if (json['waypoints'] != null) {
+      waypoints = <Waypoints>[];
+      json['waypoints'].forEach((v) {
+        waypoints!.add(new Waypoints.fromJson(v));
+      });
+    }
+    userJourneyDistance = json['user_journey_distance'];
+    totalFare = json['total_fare'];
+    convCharge = json['conv_charge'];
+    grandTotal = json['grand_total'];
+    userId = json['user_id'];
+    walletAmount = json['wallet_amount'];
+    bookingId = json['booking_id'];
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'driver_id': driverId,
-      'arriving_time': arrivingTime,
-      'rating': rating,
-      'driver_name': driverName,
-      'driver_mobile': driverMobile,
-      'driver_profile': driverProfile,
-      'vehicle_image': vehicleImage,
-      'vehicle_make': vehicleMake,
-      'vehicle_model': vehicleModel,
-      'vehicle_no': vehicleNo,
-      'vehicle_colour': vehicleColour,
-      'vehicle_reg_year': vehicleRegYear,
-      'waypoints': waypoints != null ? jsonEncode(waypoints) : null,
-      'user_journey_distance': userJourneyDistance,
-      'total_fare': totalFare,
-      'conv_charge': convCharge,
-      'grand_total': grandTotal,
-      'user_id': userId,
-      'wallet_amount': walletAmount,
-      'booking_id': bookingId,
-    };
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['driver_id'] = this.driverId;
+    data['arriving_time'] = this.arrivingTime;
+    data['rating'] = this.rating;
+    data['driver_name'] = this.driverName;
+    data['driver_mobile'] = this.driverMobile;
+    data['driver_profile'] = this.driverProfile;
+    data['vehicle_image'] = this.vehicleImage;
+    data['vehicle_make'] = this.vehicleMake;
+    data['vehicle_model'] = this.vehicleModel;
+    data['vehicle_no'] = this.vehicleNo;
+    data['vehicle_colour'] = this.vehicleColour;
+    data['vehicle_reg_year'] = this.vehicleRegYear;
+    if (this.waypoints != null) {
+      data['waypoints'] = this.waypoints!.map((v) => v.toJson()).toList();
+    }
+    data['user_journey_distance'] = this.userJourneyDistance;
+    data['total_fare'] = this.totalFare;
+    data['conv_charge'] = this.convCharge;
+    data['grand_total'] = this.grandTotal;
+    data['user_id'] = this.userId;
+    data['wallet_amount'] = this.walletAmount;
+    data['booking_id'] = this.bookingId;
+    return data;
   }
 }
 
-class WayPointModel {
-  final double? latitude;
-  final double? longitude;
-  final String? address;
-  WayPointModel({this.latitude, this.longitude, this.address});
+class Waypoints {
+  double? lat;
+  double? long;
+  String? address;
 
-  factory WayPointModel.fromJson(Map<String, dynamic> json) {
-    return WayPointModel(
-        latitude: json["lat"],
-        longitude: json["long"],
-        address: json["address"]);
+  Waypoints({this.lat, this.long, this.address});
+
+  Waypoints.fromJson(Map<String, dynamic> json) {
+    lat = json['lat'];
+    long = json['long'];
+    address = json['address'];
   }
 
   Map<String, dynamic> toJson() {
-    return {"latitude": latitude, "longitude": longitude, "address": address};
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['lat'] = this.lat;
+    data['long'] = this.long;
+    data['address'] = this.address;
+    return data;
   }
 }

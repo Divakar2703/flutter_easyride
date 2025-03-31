@@ -13,6 +13,7 @@ import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../../utils/constant.dart';
 import '../driver_details/model/driver_details.dart';
 
 class WebRTCProvider with ChangeNotifier {
@@ -26,6 +27,13 @@ class WebRTCProvider with ChangeNotifier {
   bool isMicMuted = false;
   bool isSpeakerOn = false;
   Logger logger = Logger();
+  double? driverLat;
+  double? driverLong;
+  DriverDetailsModel? driverDetailsModel;
+  Set<Marker> markers = {};
+  PolylinePoints polylinePoints = PolylinePoints();
+  LatLng? currentLocation;
+  List<LatLng> polylineCoordinates = [];
 
   void initSocket(String id) {
     socket = IO.io(
@@ -114,7 +122,41 @@ class WebRTCProvider with ChangeNotifier {
         }
       }
     });
+
+    ///driver details listening
+    socket.on('ride_accepted', (data) {
+      driverDetailsModel = DriverDetailsModel.fromJson(data);
+
+      Navigator.push(navigatorKey.currentContext!,
+          MaterialPageRoute(builder: (context) => DriverDetailScreen()));
+    });
+
+    socket.on("update_location", (data) {
+      driverLat = data["latitude"];
+      driverLong = data["longitude"];
+      loadMapData(
+          pickupLat: driverLat ?? 0.0,
+          pickupLong: driverDetailsModel?.waypoints?.first.long ?? 0.0,
+          destLat: driverDetailsModel?.waypoints?.last.lat ?? 0.0,
+          destLng: driverDetailsModel?.waypoints?.last.long ?? 0.0);
+      getPolyPoints(
+          pickupLat: driverDetailsModel?.waypoints?.first.lat ?? 0.0,
+          pickupLong: driverDetailsModel?.waypoints?.first.long ?? 0.0,
+          destLat: driverDetailsModel?.waypoints?.last.lat ?? 0.0,
+          destLng: driverDetailsModel?.waypoints?.last.long ?? 0.0);
+    });
     _initializePeerConnection();
+  }
+
+  addMarkers() {
+    markers.add(
+      Marker(
+          markerId: markerId,
+          position: l,
+          icon: icon,
+          anchor: Offset(0.5, 0.5),
+          infoWindow: InfoWindow(title: address)),
+    );
   }
 
   disConnectSocket() {
@@ -238,34 +280,7 @@ class WebRTCProvider with ChangeNotifier {
     socket.emit("find_driver", {"booking_id": bookingId});
   }
 
-  ///driver details listening
-  DriverDetailsModel? driverDetailsModel;
-  rideAccept() {
-    socket.on('ride_accepted', (data) {
-      driverDetailsModel = DriverDetailsModel.fromJson(data);
-      loadMapData(
-          pickupLat: driverDetailsModel?.waypoints?.first.latitude ?? 0.0,
-          pickupLong: driverDetailsModel?.waypoints?.first.latitude ?? 0.0,
-          destLat: driverDetailsModel?.waypoints?.first.latitude ?? 0.0,
-          destLng: driverDetailsModel?.waypoints?.first.longitude ?? 0.0);
-      getPolyPoints(
-          pickupLat: driverDetailsModel?.waypoints?.first.latitude ?? 0.0,
-          pickupLong: driverDetailsModel?.waypoints?.first.latitude ?? 0.0,
-          destLat: driverDetailsModel?.waypoints?.first.latitude ?? 0.0,
-          destLng: driverDetailsModel?.waypoints?.first.longitude ?? 0.0);
-
-      Navigator.push(navigatorKey.currentContext!,
-          MaterialPageRoute(builder: (context) => DriverDetailScreen()));
-    });
-
-    notifyListeners();
-  }
-
   ///marker and polyline for driver details
-  Set<Marker> markers = {};
-  PolylinePoints polylinePoints = PolylinePoints();
-  LatLng? currentLocation;
-  List<LatLng> polylineCoordinates = [];
 
   final String googleApiKey = "AIzaSyCqOtn--DWaSee5PMjb1J1zkPe7gw5XMWQ";
 
@@ -300,19 +315,27 @@ class WebRTCProvider with ChangeNotifier {
       double? destLng}) async {
     // Simulate a delay to fetch map data
     await Future.delayed(Duration(seconds: 2));
+    final BitmapDescriptor pickupIcon = await BitmapDescriptor.asset(
+      ImageConfiguration(size: Size(10, 10)),
+      AppImage.source,
+    );
+    final BitmapDescriptor driverIcon = await BitmapDescriptor.asset(
+      ImageConfiguration(size: Size(10, 10)),
+      AppImage.carMap,
+    );
     markers.add(
       Marker(
         markerId: MarkerId("pickup"),
         position:
             LatLng(pickupLat ?? 0.0, pickupLong ?? 0.0), // Pickup Location
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+        icon: driverIcon,
       ),
     );
     markers.add(
       Marker(
-        markerId: MarkerId("dropoff"),
+        markerId: MarkerId("Driver"),
         position: LatLng(destLat ?? 0.0, destLng ?? 0.0), // Drop Location
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        icon: pickupIcon,
       ),
     );
     notifyListeners();

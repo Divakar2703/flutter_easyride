@@ -40,7 +40,7 @@ class DriverDetailScreen extends StatelessWidget {
                             polylineId: PolylineId('route'),
                             points: value.polylineCoordinates,
                             width: 3,
-                            color: Colors.blue,
+                            color: Colors.black,
                           ),
                         },
                         zoomControlsEnabled: false,
@@ -180,10 +180,24 @@ class DriverDetailScreen extends StatelessWidget {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          CircleAvatar(
-                                            radius: 30,
-                                            backgroundImage:
-                                                AssetImage(AppImage.driver),
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(99),
+                                            child: CachedNetworkImage(
+                                              imageUrl: value.driverDetailsModel
+                                                      ?.driverProfile ??
+                                                  "",
+                                              fit: BoxFit.fill,
+                                              placeholder: (context, url) =>
+                                                  Indicator(),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      CircleAvatar(
+                                                radius: 30,
+                                                backgroundImage:
+                                                    AssetImage(AppImage.driver),
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -284,14 +298,17 @@ class DriverDetailScreen extends StatelessWidget {
                                             imageUrl: value.driverDetailsModel
                                                     ?.vehicleImage ??
                                                 "",
+                                            fit: BoxFit.cover,
                                             placeholder: (context, url) =>
                                                 Indicator(),
                                             errorWidget:
                                                 (context, url, error) =>
                                                     Image.asset(
-                                                        height: 85,
-                                                        width: 100,
-                                                        AppImage.primeCar),
+                                              height: 85,
+                                              width: 100,
+                                              AppImage.primeCar,
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -340,8 +357,12 @@ class DriverDetailScreen extends StatelessWidget {
                                                 child: Column(
                                                   children: [
                                                     CommonTextField(
-                                                      hintText:
-                                                          "Muradnagr, Ghaziabad",
+                                                      hintText: value
+                                                              .driverDetailsModel
+                                                              ?.waypoints
+                                                              ?.first
+                                                              .address ??
+                                                          "",
                                                       border: InputBorder.none,
                                                       contentPadding:
                                                           EdgeInsets.all(10),
@@ -353,8 +374,12 @@ class DriverDetailScreen extends StatelessWidget {
                                                         endIndent: 30,
                                                         height: 0),
                                                     CommonTextField(
-                                                      hintText:
-                                                          "Sec 57, Gurugram, Haryana",
+                                                      hintText: value
+                                                              .driverDetailsModel
+                                                              ?.waypoints
+                                                              ?.last
+                                                              .address ??
+                                                          "",
                                                       border: InputBorder.none,
                                                       readOnly: true,
                                                       contentPadding:
