@@ -125,8 +125,8 @@ class WebRTCProvider with ChangeNotifier {
       markers.add(
         Marker(
           markerId: MarkerId("source"),
-          position: LatLng(driverDetailsModel?.waypoints?.first.lat ?? 0.0,
-              driverDetailsModel?.waypoints?.first.long ?? 0.0),
+          position:
+              LatLng(driverDetailsModel?.waypoints?.first.lat ?? 0.0, driverDetailsModel?.waypoints?.first.long ?? 0.0),
           icon: await BitmapDescriptor.asset(
             ImageConfiguration(size: Size(10, 10)),
             AppImage.source,
@@ -135,8 +135,7 @@ class WebRTCProvider with ChangeNotifier {
       );
 
       notifyListeners();
-      Navigator.push(navigatorKey.currentContext!,
-          MaterialPageRoute(builder: (context) => DriverDetailScreen()));
+      Navigator.push(navigatorKey.currentContext!, MaterialPageRoute(builder: (context) => DriverDetailScreen()));
     });
 
     socket.on("update_location", (data) => _updateDriverLocation(data));
