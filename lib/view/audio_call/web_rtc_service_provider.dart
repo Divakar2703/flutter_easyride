@@ -1,7 +1,5 @@
-import 'dart:convert';
 import 'dart:math';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/main.dart';
 import 'package:flutter_easy_ride/view/audio_call/call_ui.dart';
@@ -39,11 +37,7 @@ class WebRTCProvider with ChangeNotifier {
   void initSocket(String id) {
     socket = IO.io(
       'https://cabsocket.asatvindia.in:5005',
-      IO.OptionBuilder()
-          .setTransports(['websocket'])
-          .disableAutoConnect()
-          .setReconnectionAttempts(5)
-          .build(),
+      IO.OptionBuilder().setTransports(['websocket']).setReconnectionAttempts(5).build(),
     );
     userId = id;
     socket.connect();
@@ -127,8 +121,7 @@ class WebRTCProvider with ChangeNotifier {
     ///driver details listening
     socket.on('ride_accepted', (data) {
       driverDetailsModel = DriverDetailsModel.fromJson(data);
-      Navigator.push(navigatorKey.currentContext!,
-          MaterialPageRoute(builder: (context) => DriverDetailScreen()));
+      Navigator.push(navigatorKey.currentContext!, MaterialPageRoute(builder: (context) => DriverDetailScreen()));
     });
 
     socket.on("update_location", (data) => _updateDriverLocation(data));
@@ -140,11 +133,7 @@ class WebRTCProvider with ChangeNotifier {
     driverLong = data["longitude"];
 
     addPolyLine(driverLat: driverLat, driverLong: driverLong, isPickup: true);
-    addMarkers(
-        driverLat: driverLat,
-        driverLong: driverLong,
-        waypoints: driverDetailsModel?.waypoints,
-        isPickup: true);
+    addMarkers(driverLat: driverLat, driverLong: driverLong, waypoints: driverDetailsModel?.waypoints, isPickup: true);
     notifyListeners();
   }
 
@@ -155,24 +144,17 @@ class WebRTCProvider with ChangeNotifier {
           request: PolylineRequest(
               origin: PointLatLng(driverLat ?? 0.0, driverLong ?? 0.0),
               destination: PointLatLng(
-                  driverDetailsModel?.waypoints?.first.lat ?? 0.0,
-                  driverDetailsModel?.waypoints?.first.long ?? 0.0),
+                  driverDetailsModel?.waypoints?.first.lat ?? 0.0, driverDetailsModel?.waypoints?.first.long ?? 0.0),
               mode: TravelMode.driving));
 
       if (result.points.isNotEmpty) {
-        polylineCoordinates = result.points
-            .map((point) => LatLng(point.latitude, point.longitude))
-            .toList();
+        polylineCoordinates = result.points.map((point) => LatLng(point.latitude, point.longitude)).toList();
         notifyListeners();
       }
     }
   }
 
-  addMarkers(
-      {double? driverLat,
-      double? driverLong,
-      List<Waypoints>? waypoints,
-      bool? isPickup}) async {
+  addMarkers({double? driverLat, double? driverLong, List<Waypoints>? waypoints, bool? isPickup}) async {
     if (isPickup ?? false) {
       for (int i = 0; i < polylineCoordinates.length - 1; i++) {
         LatLng nextPosition = polylineCoordinates[i + 1];
@@ -196,8 +178,7 @@ class WebRTCProvider with ChangeNotifier {
         markers.add(
           Marker(
               markerId: MarkerId("source"),
-              position: LatLng(
-                  waypoints?.first.lat ?? 0.0, waypoints?.first.long ?? 0.0),
+              position: LatLng(waypoints?.first.lat ?? 0.0, waypoints?.first.long ?? 0.0),
               icon: await BitmapDescriptor.asset(
                 ImageConfiguration(size: Size(10, 10)),
                 AppImage.source,
@@ -271,8 +252,7 @@ class WebRTCProvider with ChangeNotifier {
 
   Future<void> _initializePeerConnection() async {
     await requestPermissions();
-    _localStream = await navigator.mediaDevices
-        .getUserMedia({'audio': true, 'video': false});
+    _localStream = await navigator.mediaDevices.getUserMedia({'audio': true, 'video': false});
     _remoteStream = await createLocalMediaStream('remoteStream');
 
     _peerConnection = await createPeerConnection({
@@ -312,8 +292,7 @@ class WebRTCProvider with ChangeNotifier {
     if (incomingCallerId == null) return;
     RTCSessionDescription answer = await _peerConnection!.createAnswer();
     await _peerConnection!.setLocalDescription(answer);
-    socket.emit('answer_call',
-        {'toUserId': incomingCallerId, 'answer': answer.toMap()});
+    socket.emit('answer_call', {'toUserId': incomingCallerId, 'answer': answer.toMap()});
     isCallActive = true;
     incomingCallerId = null;
     notifyListeners();
@@ -336,11 +315,7 @@ class WebRTCProvider with ChangeNotifier {
 
   final String googleApiKey = "AIzaSyCqOtn--DWaSee5PMjb1J1zkPe7gw5XMWQ";
 
-  Future<void> getPolyPoints(
-      {double? pickupLat,
-      double? pickupLong,
-      double? destLat,
-      double? destLng}) async {
+  Future<void> getPolyPoints({double? pickupLat, double? pickupLong, double? destLat, double? destLng}) async {
     try {
       PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
           googleApiKey: googleApiKey,
@@ -350,9 +325,7 @@ class WebRTCProvider with ChangeNotifier {
               mode: TravelMode.driving));
 
       if (result.points.isNotEmpty) {
-        polylineCoordinates = result.points
-            .map((point) => LatLng(point.latitude, point.longitude))
-            .toList();
+        polylineCoordinates = result.points.map((point) => LatLng(point.latitude, point.longitude)).toList();
         notifyListeners();
       }
     } catch (error) {
