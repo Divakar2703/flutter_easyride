@@ -25,54 +25,52 @@ void openPromocodeBottomSheet(BuildContext context) {
               child: Scaffold(
                 body: Consumer<CabBookProvider>(
                   builder: (BuildContext context, CabBookProvider value, Widget? child) {
-                    return value.couponData?.coupon.isNotEmpty ?? false
-                        ? SingleChildScrollView(
-                            controller: scrollController,
-                            padding: EdgeInsets.all(16),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Promo Codes",
-                                      style: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w500,
-                                        fontFamily: 'Poppins',
-                                      ),
-                                    ),
-                                    IconButton(
-                                      icon: Icon(
-                                        Icons.close,
-                                        color: Colors.black87,
-                                        size: 20,
-                                      ),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ],
+                    return value.couponData!.coupon.isNotEmpty?SingleChildScrollView(
+                      controller: scrollController,
+                      padding: EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Promo Codes",
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'Poppins',
                                 ),
-                                SizedBox(height: 10),
-                                for (var offer in value.couponData!.coupon)
-                                  CouponCard(
-                                    couponId: offer.couponId,
-                                    promocodeImg: offer.promocodeImg,
-                                    promoCode: offer.promoCode,
-                                    promoCodeDescription: offer.promoCodeDescription,
-                                    promoCodeDiscount: offer.promoCodeDiscount,
-                                    startDate: offer.startDate,
-                                    expiryDate: offer.expiryDate,
-                                    couponStatus: offer.couponStatus,
-                                    fare: offer.fare,
-                                    discount: offer.discount,
-                                    netFare: offer.netFare,
-                                  ),
-                              ],
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.close,
+                                  color: Colors.black87,
+                                  size: 20,
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10),
+                          for (var offer in value.couponData!.coupon)
+                            CouponCard(
+                              couponId: offer.couponId,
+                              promocodeImg: offer.promocodeImg,
+                              promoCode: offer.promoCode,
+                              promoCodeDescription: offer.promoCodeDescription,
+                              promoCodeDiscount: offer.promoCodeDiscount,
+                              startDate: offer.startDate,
+                              expiryDate: offer.expiryDate,
+                              couponStatus: offer.couponStatus,
+                              fare: offer.fare,
+                              discount: offer.discount,
+                              netFare: offer.netFare,
                             ),
-                          )
-                        : Center(child: Text("No coupon available for this vehicle"));
+                        ],
+                      ),
+                    ):Center(child: Text("No coupon available for this vehicle"));
                   },
                 ),
               ),
