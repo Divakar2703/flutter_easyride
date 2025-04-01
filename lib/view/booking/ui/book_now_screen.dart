@@ -28,14 +28,19 @@ class BookNowScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(right: 10.0),
                       child: GestureDetector(
                         onTap: () {
-                          context.read<BookNowProvider>().updateSelectedTextField(e.address ?? "",
-                              isSource: false, isDestination: true, fromAddress: true);
+                          context
+                              .read<BookNowProvider>()
+                              .updateSelectedTextField(e.address ?? "",
+                                  isSource: false,
+                                  isDestination: true,
+                                  fromAddress: true);
                         },
                         child: Container(
                           padding: EdgeInsets.all(8),
                           decoration: BoxDecoration(
                               color: AppColors.white,
-                              border: Border.all(color: AppColors.black.withOpacity(0.2)),
+                              border: Border.all(
+                                  color: AppColors.black.withOpacity(0.2)),
                               borderRadius: BorderRadius.circular(12)),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -62,7 +67,7 @@ class BookNowScreen extends StatelessWidget {
         ),
         SizedBox(height: 10),
         Consumer<BookNowProvider>(
-          builder: (context, v, child) => v.loadDropLocation
+          builder: (context, v, child) => v.loadPlace
               ? Shimmer.fromColors(
                   baseColor: Colors.red.shade300,
                   highlightColor: Colors.blueAccent.shade100,
@@ -77,28 +82,40 @@ class BookNowScreen extends StatelessWidget {
                     ),
                   ),
                 )
-              : ListView.builder(
-                  shrinkWrap: true,
-                  padding: EdgeInsets.zero,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: v.placesList.length,
-                  itemBuilder: (context, index) => Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ListTile(
-                        leading: SvgPicture.asset(AppImage.loc),
-                        title: Text(v.placesList[index].placePrediction?.text?.text ?? ""),
-                        onTap: () {
-                          String selectedText = v.placesList[index].placePrediction?.text?.text ?? "";
-                          bool isSource = v.selectedController == v.controllerList.first;
-                          bool isDestination = v.selectedController == v.controllerList.last;
-                          v.updateSelectedTextField(selectedText, isSource: isSource, isDestination: isDestination);
-                        },
+              : v.placesList.isEmpty
+                  ? Center(child: Text("Place not found"))
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.zero,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: v.placesList.length,
+                      itemBuilder: (context, index) => Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ListTile(
+                            leading: SvgPicture.asset(AppImage.loc),
+                            title: Text(v.placesList[index].placePrediction
+                                    ?.text?.text ??
+                                ""),
+                            onTap: () {
+                              String selectedText = v.placesList[index]
+                                      .placePrediction?.text?.text ??
+                                  "";
+                              bool isSource = v.selectedController ==
+                                  v.controllerList.first;
+                              bool isDestination =
+                                  v.selectedController == v.controllerList.last;
+                              v.updateSelectedTextField(selectedText,
+                                  isSource: isSource,
+                                  isDestination: isDestination);
+                            },
+                          ),
+                          Divider(
+                              height: 0,
+                              color: AppColors.borderColor.withOpacity(0.2))
+                        ],
                       ),
-                      Divider(height: 0, color: AppColors.borderColor.withOpacity(0.2))
-                    ],
-                  ),
-                ),
+                    ),
         ),
       ],
     );

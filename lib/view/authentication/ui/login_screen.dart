@@ -32,10 +32,13 @@ class _LoginScreenState extends State<LoginScreen> {
         body: Column(
           children: [
             Container(
-              padding: EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 10),
+              padding:
+                  EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 10),
               decoration: BoxDecoration(
                 color: AppColors.white,
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(28), bottomRight: Radius.circular(28)),
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(28),
+                    bottomRight: Radius.circular(28)),
                 boxShadow: [
                   BoxShadow(
                     blurRadius: 14,
@@ -45,7 +48,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
               child: SafeArea(
-                child: Center(child: Text("Login", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+                child: Center(
+                    child: Text("Login",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold))),
               ),
             ),
             Expanded(
@@ -93,18 +99,22 @@ class _LoginScreenState extends State<LoginScreen> {
                           onPressed: () async {
                             final mobileNumber = _mobileController.text;
                             if (mobileNumber.length == 10) {
-                              bool success = await authProvider.sendOtp(mobileNumber);
+                              bool success =
+                                  await authProvider.sendOtp(mobileNumber);
                               if (success) {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (_) => VerifyScreen()),
+                                  MaterialPageRoute(
+                                      builder: (_) => VerifyScreen()),
                                 );
                               } else {
                                 AppUtils.show("Failed to send OTP");
                               }
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Enter a valid mobile number')),
+                                SnackBar(
+                                    content:
+                                        Text('Enter a valid mobile number')),
                               );
                             }
                           },

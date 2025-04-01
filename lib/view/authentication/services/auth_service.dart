@@ -9,7 +9,12 @@ import 'package:flutter_easy_ride/view/authentication/models/login_response.dart
 class AuthService {
   final dio = getIt.get<DioClient>();
 
-  Future<int> registerCabUser({String? email, String? name, String? phone, String? fToken, String? referralId}) async {
+  Future<int> registerCabUser(
+      {String? email,
+      String? name,
+      String? phone,
+      String? fToken,
+      String? referralId}) async {
     try {
       final response = await dio.post(Endpoints.registerUser, data: {
         "email": email ?? "",
@@ -45,7 +50,8 @@ class AuthService {
 
   Future<LoginModel?> verifyOtp({String? phone, String? otp}) async {
     try {
-      final resp = await dio.post(Endpoints.verifyOtp, data: {"phone": phone ?? "", "otp": otp ?? ""});
+      final resp = await dio.post(Endpoints.verifyOtp,
+          data: {"phone": phone ?? "", "otp": otp ?? ""});
 
       final loginModel = LoginModel.fromJson(resp.data);
       if (loginModel.statusCode == 200 && loginModel.status == "success") {
