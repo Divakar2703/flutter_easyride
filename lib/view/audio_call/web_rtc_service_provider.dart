@@ -135,7 +135,10 @@ class WebRTCProvider with ChangeNotifier {
       );
 
       notifyListeners();
-      Navigator.push(navigatorKey.currentContext!, MaterialPageRoute(builder: (context) => DriverDetailScreen()));
+      Navigator.push(
+        navigatorKey.currentContext!,
+        MaterialPageRoute(builder: (context) => DriverDetailScreen()),
+      );
     });
 
     socket.on("update_location", (data) => _updateDriverLocation(data));
