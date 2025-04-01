@@ -36,7 +36,7 @@ class WebRTCProvider with ChangeNotifier {
   LatLng? currentLocation;
   List<LatLng> polylineCoordinates = [];
 
-  void initSocket(String id) {
+  Future<void> initSocket(String id) async {
     socket = IO.io(
       'https://cabsocket.asatvindia.in:5005',
       IO.OptionBuilder()
@@ -125,8 +125,22 @@ class WebRTCProvider with ChangeNotifier {
     });
 
     ///driver details listening
-    socket.on('ride_accepted', (data) {
+    socket.on('ride_accepted', (data) async {
       driverDetailsModel = DriverDetailsModel.fromJson(data);
+
+      markers.add(
+        Marker(
+          markerId: MarkerId("source"),
+          position: LatLng(driverDetailsModel?.waypoints?.first.lat ?? 0.0,
+              driverDetailsModel?.waypoints?.first.long ?? 0.0),
+          icon: await BitmapDescriptor.asset(
+            ImageConfiguration(size: Size(10, 10)),
+            AppImage.source,
+          ),
+        ),
+      );
+
+      notifyListeners();
       Navigator.push(navigatorKey.currentContext!,
           MaterialPageRoute(builder: (context) => DriverDetailScreen()));
     });
@@ -193,20 +207,8 @@ class WebRTCProvider with ChangeNotifier {
                               : ""),
               rotation: bearing),
         );
-        markers.add(
-          Marker(
-              markerId: MarkerId("source"),
-              position: LatLng(
-                  waypoints?.first.lat ?? 0.0, waypoints?.first.long ?? 0.0),
-              icon: await BitmapDescriptor.asset(
-                ImageConfiguration(size: Size(10, 10)),
-                AppImage.source,
-              ),
-              anchor: Offset(0.5, 0.5),
-              infoWindow: InfoWindow(title: waypoints?.first.address)),
-        );
 
-        await Future.delayed(Duration(seconds: 2)); // Simulate movement delay
+        await Future.delayed(Duration(seconds: 1)); // Simulate movement delay
       }
     }
   }
