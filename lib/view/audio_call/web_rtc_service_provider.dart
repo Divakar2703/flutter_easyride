@@ -365,9 +365,9 @@ class WebRTCProvider with ChangeNotifier {
     double bearing = atan2(y, x) * 180 / pi;
     return (bearing + 360) % 360; // Normalize angle
   }
+
   void cancelRideFromUser(String reason) {
-    socket.emit('cancel_ride',
-        {"booking_id": driverDetailsModel?.bookingId, "reason": reason});
+    socket.emit('cancel_ride', {"booking_id": driverDetailsModel?.bookingId, "reason": reason});
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Navigator.pushAndRemoveUntil(
