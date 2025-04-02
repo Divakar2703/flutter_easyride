@@ -14,6 +14,8 @@ import 'package:flutter_easy_ride/view/home/provider/dashboard_provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../../driver_details/components/cancellation_bottomsheet.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -69,13 +71,14 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 GestureDetector(
                   onTap: () async {
-                    final userId = await LocalStorage.getUserID();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            CallScreen(userId: userId, peerId: "15"),
+                    showModalBottomSheet(
+                      context: context,
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(20)),
                       ),
+                      backgroundColor: AppColors.white,
+                      builder: (context) => CancellationReasonBottomSheet(),
                     );
                   },
                   child: Container(

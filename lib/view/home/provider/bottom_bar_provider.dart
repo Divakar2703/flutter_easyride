@@ -69,13 +69,15 @@ class BottomBarProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   onCameraIdle() async {
-    List<Placemark> placeMarks = await placemarkFromCoordinates(
-        currentLocation?.latitude ?? 0.0, currentLocation?.longitude ?? 0.0);
-
-    homeSearchCon.text =
-        '${placeMarks[0].thoroughfare}, ${placeMarks[0].subLocality}, ${placeMarks[0].locality}, ${placeMarks[0].administrativeArea}, ${placeMarks[0].postalCode}';
     if (currentLocation != null) {
-      await getLocationVehicles();
+      List<Placemark> placeMarks = await placemarkFromCoordinates(
+          currentLocation?.latitude ?? 0.0, currentLocation?.longitude ?? 0.0);
+
+      homeSearchCon.text =
+          '${placeMarks[0].thoroughfare}, ${placeMarks[0].subLocality}, ${placeMarks[0].locality}, ${placeMarks[0].administrativeArea}, ${placeMarks[0].postalCode}';
+      if (currentLocation != null) {
+        await getLocationVehicles();
+      }
     }
   }
 

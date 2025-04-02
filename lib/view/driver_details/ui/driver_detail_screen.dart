@@ -11,6 +11,10 @@ import 'package:flutter_easy_ride/view/driver_details/provider/driver_details_pr
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:slidable_button/slidable_button.dart';
+
+import '../../components/common_button.dart';
+import '../components/cancellation_bottomsheet.dart';
 
 class DriverDetailScreen extends StatelessWidget {
   DriverDetailScreen({
@@ -427,7 +431,12 @@ class DriverDetailScreen extends StatelessWidget {
                                     ),
                                     Column(
                                       children: [
-                                        Icon(Icons.arrow_forward_ios_rounded, size: 20),
+                                        InkWell(
+                                          onTap: () {},
+                                          child: Icon(
+                                              Icons.arrow_forward_ios_rounded,
+                                              size: 20),
+                                        ),
                                       ],
                                     )
                                   ],
@@ -435,7 +444,100 @@ class DriverDetailScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                          SizedBox(height: 15)
+                          SizedBox(height: 15),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 7,
+                                child: CommonButton(
+                                  label: "Cancel",
+                                  labelColor: AppColors.buttonBackground,
+                                  buttonColor: Colors.white,
+                                  buttonBorderColor: AppColors.buttonBackground,
+                                  img: AppImage.close,
+                                  onPressed: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(20)),
+                                      ),
+                                      backgroundColor: AppColors.white,
+                                      builder: (context) =>
+                                          CancellationReasonBottomSheet(),
+                                    );
+                                  },
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Expanded(
+                                flex: 12,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(99),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(99),
+                                      border: Border.all(
+                                          color: AppColors.borderColor
+                                              .withOpacity(0.8)),
+                                    ),
+                                    child: HorizontalSlidableButton(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 52,
+                                      buttonWidth: 52,
+                                      color: AppColors.borderColor
+                                          .withOpacity(0.8),
+                                      buttonColor: AppColors.white,
+                                      dismissible: false,
+                                      label: Icon(Icons.phone),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const SizedBox(),
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Icon(
+                                                  Icons
+                                                      .arrow_forward_ios_outlined,
+                                                  color: AppColors.white,
+                                                  size: 18),
+                                              Icon(
+                                                  Icons
+                                                      .arrow_forward_ios_rounded,
+                                                  color: AppColors.white
+                                                      .withOpacity(0.7),
+                                                  size: 18),
+                                              Icon(
+                                                  Icons
+                                                      .arrow_forward_ios_rounded,
+                                                  color: AppColors.white
+                                                      .withOpacity(0.3),
+                                                  size: 18),
+                                            ],
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 20.0),
+                                            child: Text(
+                                              "Call",
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      onChanged: (position) {},
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10),
                         ],
                       ),
                     )

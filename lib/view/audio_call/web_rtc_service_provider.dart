@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/main.dart';
 import 'package:flutter_easy_ride/view/audio_call/call_ui.dart';
 import 'package:flutter_easy_ride/view/driver_details/ui/driver_detail_screen.dart';
+import 'package:flutter_easy_ride/view/home/ui/bottom_bar_screen.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart' as getX;
@@ -33,6 +34,26 @@ class WebRTCProvider with ChangeNotifier {
   PolylinePoints polylinePoints = PolylinePoints();
   LatLng? currentLocation;
   List<LatLng> polylineCoordinates = [];
+
+  List<String> _reasons = [
+    "Selected Wrong Pickup Location",
+    "Selected Wrong Drop Location",
+    "Booked by mistake",
+    "Selected different service/vehicle",
+    "Taking too long to confirm the ride",
+    "Got a ride elsewhere",
+    "Others"
+  ];
+
+  String? _selectedReason;
+
+  List<String> get reasons => _reasons;
+  String? get selectedReason => _selectedReason;
+
+  void selectReason(String reason) {
+    _selectedReason = reason;
+    notifyListeners(); // Notifies the UI about changes
+  }
 
   Future<void> initSocket(String id) async {
     socket = IO.io(
@@ -343,5 +364,19 @@ class WebRTCProvider with ChangeNotifier {
 
     double bearing = atan2(y, x) * 180 / pi;
     return (bearing + 360) % 360; // Normalize angle
+  }
+  void cancelRideFromUser(String reason) {
+    socket.emit('cancel_ride',
+        {"booking_id": driverDetailsModel?.bookingId, "reason": reason});
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.pushAndRemoveUntil(
+        navigatorKey.currentContext!,
+        MaterialPageRoute(builder: (context) => BottomBarScreen()),
+        (route) => false,
+      );
+    });
+
+    notifyListeners();
   }
 }
