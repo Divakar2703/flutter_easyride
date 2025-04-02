@@ -10,6 +10,7 @@ class AppColors {
   static const Color lightYellowText = Color(0xfffbe7c6);
 
   static const Color black = Color(0xFF000000);
+  static const Color blackBtn = Color(0xff272729);
   static const Color red = Color(0xFF841818);
   static const Color yellowCyan = Color(0xFFFFF8DB);
   static const Color lightYellow = Color(0xFFFFF9E0);
@@ -19,11 +20,13 @@ class AppColors {
   // static const Color white = Color(0xFFFAFAFA);
   static const Color background = Color(0xFFF5F5F5);
   static const Color primary = Color(0xFF42A5F5); // Light blue for buttons
-  static const Color secondary = Color(0xFF1E88E5); // Darker blue for highlights
+  static const Color secondary =
+      Color(0xFF1E88E5); // Darker blue for highlights
   static const Color mapBorder = Color(0xFFBDBDBD);
   static const Color textPrimary = Color(0xFF212121);
   static const Color textSecondary = Color(0xFF757575);
-  static const Color buttonBackground = Color(0xFFFF4081); // Pink button background
+  static const Color buttonBackground =
+      Color(0xFFFF4081); // Pink button background
   static const Color buttonText = Color(0xFFFFFFFF); // White button text
   static const Color pickupMarker = Color(0xFF4CAF50); // Green for pickup
   static const Color dropoffMarker = Color(0xFFF44336);

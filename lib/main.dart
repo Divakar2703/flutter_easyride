@@ -10,6 +10,7 @@ import 'package:flutter_easy_ride/view/authentication/ui/splash_screen.dart';
 import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_easy_ride/view/car_selection/provider/car_selection_provider.dart';
 import 'package:flutter_easy_ride/view/driver_details/provider/driver_details_provider.dart';
+import 'package:flutter_easy_ride/view/driver_details/ui/driver_detail_screen.dart';
 import 'package:flutter_easy_ride/view/home/provider/bottom_bar_provider.dart';
 import 'package:flutter_easy_ride/view/home/provider/dashboard_provider.dart';
 import 'package:flutter_easy_ride/view/payments/provider/payment_provider.dart';
@@ -80,7 +81,9 @@ class _MyAppState extends State<MyApp> {
                 // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
                 // useMaterial3: true,
                 ),
-            home: SplashScreen()
+            home:
+                //DriverDetailScreen()
+                SplashScreen()
             //BookRideScreen(),
             ),
       );
