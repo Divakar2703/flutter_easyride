@@ -27,6 +27,8 @@ class Endpoints {
   static const String bookNow = "$newBaseUrl/book-cab";
   static const String addMoneyToWallet = "$newBaseUrl/add-wallet-balance";
   static const String verifyWalletPayment = "$newBaseUrl/verify-wallet-payment";
+
+  static final String googleApiKey = "AIzaSyCqOtn--DWaSee5PMjb1J1zkPe7gw5XMWQ";
 }
 
 class AppImage {

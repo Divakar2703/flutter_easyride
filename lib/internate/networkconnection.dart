@@ -31,9 +31,7 @@ class _ConnectivityCheckerState extends State<ConnectivityChecker> {
 
           _showOverlay(
             isConnected ? 'Internet is Connected' : 'No Internet Connection',
-            isConnected
-                ? 'assets/images/con1.json'
-                : 'assets/images/connection1.json',
+            isConnected ? 'assets/images/con1.json' : 'assets/images/connection1.json',
           );
         }
       },
@@ -64,7 +62,7 @@ class _ConnectivityCheckerState extends State<ConnectivityChecker> {
             child: Container(
               margin: EdgeInsets.only(left: 10),
               decoration: BoxDecoration(
-               color: Color.fromARGB(200, 100, 200, 200),
+                color: Color.fromARGB(200, 100, 200, 200),
                 borderRadius: BorderRadius.circular(5.0),
                 boxShadow: [
                   BoxShadow(
@@ -77,7 +75,9 @@ class _ConnectivityCheckerState extends State<ConnectivityChecker> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  SizedBox(height: 10,),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Lottie.asset(
                     animationPath,
                     height: 50,
@@ -107,10 +107,12 @@ class _ConnectivityCheckerState extends State<ConnectivityChecker> {
       _overlayEntry = null;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Container();
   }
+
   @override
   void dispose() {
     _overlayEntry?.remove();

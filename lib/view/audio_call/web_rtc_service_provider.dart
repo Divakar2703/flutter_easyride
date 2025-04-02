@@ -145,11 +145,11 @@ class WebRTCProvider with ChangeNotifier {
     _initializePeerConnection();
   }
 
-  _updateDriverLocation(data) {
+  _updateDriverLocation(data) async {
     driverLat = data["latitude"];
     driverLong = data["longitude"];
 
-    addPolyLine(driverLat: driverLat, driverLong: driverLong, isPickup: true);
+    await addPolyLine(driverLat: driverLat, driverLong: driverLong, isPickup: true);
     addMarkers(driverLat: driverLat, driverLong: driverLong, waypoints: driverDetailsModel?.waypoints, isPickup: true);
     notifyListeners();
   }
@@ -157,7 +157,7 @@ class WebRTCProvider with ChangeNotifier {
   addPolyLine({double? driverLat, double? driverLong, bool? isPickup}) async {
     if (isPickup ?? false) {
       PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-          googleApiKey: googleApiKey,
+          googleApiKey: Endpoints.googleApiKey,
           request: PolylineRequest(
               origin: PointLatLng(driverLat ?? 0.0, driverLong ?? 0.0),
               destination: PointLatLng(
@@ -173,39 +173,22 @@ class WebRTCProvider with ChangeNotifier {
 
   addMarkers({double? driverLat, double? driverLong, List<Waypoints>? waypoints, bool? isPickup}) async {
     if (isPickup ?? false) {
-      for (int i = 0; i < polylineCoordinates.length - 1; i++) {
-        LatLng nextPosition = polylineCoordinates[i + 1];
-        double bearing = calculateBearing(polylineCoordinates[i], nextPosition);
-
-        markers.add(
-          Marker(
-              markerId: MarkerId("driver_id"),
-              position: LatLng(driverLat ?? 0.0, driverLong ?? 0.0),
-              icon: await BitmapDescriptor.asset(
-                  ImageConfiguration(size: Size(40, 40)),
-                  driverDetailsModel?.type?.toLowerCase() == "car"
-                      ? AppImage.carMap
-                      : driverDetailsModel?.type?.toLowerCase() == "auto"
-                          ? AppImage.autoMap
-                          : driverDetailsModel?.type?.toLowerCase() == "bike"
-                              ? AppImage.bikeMap
-                              : ""),
-              rotation: bearing),
-        );
-        markers.add(
-          Marker(
-              markerId: MarkerId("source"),
-              position: LatLng(waypoints?.first.lat ?? 0.0, waypoints?.first.long ?? 0.0),
-              icon: await BitmapDescriptor.asset(
-                ImageConfiguration(size: Size(10, 10)),
-                AppImage.source,
-              ),
-              anchor: Offset(0.5, 0.5),
-              infoWindow: InfoWindow(title: waypoints?.first.address)),
-        );
-
-        await Future.delayed(Duration(seconds: 1)); // Simulate movement delay
-      }
+      markers.add(
+        Marker(
+          markerId: MarkerId("driver_id"),
+          position: LatLng(driverLat ?? 0.0, driverLong ?? 0.0),
+          icon: await BitmapDescriptor.asset(
+              ImageConfiguration(size: Size(40, 40)),
+              driverDetailsModel?.type?.toLowerCase() == "car"
+                  ? AppImage.carMap
+                  : driverDetailsModel?.type?.toLowerCase() == "auto"
+                      ? AppImage.autoMap
+                      : driverDetailsModel?.type?.toLowerCase() == "bike"
+                          ? AppImage.bikeMap
+                          : ""),
+        ),
+      );
+      await Future.delayed(Duration(seconds: 1));
     }
   }
 
@@ -330,12 +313,10 @@ class WebRTCProvider with ChangeNotifier {
 
   ///marker and polyline for driver details
 
-  final String googleApiKey = "AIzaSyCqOtn--DWaSee5PMjb1J1zkPe7gw5XMWQ";
-
   Future<void> getPolyPoints({double? pickupLat, double? pickupLong, double? destLat, double? destLng}) async {
     try {
       PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-          googleApiKey: googleApiKey,
+          googleApiKey: Endpoints.googleApiKey,
           request: PolylineRequest(
               origin: PointLatLng(pickupLat ?? 0.0, pickupLong ?? 0.0),
               destination: PointLatLng(destLat ?? 0.0, destLng ?? 0.0),
@@ -363,6 +344,4 @@ class WebRTCProvider with ChangeNotifier {
     double bearing = atan2(y, x) * 180 / pi;
     return (bearing + 360) % 360; // Normalize angle
   }
-
-  void updateMarkerPosition() async {}
 }
