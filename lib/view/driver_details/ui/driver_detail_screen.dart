@@ -7,7 +7,6 @@ import 'package:flutter_easy_ride/view/audio_call/web_rtc_service_provider.dart'
 import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_easy_ride/view/components/common_textfield.dart';
 import 'package:flutter_easy_ride/view/components/dotted_line.dart';
-import 'package:flutter_easy_ride/view/driver_details/provider/driver_details_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +29,7 @@ class DriverDetailScreen extends StatelessWidget {
           clipBehavior: Clip.none,
           children: [
             Container(
-              height: MediaQuery.of(context).size.height - 450,
+              height: MediaQuery.of(context).size.height - 400,
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(color: AppColors.white),
               child: Consumer<BookNowProvider>(
@@ -77,7 +76,7 @@ class DriverDetailScreen extends StatelessWidget {
               alignment: Alignment.bottomCenter,
               child: Container(
                 padding: EdgeInsets.only(top: 15, right: 15, left: 15),
-                height: MediaQuery.of(context).size.height - 320,
+                height: MediaQuery.of(context).size.height - 300,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   color: AppColors.white,
@@ -97,7 +96,7 @@ class DriverDetailScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    context.watch<DriverDetailsProvider>().isConfirmed
+                    true /* context.watch<DriverDetailsProvider>().isConfirmed*/
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -449,9 +448,9 @@ class DriverDetailScreen extends StatelessWidget {
                                 flex: 7,
                                 child: CommonButton(
                                   label: "Cancel",
-                                  labelColor: AppColors.buttonBackground,
+                                  labelColor: AppColors.red,
                                   buttonColor: Colors.white,
-                                  buttonBorderColor: AppColors.buttonBackground,
+                                  buttonBorderColor: AppColors.red,
                                   img: AppImage.close,
                                   onPressed: () {
                                     showModalBottomSheet(

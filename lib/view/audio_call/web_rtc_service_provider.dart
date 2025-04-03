@@ -52,7 +52,7 @@ class WebRTCProvider with ChangeNotifier {
 
   void selectReason(String reason) {
     _selectedReason = reason;
-    notifyListeners(); // Notifies the UI about changes
+    notifyListeners();
   }
 
   Future<void> initSocket(String id) async {
