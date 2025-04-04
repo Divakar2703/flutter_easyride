@@ -50,28 +50,28 @@ class DriverDetailScreen extends StatelessWidget {
                       ),
               ),
             ),
-            SafeArea(
-                child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: InkWell(
-                onTap: () => Navigator.pop(context),
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.black.withOpacity(0.2),
-                        offset: Offset(0, -4),
-                        blurRadius: 18,
-                      )
-                    ],
-                  ),
-                  child: SvgPicture.asset(AppImage.back),
-                ),
-              ),
-            )),
+            // SafeArea(
+            //     child: Padding(
+            //   padding: const EdgeInsets.all(15.0),
+            //   child: InkWell(
+            //     onTap: () => Navigator.pop(context),
+            //     child: Container(
+            //       padding: EdgeInsets.all(10),
+            //       decoration: BoxDecoration(
+            //         color: AppColors.white,
+            //         shape: BoxShape.circle,
+            //         boxShadow: [
+            //           BoxShadow(
+            //             color: AppColors.black.withOpacity(0.2),
+            //             offset: Offset(0, -4),
+            //             blurRadius: 18,
+            //           )
+            //         ],
+            //       ),
+            //       child: SvgPicture.asset(AppImage.back),
+            //     ),
+            //   ),
+            // )),
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
@@ -96,7 +96,7 @@ class DriverDetailScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    true /* context.watch<DriverDetailsProvider>().isConfirmed*/
+                    context.watch<WebRTCProvider>().otp != null
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -115,7 +115,7 @@ class DriverDetailScreen extends StatelessWidget {
                                   children: [
                                     Text("Your Code", style: TextStyle(fontSize: 12)),
                                     Text(
-                                      "4080",
+                                      context.watch<WebRTCProvider>().otp ?? "",
                                       style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, letterSpacing: 8),
                                     ),
                                   ],
@@ -442,77 +442,80 @@ class DriverDetailScreen extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 15),
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 7,
-                                child: CommonButton(
-                                  label: "Cancel",
-                                  labelColor: AppColors.red,
-                                  buttonColor: Colors.white,
-                                  buttonBorderColor: AppColors.red,
-                                  img: AppImage.close,
-                                  onPressed: () {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                                      ),
-                                      backgroundColor: AppColors.white,
-                                      builder: (context) => CancellationReasonBottomSheet(),
-                                    );
-                                  },
+                          if (context.watch<WebRTCProvider>().otp == null) ...[
+                            Row(
+                              children: [
+                                Expanded(
+                                  flex: 7,
+                                  child: CommonButton(
+                                    label: "Cancel",
+                                    labelColor: AppColors.red,
+                                    buttonColor: Colors.white,
+                                    buttonBorderColor: AppColors.red,
+                                    img: AppImage.close,
+                                    onPressed: () {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                                        ),
+                                        backgroundColor: AppColors.white,
+                                        builder: (context) => CancellationReasonBottomSheet(),
+                                      );
+                                    },
+                                  ),
                                 ),
-                              ),
-                              SizedBox(width: 10),
-                              Expanded(
-                                flex: 12,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(99),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(99),
-                                      border: Border.all(color: AppColors.borderColor.withOpacity(0.8)),
-                                    ),
-                                    child: HorizontalSlidableButton(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: 52,
-                                      buttonWidth: 52,
-                                      color: AppColors.borderColor.withOpacity(0.8),
-                                      buttonColor: AppColors.white,
-                                      dismissible: false,
-                                      label: Icon(Icons.phone),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const SizedBox(),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Icon(Icons.arrow_forward_ios_outlined, color: AppColors.white, size: 18),
-                                              Icon(Icons.arrow_forward_ios_rounded,
-                                                  color: AppColors.white.withOpacity(0.7), size: 18),
-                                              Icon(Icons.arrow_forward_ios_rounded,
-                                                  color: AppColors.white.withOpacity(0.3), size: 18),
-                                            ],
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(right: 20.0),
-                                            child: Text(
-                                              "Call",
-                                              style: TextStyle(
-                                                  fontSize: 16, fontWeight: FontWeight.w500, color: AppColors.white),
-                                            ),
-                                          ),
-                                        ],
+                                SizedBox(width: 10),
+                                Expanded(
+                                  flex: 12,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(99),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(99),
+                                        border: Border.all(color: AppColors.borderColor.withOpacity(0.8)),
                                       ),
-                                      onChanged: (position) {},
+                                      child: HorizontalSlidableButton(
+                                        width: MediaQuery.of(context).size.width,
+                                        height: 52,
+                                        buttonWidth: 52,
+                                        color: AppColors.borderColor.withOpacity(0.8),
+                                        buttonColor: AppColors.white,
+                                        dismissible: false,
+                                        label: Icon(Icons.phone),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            const SizedBox(),
+                                            Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Icon(Icons.arrow_forward_ios_outlined,
+                                                    color: AppColors.white, size: 18),
+                                                Icon(Icons.arrow_forward_ios_rounded,
+                                                    color: AppColors.white.withOpacity(0.7), size: 18),
+                                                Icon(Icons.arrow_forward_ios_rounded,
+                                                    color: AppColors.white.withOpacity(0.3), size: 18),
+                                              ],
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(right: 20.0),
+                                              child: Text(
+                                                "Call",
+                                                style: TextStyle(
+                                                    fontSize: 16, fontWeight: FontWeight.w500, color: AppColors.white),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        onChanged: (position) {},
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
+                              ],
+                            ),
+                          ],
                           SizedBox(height: 10),
                         ],
                       ),

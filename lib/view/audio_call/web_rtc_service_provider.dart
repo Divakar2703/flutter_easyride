@@ -1,7 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/main.dart';
+import 'package:flutter_easy_ride/utils/toast.dart';
 import 'package:flutter_easy_ride/view/audio_call/call_ui.dart';
 import 'package:flutter_easy_ride/view/driver_details/ui/driver_detail_screen.dart';
 import 'package:flutter_easy_ride/view/home/ui/bottom_bar_screen.dart';
@@ -34,6 +33,7 @@ class WebRTCProvider with ChangeNotifier {
   PolylinePoints polylinePoints = PolylinePoints();
   LatLng? currentLocation;
   List<LatLng> polylineCoordinates = [];
+  String? otp;
 
   List<String> _reasons = [
     "Selected Wrong Pickup Location",
@@ -163,7 +163,31 @@ class WebRTCProvider with ChangeNotifier {
     });
 
     socket.on("update_location", (data) => _updateDriverLocation(data));
+
+    socket.on('pickup_location_reached', (data) => _pickupLocationReached(data));
+
+    socket.on('ride_cancelled', (data) => _rideCancelListen(data));
+
     _initializePeerConnection();
+  }
+
+  _pickupLocationReached(data) {
+    otp = data["otp"].toString();
+    AppUtils.show("Driver arrived.");
+    notifyListeners();
+  }
+
+  _rideCancelListen(data) {
+    AppUtils.show(data["reason"].toString());
+    markers.clear();
+    driverLat = null;
+    driverLong = null;
+    currentLocation = null;
+    driverDetailsModel = null;
+    polylineCoordinates.clear();
+    polylinePoints = PolylinePoints();
+    notifyListeners();
+    getX.Get.offAll(() => BottomBarScreen());
   }
 
   _updateDriverLocation(data) async {
@@ -352,31 +376,7 @@ class WebRTCProvider with ChangeNotifier {
     }
   }
 
-  double calculateBearing(LatLng start, LatLng end) {
-    double lat1 = start.latitude * pi / 180;
-    double lat2 = end.latitude * pi / 180;
-    double lon1 = start.longitude * pi / 180;
-    double lon2 = end.longitude * pi / 180;
-
-    double deltaLon = lon2 - lon1;
-    double y = sin(deltaLon) * cos(lat2);
-    double x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(deltaLon);
-
-    double bearing = atan2(y, x) * 180 / pi;
-    return (bearing + 360) % 360; // Normalize angle
-  }
-
   void cancelRideFromUser(String reason) {
     socket.emit('cancel_ride', {"booking_id": driverDetailsModel?.bookingId, "reason": reason});
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.pushAndRemoveUntil(
-        navigatorKey.currentContext!,
-        MaterialPageRoute(builder: (context) => BottomBarScreen()),
-        (route) => false,
-      );
-    });
-
-    notifyListeners();
   }
 }

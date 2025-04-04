@@ -10,11 +10,11 @@ import 'package:flutter_easy_ride/view/authentication/ui/splash_screen.dart';
 import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_easy_ride/view/car_selection/provider/car_selection_provider.dart';
 import 'package:flutter_easy_ride/view/driver_details/provider/driver_details_provider.dart';
-import 'package:flutter_easy_ride/view/driver_details/ui/driver_detail_screen.dart';
 import 'package:flutter_easy_ride/view/home/provider/bottom_bar_provider.dart';
 import 'package:flutter_easy_ride/view/home/provider/dashboard_provider.dart';
 import 'package:flutter_easy_ride/view/payments/provider/payment_provider.dart';
 import 'package:flutter_easy_ride/view/profile/provider/profile_provider.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 var navigatorKey = GlobalKey<NavigatorState>();
@@ -72,7 +72,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) => Consumer<ApiProvider>(
-        builder: (BuildContext context, value, Widget? child) => MaterialApp(
+        builder: (BuildContext context, value, Widget? child) => GetMaterialApp(
             navigatorKey: navigatorKey,
             debugShowCheckedModeBanner: false,
             title: 'Flutter Demo',

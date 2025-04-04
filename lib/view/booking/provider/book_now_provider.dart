@@ -99,8 +99,7 @@ class BookNowProvider with ChangeNotifier {
 
   /// On Map Tap & add marker
   Set<Marker> markers = {};
-  Future<void> addLocationMarkers(LatLng l, String address,
-      {bool isSource = false, bool isDestination = false}) async {
+  Future<void> addLocationMarkers(LatLng l, String address, {bool isSource = false, bool isDestination = false}) async {
     try {
       final markerId = MarkerId(isSource
               ? 'source_marker'
@@ -166,14 +165,12 @@ class BookNowProvider with ChangeNotifier {
     if (indexToRemove != -1) {
       controllerList.removeAt(indexToRemove);
       markers.forEach((m) {
-        if (m.infoWindow.title ==
-            locationTextfieldList[indexToRemove].con?.text) {
+        if (m.infoWindow.title == locationTextfieldList[indexToRemove].con?.text) {
           removeMarkId = m.markerId.value;
         }
       });
       locationTextfieldList.removeAt(indexToRemove);
-      if (locationTextfieldList[indexToRemove].con != con &&
-          indexToRemove < markerPositions.length) {
+      if (locationTextfieldList[indexToRemove].con != con && indexToRemove < markerPositions.length) {
         markerPositions.removeAt(indexToRemove);
       }
       markers.removeWhere((m) => m.markerId.value == removeMarkId);
@@ -200,8 +197,7 @@ class BookNowProvider with ChangeNotifier {
   }
 
   /// Add Source and Destination Location
-  addLocationTextFields(TextEditingController sourceLocation,
-      TextEditingController destination, String address) {
+  addLocationTextFields(TextEditingController sourceLocation, TextEditingController destination, String address) {
     controllerList.add(sourceLocation);
     controllerList.add(destination);
     sourceLocation.text = address;
@@ -251,9 +247,7 @@ class BookNowProvider with ChangeNotifier {
 
   /// Update textfield value
   Future<void> updateSelectedTextField(String text,
-      {bool isSource = true,
-      bool isDestination = false,
-      bool? fromAddress}) async {
+      {bool isSource = true, bool isDestination = false, bool? fromAddress}) async {
     if (selectedController != null) {
       selectedController!.text = text;
       placesList.clear();
@@ -276,10 +270,8 @@ class BookNowProvider with ChangeNotifier {
     placesList.clear();
     notifyListeners();
     try {
-      final resp = await dio.post(Endpoints.places, queryParameters: {
-        "input": v,
-        "key": "AIzaSyCqOtn--DWaSee5PMjb1J1zkPe7gw5XMWQ"
-      });
+      final resp = await dio
+          .post(Endpoints.places, queryParameters: {"input": v, "key": "AIzaSyCqOtn--DWaSee5PMjb1J1zkPe7gw5XMWQ"});
       final model = SuggestionsResponse.fromJson(resp.data);
       placesList = model.suggestions ?? [];
       loadPlace = false;
@@ -292,13 +284,12 @@ class BookNowProvider with ChangeNotifier {
 
   /// Get Current Location
   LatLng? _currentLocation;
-  bool _isLoading = false;
+  bool isLoading = false;
 
   LatLng? get currentLocation => _currentLocation;
-  bool get isLoading => _isLoading;
   Future<void> fetchCurrentLocation(LatLng? currentLocation) async {
     try {
-      _isLoading = true;
+      isLoading = true;
       notifyListeners();
 
       try {
@@ -320,20 +311,20 @@ class BookNowProvider with ChangeNotifier {
           throw Exception('Location permissions are permanently denied.');
         }
         _currentLocation = currentLocation;
-        List<Placemark> placeMarks = await placemarkFromCoordinates(
-            _currentLocation?.latitude ?? 0, _currentLocation?.longitude ?? 0);
+        List<Placemark> placeMarks =
+            await placemarkFromCoordinates(_currentLocation?.latitude ?? 0, _currentLocation?.longitude ?? 0);
         final address =
             '${placeMarks[0].thoroughfare}, ${placeMarks[0].subLocality}, ${placeMarks[0].locality}, ${placeMarks[0].administrativeArea}, ${placeMarks[0].postalCode}';
         if (_currentLocation != null) {
           await addLocationMarkers(_currentLocation!, address, isSource: true);
         }
-        _isLoading = false;
+        isLoading = false;
         notifyListeners();
       } catch (e) {
         print('Error fetching location: $e');
       }
     } finally {
-      _isLoading = false;
+      isLoading = false;
       notifyListeners();
     }
   }

@@ -4,9 +4,9 @@ import 'package:flutter_easy_ride/provider/api_provider.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
 import 'package:flutter_easy_ride/utils/indicator.dart';
-import 'package:flutter_easy_ride/utils/local_storage.dart';
-import 'package:flutter_easy_ride/view/audio_call/call_screen.dart';
+import 'package:flutter_easy_ride/view/booking/provider/book_now_provider.dart';
 import 'package:flutter_easy_ride/view/booking/ui/booking_screen.dart';
+import 'package:flutter_easy_ride/view/car_selection/provider/car_selection_provider.dart';
 import 'package:flutter_easy_ride/view/components/common_textfield.dart';
 import 'package:flutter_easy_ride/view/components/image_text_widget.dart';
 import 'package:flutter_easy_ride/view/home/provider/bottom_bar_provider.dart';
@@ -29,9 +29,17 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    final provider = context.read<BookNowProvider>();
+    provider.controllerList.forEach((e) => e.clear());
+    provider.locationTextfieldList.clear();
+    provider.markers.clear();
+    provider.polyLines.clear();
+    provider.markerPositions.clear();
+    provider.isLoading = false;
+    context.read<CarSelectionProvider>().load = false;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<BottomBarProvider>(context, listen: false)
-          .fetchCurrentLocation();
+      Provider.of<BottomBarProvider>(context, listen: false).fetchCurrentLocation();
       Provider.of<ApiProvider>(context, listen: false).fetchAuth();
       Provider.of<DashboardProvider>(context, listen: false).fetchDashboard();
       Provider.of<BottomBarProvider>(context, listen: false).bookingType();
@@ -64,8 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         SafeArea(
           child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -74,8 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     showModalBottomSheet(
                       context: context,
                       shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(20)),
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                       ),
                       backgroundColor: AppColors.white,
                       builder: (context) => CancellationReasonBottomSheet(),
@@ -105,10 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     hintText: "Your Location",
                     onTap: () {
                       context.read<BottomBarProvider>().changeBooking(0);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => BookingScreen()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => BookingScreen()));
                     },
                     con: context.watch<BottomBarProvider>().homeSearchCon,
                     fillColor: AppColors.white.withOpacity(0.7),
@@ -134,8 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   color: AppColors.white,
-                  border: BorderDirectional(
-                      top: BorderSide(color: AppColors.yellow)),
+                  border: BorderDirectional(top: BorderSide(color: AppColors.yellow)),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(28),
                     topRight: Radius.circular(28),
@@ -155,58 +157,38 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: 60),
-                        Text("Today's Offer",
-                            style: TextStyle(fontWeight: FontWeight.w500)),
+                        Text("Today's Offer", style: TextStyle(fontWeight: FontWeight.w500)),
                         SizedBox(height: 15),
                         Consumer<DashboardProvider>(
-                          builder: (BuildContext context, value,
-                                  Widget? child) =>
-                              !value.loading
-                                  ? CarouselSlider(
-                                      options: CarouselOptions(
-                                        initialPage: 0,
-                                        height: 160,
-                                        viewportFraction: 1,
-                                        aspectRatio:
-                                            MediaQuery.of(context).size.width /
-                                                160,
-                                        enableInfiniteScroll: true,
-                                        autoPlay: value.dashboardResponse
-                                                    ?.banner.length ==
-                                                1
-                                            ? false
-                                            : true,
-                                        autoPlayInterval:
-                                            const Duration(seconds: 5),
-                                      ),
-                                      items: (value.dashboardResponse?.banner ??
-                                              [])
-                                          .map(
-                                            (e) => Container(
-                                              margin: EdgeInsets.symmetric(
-                                                  horizontal: 10),
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color: AppColors.black
-                                                        .withOpacity(0.1)),
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                                child: Image.network(
-                                                    e.appBannerImage,
-                                                    fit: BoxFit.fill),
-                                              ),
-                                            ),
-                                          )
-                                          .toList(),
-                                    )
-                                  : Indicator(),
+                          builder: (BuildContext context, value, Widget? child) => !value.loading
+                              ? CarouselSlider(
+                                  options: CarouselOptions(
+                                    initialPage: 0,
+                                    height: 160,
+                                    viewportFraction: 1,
+                                    aspectRatio: MediaQuery.of(context).size.width / 160,
+                                    enableInfiniteScroll: true,
+                                    autoPlay: value.dashboardResponse?.banner.length == 1 ? false : true,
+                                    autoPlayInterval: const Duration(seconds: 5),
+                                  ),
+                                  items: (value.dashboardResponse?.banner ?? [])
+                                      .map(
+                                        (e) => Container(
+                                          margin: EdgeInsets.symmetric(horizontal: 10),
+                                          width: MediaQuery.of(context).size.width,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(color: AppColors.black.withOpacity(0.1)),
+                                            borderRadius: BorderRadius.circular(12),
+                                          ),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(12),
+                                            child: Image.network(e.appBannerImage, fit: BoxFit.fill),
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                                )
+                              : Indicator(),
                         ),
                         SizedBox(height: 80),
                       ],
@@ -227,21 +209,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           v.bookingTypeList.length,
                           (index) => Expanded(
                             child: ImageTextWidget(
-                              isLastIndex:
-                                  index == v.bookingTypeList.length - 1,
+                              isLastIndex: index == v.bookingTypeList.length - 1,
                               title: v.bookingTypeList[index].name,
-                              image: v.bookingTypeList[index].image ??
-                                  AppImage.bookNow,
-                              subImage: v.bookingTypeList[index].icon ??
-                                  AppImage.bookNowIcon,
+                              image: v.bookingTypeList[index].image ?? AppImage.bookNow,
+                              subImage: v.bookingTypeList[index].icon ?? AppImage.bookNowIcon,
                               onTap: () {
-                                context
-                                    .read<BottomBarProvider>()
-                                    .changeBooking(index);
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => BookingScreen()));
+                                context.read<BottomBarProvider>().changeBooking(index);
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => BookingScreen()));
                               },
                             ),
                           ),
