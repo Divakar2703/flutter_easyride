@@ -16,9 +16,7 @@ import '../../components/common_button.dart';
 import '../components/cancellation_bottomsheet.dart';
 
 class DriverDetailScreen extends StatelessWidget {
-  DriverDetailScreen({
-    super.key,
-  });
+  DriverDetailScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +43,7 @@ class DriverDetailScreen extends StatelessWidget {
                             color: Colors.black,
                           ),
                         },
+                        onMapCreated: (controller) => value.mapController = controller,
                         zoomControlsEnabled: false,
                         initialCameraPosition: CameraPosition(target: v.currentLocation ?? LatLng(0, 0), zoom: 15),
                       ),
