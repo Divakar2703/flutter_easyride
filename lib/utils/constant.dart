@@ -18,6 +18,8 @@ class Endpoints {
   static String getBookingType = "$newBaseUrl/get-booking-type";
   static String getProfile = "$newBaseUrl/my-profile";
   static String updateProfile = "$newBaseUrl/update-profile";
+  static String getBookingHistory = "$newBaseUrl/bookings-history";
+
   static String getSavedAddress = "$newBaseUrl/list-address";
   static String addAddress = "$newBaseUrl/submit-address";
   static String deleteAddress = "$newBaseUrl/delete-address";
@@ -104,4 +106,5 @@ class AppImage {
   static const String filter = '${assetSvg}filter.svg';
   static const String sourceSvg = '${assetSvg}source.svg';
   static const String destinationSvg = '${assetSvg}destination.svg';
+  static const String cod = '${assetSvg}cod.svg';
 }

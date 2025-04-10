@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/model/location_suggetions.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
+import 'package:flutter_easy_ride/utils/date_formates.dart';
 import 'package:flutter_easy_ride/utils/local_storage.dart';
 import 'package:flutter_easy_ride/utils/toast.dart';
 import 'package:flutter_easy_ride/view/booking/models/common_model.dart';
 import 'package:flutter_easy_ride/view/profile/models/address_model.dart';
+import 'package:flutter_easy_ride/view/profile/models/booking_history_model.dart';
 import 'package:flutter_easy_ride/view/profile/models/profile_model.dart';
 import 'package:flutter_easy_ride/view/profile/services/profile_service.dart';
 import 'package:geocoding/geocoding.dart';
@@ -128,6 +130,67 @@ class ProfileProvider extends ChangeNotifier {
       }
       notifyListeners();
     } catch (e) {
+      notifyListeners();
+    }
+  }
+
+  String? type;
+
+  selectFilter(int index) {
+    typeList.forEach((e) => e.isSelected = false);
+    typeList[index].isSelected = true;
+    type = typeList[index].subTitle;
+    notifyListeners();
+  }
+
+  selectStartDate(BuildContext context, String? title) async {
+    final date = await AppUtils.pickDate(context);
+    if (date != null) {
+      if (title?.toLowerCase().contains("start") ?? false) {
+        startCon.text = DateFormats.formatDateYYYYMMDD(date);
+      } else {
+        endCon.text = DateFormats.formatDateYYYYMMDD(date);
+      }
+      notifyListeners();
+    }
+  }
+
+  final startCon = TextEditingController();
+  final endCon = TextEditingController();
+  final search = TextEditingController();
+
+  List<CommonModel> typeList = [
+    CommonModel(title: "Book Now", subTitle: "book_now", isSelected: false),
+    CommonModel(title: "Pre - Booking", subTitle: "pre_booking", isSelected: false),
+    CommonModel(title: "rental", subTitle: "rental", isSelected: false),
+  ];
+  bool pullUp = true;
+  int page = 1;
+  bool loadHistory = false;
+  List<BookingHistoryList> bookingHistoryList = [];
+
+  Future<void> getBookingsHistory() async {
+    try {
+      if (page == 1) {
+        loadHistory = true;
+        pullUp = true;
+        bookingHistoryList.clear();
+      }
+      notifyListeners();
+      final userId = await LocalStorage.getId();
+      final resp = await profileService.getBookingsHistory(
+          userId: userId, page: page, startDate: startCon.text, endDate: endCon.text, type: type, search: search.text);
+      if (resp != null) {
+        if (resp.data != null && (resp.data?.data?.isNotEmpty ?? false)) {
+          bookingHistoryList.addAll(resp.data?.data ?? []);
+        } else {
+          pullUp = false;
+        }
+      }
+      loadHistory = false;
+      notifyListeners();
+    } catch (e) {
+      loadHistory = false;
       notifyListeners();
     }
   }

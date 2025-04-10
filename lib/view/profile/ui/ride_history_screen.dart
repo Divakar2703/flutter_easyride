@@ -1,12 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
 import 'package:flutter_easy_ride/utils/constant.dart';
+import 'package:flutter_easy_ride/utils/indicator.dart';
 import 'package:flutter_easy_ride/view/components/common_textfield.dart';
-import 'package:flutter_easy_ride/view/components/dotted_line.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_easy_ride/view/profile/provider/profile_provider.dart';
+import 'package:flutter_easy_ride/view/profile/ui/ride_history_card.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
-class RideHistoryScreen extends StatelessWidget {
-  const RideHistoryScreen({super.key});
+class RideHistoryScreen extends StatefulWidget {
+  RideHistoryScreen({super.key});
+
+  @override
+  State<RideHistoryScreen> createState() => _RideHistoryScreenState();
+}
+
+class _RideHistoryScreenState extends State<RideHistoryScreen> {
+  RefreshController refreshController = RefreshController(initialRefresh: false);
+
+  ScrollController scrollController = ScrollController();
+
+  void onLoading() async {
+    final provider = context.read<ProfileProvider>();
+    provider.page += 1;
+    await provider.getBookingsHistory();
+    if (mounted) {
+      refreshController.loadComplete();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +52,17 @@ class RideHistoryScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  InkWell(onTap: () => Navigator.pop(context), child: Icon(Icons.arrow_back_ios_new_rounded, size: 20)),
-                  Text("History", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  InkWell(
+                    onTap: () => Navigator.pop(context),
+                    child: Icon(Icons.arrow_back_ios_new_rounded, size: 20),
+                  ),
+                  Text("Booking History", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                   SizedBox()
                 ],
               ),
             ),
           ),
+          SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: Row(
@@ -44,153 +70,180 @@ class RideHistoryScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: CommonTextField(
+                    hintText: "Search",
+                    con: context.read<ProfileProvider>().search,
                     height: 38,
-                    contentPadding: EdgeInsets.all(5),
+                    onEditingComplete: () {
+                      context.read<ProfileProvider>().page = 1;
+                      context.read<ProfileProvider>().getBookingsHistory();
+                      FocusManager.instance.primaryFocus?.unfocus();
+                    },
                     cursorHeight: 18,
                     suffix: SvgPicture.asset(AppImage.search),
+                    contentPadding: EdgeInsets.only(left: 15, right: 5, top: 5, bottom: 5),
                   ),
                 ),
                 SizedBox(width: 10),
-                SvgPicture.asset(AppImage.filter),
-                SizedBox(width: 10),
-                SvgPicture.asset(AppImage.sort),
+                InkWell(
+                    onTap: () => showModalBottomSheet(
+                          context: context,
+                          backgroundColor: AppColors.white,
+                          builder: (context) => filterWidget(context),
+                        ),
+                    child: SvgPicture.asset(AppImage.filter)),
               ],
             ),
           ),
-          Expanded(
-            child: ListView.separated(
-              itemCount: 1,
-              padding: EdgeInsets.all(15),
-              separatorBuilder: (context, index) => SizedBox(height: 10),
-              itemBuilder: (context, index) => Container(
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 12,
-                      spreadRadius: 0,
-                      offset: Offset(0, 2),
-                      color: AppColors.black.withOpacity(0.1),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(7),
-                                boxShadow: [
-                                  BoxShadow(
-                                    blurRadius: 8,
-                                    spreadRadius: 0,
-                                    offset: Offset(0, 2),
-                                    color: AppColors.black.withOpacity(0.1),
-                                  ),
-                                ],
-                              ),
-                              child: Text("Book Now", style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))),
-                        ),
-                        SizedBox(width: 10),
-                        Flexible(
-                          child: Text("Today (03:42 PM)", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500)),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      children: [
-                        SvgPicture.asset(AppImage.sourceSvg),
-                        SizedBox(width: 10),
-                        Expanded(child: Text("Muradnagr, Ghaziabad", style: TextStyle(fontSize: 16))),
-                      ],
-                    ),
-                    DottedLine(),
-                    Row(
-                      children: [
-                        SvgPicture.asset(AppImage.destinationSvg),
-                        SizedBox(width: 10),
-                        Expanded(child: Text("Sec 57, Gurugram, Haryana", style: TextStyle(fontSize: 16))),
-                      ],
-                    ),
-                    SizedBox(height: 15),
-                    Container(
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.black.withOpacity(0.1)),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          CircleAvatar(radius: 17.5),
-                          SizedBox(width: 15),
-                          Expanded(
-                            flex: 2,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Rahul Sharma", style: TextStyle(fontSize: 12)),
-                                Text("Rahul Sharma", style: TextStyle(fontSize: 10))
-                              ],
-                            ),
+          Consumer<ProfileProvider>(
+            builder: (context, v, child) => Expanded(
+              child: SmartRefresher(
+                onLoading: onLoading,
+                enablePullDown: false,
+                enablePullUp: v.pullUp,
+                controller: refreshController,
+                scrollController: scrollController,
+                physics: BouncingScrollPhysics(),
+                child: v.loadHistory
+                    ? Indicator()
+                    : v.bookingHistoryList.isEmpty
+                        ? Center(child: Text("No history available."))
+                        : ListView.separated(
+                            controller: scrollController,
+                            itemCount: v.bookingHistoryList.length,
+                            padding: EdgeInsets.symmetric(horizontal: 15),
+                            separatorBuilder: (context, index) => SizedBox(height: 15),
+                            itemBuilder: (context, index) => HistoryCard(bookingHistory: v.bookingHistoryList[index]),
                           ),
-                          SizedBox(width: 15),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  "₹290",
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: AppColors.green),
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    SvgPicture.asset(AppImage.wallet, height: 12, width: 12),
-                                    SizedBox(width: 5),
-                                    Text(
-                                      "Wallet",
-                                      style: TextStyle(fontSize: 12),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 12),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.black.withOpacity(0.5)),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Re-book Ride",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.black.withOpacity(0.7)),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
               ),
             ),
           )
+        ],
+      ),
+    );
+  }
+
+  Widget filterWidget(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: 3,
+                width: 90,
+                decoration: BoxDecoration(
+                  color: AppColors.black.withOpacity(0.4),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 15),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  final provider = context.read<ProfileProvider>();
+                  provider.startCon.clear();
+                  provider.endCon.clear();
+                  provider.type = "";
+                  provider.page = 1;
+                  provider.typeList.forEach((e) => e.isSelected = false);
+                  provider.getBookingsHistory();
+                  Navigator.pop(context);
+                },
+                child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                        color: AppColors.white,
+                        border: Border.all(color: AppColors.yellowDark),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Text("Reset", style: TextStyle(fontSize: 12, color: AppColors.yellowDark))),
+              ),
+              SizedBox(width: 10),
+              GestureDetector(
+                onTap: () {
+                  context.read<ProfileProvider>().page = 1;
+                  context.read<ProfileProvider>().getBookingsHistory();
+                  Navigator.pop(context);
+                },
+                child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(color: AppColors.yellowDark, borderRadius: BorderRadius.circular(10)),
+                    child: Text("Apply", style: TextStyle(fontSize: 12, color: AppColors.white))),
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          Consumer<ProfileProvider>(
+            builder: (context, v, child) => Row(
+              children: [
+                Expanded(
+                  child: CommonTextField(
+                    con: v.startCon,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                    hintStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                    hintText: "Start Date",
+                    readOnly: true,
+                    onTap: () => v.selectStartDate(context, "start"),
+                    suffix: Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: SvgPicture.asset(AppImage.calender),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 5),
+                Text("To"),
+                SizedBox(width: 5),
+                Expanded(
+                  child: CommonTextField(
+                    con: v.endCon,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                    hintStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                    hintText: "End Date",
+                    readOnly: true,
+                    onTap: () => v.selectStartDate(context, "end"),
+                    suffix: Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: SvgPicture.asset(AppImage.calender),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 15),
+          Text(
+            "Transaction Type",
+            style: TextStyle(color: AppColors.black.withOpacity(0.8)),
+          ),
+          SizedBox(height: 15),
+          Consumer<ProfileProvider>(
+            builder: (context, v, child) => Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: List.generate(
+                v.typeList.length,
+                (index) => GestureDetector(
+                  onTap: () => v.selectFilter(index),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: v.typeList[index].isSelected ?? false ? AppColors.yellowDark : Colors.transparent),
+                      borderRadius: BorderRadius.circular(12),
+                      color: AppColors.black.withOpacity(0.03),
+                    ),
+                    child: Text(v.typeList[index].title ?? ""),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

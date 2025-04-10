@@ -455,7 +455,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   SizedBox(height: 10),
                   GestureDetector(
-                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => RideHistoryScreen())),
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => RideHistoryScreen()));
+                      context.read<ProfileProvider>().getBookingsHistory();
+                    },
                     child: Container(
                       padding: EdgeInsets.all(14),
                       decoration: BoxDecoration(
