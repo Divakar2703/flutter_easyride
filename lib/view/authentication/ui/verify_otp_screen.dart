@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/utils/colors.dart';
+import 'package:flutter_easy_ride/utils/toast.dart';
 import 'package:flutter_easy_ride/view/authentication/provider/auth_provider.dart';
 import 'package:flutter_easy_ride/view/components/common_button.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 
 class VerifyScreen extends StatelessWidget {
-  final _otpController = TextEditingController();
+  final TextEditingController _otpController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -62,10 +63,7 @@ class VerifyScreen extends StatelessWidget {
                           children: [
                             Text(
                               'Enter OTP',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                              ),
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                             ),
                             SizedBox(height: 10),
                             PinCodeTextField(
@@ -77,8 +75,8 @@ class VerifyScreen extends StatelessWidget {
                               pinTheme: PinTheme(
                                 shape: PinCodeFieldShape.box,
                                 borderRadius: BorderRadius.circular(8),
-                                fieldHeight: 50,
-                                fieldWidth: 40,
+                                fieldHeight: 45,
+                                fieldWidth: 45,
                                 selectedColor: AppColors.yellowDark,
                                 inactiveColor: Colors.grey,
                               ),
@@ -94,26 +92,28 @@ class VerifyScreen extends StatelessWidget {
                       load: authProvider.loadVerifyOtp,
                       width: MediaQuery.of(context).size.width / 2,
                       onPressed: () async {
-                        final otp = _otpController.text;
-                        if (otp.length == 6) {
-                          await authProvider.verifyOtp(otp);
+                        if (_otpController.text.length == 6) {
+                          await authProvider.verifyOtp(_otpController.text);
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Enter a valid OTP')),
-                          );
+                          AppUtils.show("Please enter 6 digits otp");
                         }
                       },
                     ),
                     SizedBox(height: 20),
-                    TextButton(
-                      onPressed: () {
-                        // Resend OTP logic
-                      },
-                      child: Text(
-                        'Resend OTP',
-                        style: TextStyle(fontSize: 14, color: AppColors.blue),
-                      ),
-                    ),
+                    Consumer<AuthProvider>(
+                      builder: (context, v, child) => v.canResend
+                          ? GestureDetector(
+                              onTap: () async {
+                                final resp = await authProvider.sendOtp(authProvider.mobileNumber ?? "");
+                                if (resp) {
+                                  v.startTimer();
+                                }
+                              },
+                              child: Text("Resend OTP",
+                                  style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.yellowDark)),
+                            )
+                          : Text("You can resend otp after ${v.seconds}s"),
+                    )
                   ],
                 ),
               ),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_easy_ride/main.dart';
 import 'package:flutter_easy_ride/utils/local_storage.dart';
@@ -33,8 +35,7 @@ class AuthProvider with ChangeNotifier {
 
       if (resp == 200) {
         loading = false;
-        Navigator.push(navigatorKey.currentContext!,
-            MaterialPageRoute(builder: (context) => LoginScreen()));
+        Navigator.push(navigatorKey.currentContext!, MaterialPageRoute(builder: (context) => LoginScreen()));
         notifyListeners();
       } else {
         loading = false;
@@ -73,6 +74,30 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  int _seconds = 60;
+  Timer? _timer;
+
+  int get seconds => _seconds;
+  bool get canResend => _seconds == 0;
+
+  void startTimer() {
+    _seconds = 60;
+    _timer?.cancel();
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      _seconds--;
+      if (_seconds == 0) {
+        _timer?.cancel();
+      }
+      notifyListeners();
+    });
+  }
+
+  void reset() {
+    _timer?.cancel();
+    _seconds = 0;
+    notifyListeners();
+  }
+
   /// Verify Otp Api
   bool loadVerifyOtp = false;
   Future<void> verifyOtp(String otp) async {
@@ -101,5 +126,11 @@ class AuthProvider with ChangeNotifier {
       loadVerifyOtp = false;
       notifyListeners();
     }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 }
